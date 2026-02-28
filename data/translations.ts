@@ -26,7 +26,7 @@ export const th = {
   youCouldSave: "คุณสามารถประหยัดได้",
   switchTo: "เปลี่ยนไปใช้",
   totalOf: "ยอดรวม",
-  allOptions: "เปรียบทุกตัวเลือก",
+  allOptions: "เปรียบเทียบทุกตัวเลือก",
   cheapest: "ประหยัดสูงสุด",
   selected: "ที่คุณเลือก",
 
