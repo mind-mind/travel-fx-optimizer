@@ -2,12 +2,12 @@ import { Country, FxOption, BankName } from "./types";
 import { banks } from "@/data/banks";
 
 export const COUNTRIES: Country[] = [
-  { code: "CN", name: "China",       currency: "CNY", flag: "🇨🇳", vatEligible: true,  vatRate: 0.11 },
-  { code: "JP", name: "Japan",       currency: "JPY", flag: "🇯🇵", vatEligible: true,  vatRate: 0.10 },
-  { code: "KR", name: "South Korea", currency: "KRW", flag: "🇰🇷", vatEligible: true,  vatRate: 0.10 },
-  { code: "SG", name: "Singapore",   currency: "SGD", flag: "🇸🇬", vatEligible: true,  vatRate: 0.08 },
+  { code: "CN", name: "China",       currency: "CNY", flag: "🇨🇳", vatEligible: true,  vatRate: 0.11, vatMinAmount: 200    },
+  { code: "JP", name: "Japan",       currency: "JPY", flag: "🇯🇵", vatEligible: true,  vatRate: 0.10, vatMinAmount: 5000   },
+  { code: "KR", name: "South Korea", currency: "KRW", flag: "🇰🇷", vatEligible: true,  vatRate: 0.10, vatMinAmount: 30000  },
+  { code: "SG", name: "Singapore",   currency: "SGD", flag: "🇸🇬", vatEligible: true,  vatRate: 0.09, vatMinAmount: 100    },
   { code: "HK", name: "Hong Kong",   currency: "HKD", flag: "🇭🇰", vatEligible: false },
-  { code: "TW", name: "Taiwan",      currency: "TWD", flag: "🇹🇼", vatEligible: true,  vatRate: 0.05 },
+  { code: "TW", name: "Taiwan",      currency: "TWD", flag: "🇹🇼", vatEligible: true,  vatRate: 0.05, vatMinAmount: 2000   },
 ];
 
 export const BANKS = Object.values(banks).map((b) => b.name) as BankName[];

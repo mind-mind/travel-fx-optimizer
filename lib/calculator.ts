@@ -37,11 +37,13 @@ export function calculateComparisons(
 
   const minTotal = Math.min(...base.map((r) => r.totalTHB));
   const maxTotal = Math.max(...base.map((r) => r.totalTHB));
+  // Epsilon tolerance to handle floating-point rounding (0.001 THB)
+  const EPSILON = 0.001;
 
   return base.map((r) => ({
     ...r,
-    isCheapest: r.totalTHB === minTotal,
-    savings: r.totalTHB === minTotal ? maxTotal - minTotal : 0,
+    isCheapest: Math.abs(r.totalTHB - minTotal) < EPSILON,
+    savings: Math.abs(r.totalTHB - minTotal) < EPSILON ? maxTotal - minTotal : 0,
   }));
 }
 
@@ -77,29 +79,41 @@ export function getCheapestResult(
 // ---------------------------------------------------------------------------
 
 export interface VatRefundResult {
-  /** Whether the country supports VAT refunds */
+  /** Whether the country has any VAT refund scheme at all */
+  vatEligible: boolean;
+  /** Whether the entered amount meets the minimum purchase threshold */
+  meetsMinimum: boolean;
+  /** Both vatEligible and meetsMinimum are true */
   qualifies: boolean;
-  /** VAT rate as a decimal (e.g. 0.11 for 11%) */
+  /** VAT/GST rate as a decimal (e.g. 0.10 for 10%) */
   vatRate: number;
-  /** Estimated refund in the destination currency */
+  /** Minimum purchase amount required in local currency (0 if N/A) */
+  minAmount: number;
+  /** Estimated refund in the destination currency (0 if !qualifies) */
   estimatedRefund: number;
 }
 
 /**
  * Returns VAT refund eligibility and estimated refund amount
- * based on the destination country config.
+ * based on verified country-specific thresholds.
  */
 export function getVatRefund(
   amount: number,
   countryCode: string
 ): VatRefundResult {
   const country = COUNTRIES.find((c) => c.code === countryCode);
-  const qualifies = !!(country?.vatEligible && amount > 0);
+  const vatEligible = !!(country?.vatEligible);
   const vatRate = country?.vatRate ?? 0;
+  const minAmount = country?.vatMinAmount ?? 0;
+  const meetsMinimum = vatEligible && amount >= minAmount && minAmount > 0;
+  const qualifies = vatEligible && meetsMinimum;
 
   return {
+    vatEligible,
+    meetsMinimum,
     qualifies,
     vatRate,
+    minAmount,
     estimatedRefund: qualifies
       ? parseFloat((amount * vatRate).toFixed(2))
       : 0,

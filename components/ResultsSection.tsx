@@ -47,88 +47,86 @@ export default function ResultsSection({
   const selected = results.find(
     (r) => r.bank === selectedBank && r.method === selectedMethod
   );
-  const cheapest = results.find((r) => r.isCheapest);
+  const cheapestAll = results.filter((r) => r.isCheapest);
+  const cheapest = cheapestAll[0] ?? null;
+  const isTie = cheapestAll.length > 1;
   const mostExpensive = results.reduce((a, b) => (a.totalTHB > b.totalTHB ? a : b));
   const maxSavings = cheapest ? mostExpensive.totalTHB - cheapest.totalTHB : 0;
 
-  const isSelectedCheapest = selected?.isCheapest;
+  const isSelectedCheapest = selected?.isCheapest ?? false;
   const potentialSaving =
-    selected && cheapest ? selected.totalTHB - cheapest.totalTHB : 0;
+    selected && cheapest && !isSelectedCheapest ? selected.totalTHB - cheapest.totalTHB : 0;
 
   const banks = [...new Set(results.map((r) => r.bank))];
 
   return (
     <div className="space-y-5">
-      {/* Recommendation hero */}
-      {cheapest && (
-        <div className="rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 p-5">
-          <p className="text-xs font-semibold uppercase tracking-wide text-green-100 mb-2">
-            {t.recommendedTitle}
-          </p>
-          <p className="text-lg font-bold text-white mb-4">
-            {methodIcon[cheapest.method]} {cheapest.bank} — {cheapest.method}
-          </p>
-          <div className="flex items-end justify-between">
-            <div>
-              <p className="text-green-100 text-xs mb-0.5">{t.totalCost}</p>
-              <p className="text-2xl font-bold text-white">{fmt(cheapest.totalTHB)}</p>
-            </div>
-            {maxSavings > 0 && (
-              <div className="text-right">
-                <p className="text-green-100 text-xs mb-0.5">{t.recommendedSaves}</p>
-                <p className="text-lg font-bold text-green-200">-{fmt(maxSavings)}</p>
-              </div>
+      {/* Lowest cost summary bar */}
+      {cheapest && maxSavings > 0 && (
+        <div className="rounded-2xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 p-4 flex items-center justify-between gap-3">
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400 mb-0.5">
+              {isTie ? t.lowestCostTie : t.lowestCost}
+            </p>
+            {isTie ? (
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                {cheapestAll.map((r) => `${r.bank} (${r.method})`).join(", ")}
+              </p>
+            ) : (
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-200">
+                {methodIcon[cheapest.method]} {cheapest.bank} — {cheapest.method}
+              </p>
             )}
+          </div>
+          <div className="text-right shrink-0">
+            <p className="text-xs text-gray-400 dark:text-gray-500">{t.maxPotentialSaving}</p>
+            <p className="text-base font-bold text-gray-700 dark:text-gray-200">-{fmt(maxSavings)}</p>
           </div>
         </div>
       )}
       {/* Selected option summary card */}
       {selected && (
         <div
-          className={`rounded-2xl border-2 p-5 ${
-            isSelectedCheapest
-              ? "border-green-400 bg-green-50"
-              : "border-blue-300 bg-blue-50"
-          }`}
+          className="rounded-2xl border-2 border-blue-300 dark:border-blue-700 bg-blue-50 dark:bg-blue-950 p-5"
         >
           <div className="flex items-center justify-between mb-3">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+              <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
                 {t.yourSelection}
               </p>
-              <p className="text-lg font-bold text-gray-800">
+              <p className="text-lg font-bold text-gray-800 dark:text-gray-100">
                 {methodIcon[selected.method]} {selected.bank} — {selected.method}
               </p>
             </div>
             {isSelectedCheapest && (
-              <span className="rounded-full bg-green-500 px-3 py-1 text-xs font-semibold text-white">
-                {t.bestDeal}
+              <span className="rounded-full bg-gray-200 dark:bg-gray-700 px-3 py-1 text-xs font-semibold text-gray-700 dark:text-gray-200">
+                {isTie ? t.lowestCostTie : t.lowestCost}
               </span>
             )}
           </div>
 
           <div className="grid grid-cols-3 gap-3 mb-3">
-            <div className="bg-white rounded-xl p-3 text-center">
-              <p className="text-xs text-gray-500 mb-0.5">{t.totalCost}</p>
-              <p className="text-base font-bold text-gray-800">
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-3 text-center">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">{t.totalCost}</p>
+              <p className="text-base font-bold text-gray-800 dark:text-gray-100">
                 {fmt(selected.totalTHB)}
               </p>
             </div>
-            <div className="bg-white rounded-xl p-3 text-center">
-              <p className="text-xs text-gray-500 mb-0.5">{t.fxFee}</p>
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-3 text-center">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">{t.fxFee}</p>
               <p className="text-base font-bold text-red-500">
                 {fmt(selected.fxFeeTHB)}
               </p>
             </div>
-            <div className="bg-white rounded-xl p-3 text-center">
-              <p className="text-xs text-gray-500 mb-0.5">{t.spreadCost}</p>
+            <div className="bg-white dark:bg-gray-800 rounded-xl p-3 text-center">
+              <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">{t.spreadCost}</p>
               <p className="text-base font-bold text-orange-500">
                 {fmt(selected.spreadCostTHB)}
               </p>
             </div>
           </div>
 
-          <p className="text-xs text-gray-500">
+          <p className="text-xs text-gray-500 dark:text-gray-400">
             {t.effectiveRate}: {selected.effectiveRate.toFixed(4)} THB/{currency} &nbsp;·&nbsp;
             {t.fee}: {selected.fxFeePercent}%
           </p>
@@ -137,15 +135,21 @@ export default function ResultsSection({
 
       {/* Savings banner */}
       {!isSelectedCheapest && potentialSaving > 0 && cheapest && (
-        <div className="rounded-2xl bg-amber-50 border border-amber-300 p-4 flex items-start gap-3">
+        <div className="rounded-2xl bg-amber-50 dark:bg-amber-950 border border-amber-300 dark:border-amber-800 p-4 flex items-start gap-3">
           <span className="text-2xl">💡</span>
           <div>
-            <p className="text-sm font-semibold text-amber-800">
+            <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">
               {t.youCouldSave} {fmt(potentialSaving)}
             </p>
-            <p className="text-xs text-amber-700 mt-0.5">
-              {t.switchTo} <strong>{cheapest.bank}</strong> —{" "}
-              <strong>{cheapest.method}</strong> {t.totalOf} {fmt(cheapest.totalTHB)}{" "}
+            <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
+              {t.switchTo}{" "}
+              {isTie
+                ? cheapestAll.map((r, i) => (
+                    <span key={i}>{i > 0 ? " / " : ""}<strong>{r.bank}</strong> — <strong>{r.method}</strong></span>
+                  ))
+                : <><strong>{cheapest.bank}</strong> — <strong>{cheapest.method}</strong></>
+              }{" "}
+              {t.totalOf} {fmt(cheapest.totalTHB)}{" "}
               (rate {cheapest.effectiveRate.toFixed(4)} THB/{currency})
             </p>
           </div>
@@ -154,7 +158,7 @@ export default function ResultsSection({
 
       {/* All options by bank */}
       <div>
-        <h2 className="text-sm font-semibold text-gray-500 uppercase tracking-wide mb-3">
+        <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">
           {t.allOptions}
         </h2>
         <div className="space-y-3">
@@ -163,13 +167,13 @@ export default function ResultsSection({
             return (
               <div
                 key={bankName}
-                className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden"
+                className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm overflow-hidden"
               >
-                <div className="px-4 py-2.5 bg-gray-50 border-b border-gray-100 flex items-start justify-between gap-2">
-                  <p className="text-sm font-semibold text-gray-700">{bankName}</p>
+                <div className="px-4 py-2.5 bg-gray-50 dark:bg-gray-800 border-b border-gray-100 dark:border-gray-700 flex items-start justify-between gap-2">
+                  <p className="text-sm font-semibold text-gray-700 dark:text-gray-200">{bankName}</p>
                   {bankMeta[bankName] && (
                     <div className="text-right shrink-0">
-                      <p className="text-xs text-gray-400">
+                      <p className="text-xs text-gray-400 dark:text-gray-500">
                         ตรวจสอบล่าสุด: {bankMeta[bankName].lastVerified}
                       </p>
                       <a
@@ -183,7 +187,7 @@ export default function ResultsSection({
                     </div>
                   )}
                 </div>
-                <div className="divide-y divide-gray-50">
+                <div className="divide-y divide-gray-50 dark:divide-gray-800">
                   {bankResults.map((r) => {
                     const isSelected =
                       r.bank === selectedBank && r.method === selectedMethod;
@@ -191,28 +195,28 @@ export default function ResultsSection({
                       <div
                         key={`${r.bank}-${r.method}`}
                         className={`flex items-center justify-between px-4 py-3 ${
-                          r.isCheapest ? "bg-green-50" : ""
-                        } ${isSelected ? "ring-1 ring-inset ring-blue-400" : ""}`}
+                          isSelected ? "ring-1 ring-inset ring-blue-400" : ""
+                        }`}
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-lg">{methodIcon[r.method]}</span>
                           <div>
-                            <p className="text-sm font-medium text-gray-800">
+                            <p className="text-sm font-medium text-gray-800 dark:text-gray-100">
                               {r.method}
                             </p>
-                            <p className="text-xs text-gray-400">
+                            <p className="text-xs text-gray-400 dark:text-gray-500">
                               {r.effectiveRate.toFixed(4)} THB/{currency}
                               {r.fxFeePercent > 0 ? ` + ${r.fxFeePercent}% fee` : ""}
                             </p>
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm font-bold text-gray-800">
+                          <p className="text-sm font-bold text-gray-800 dark:text-gray-100">
                             {fmt(r.totalTHB)}
                           </p>
                           {r.isCheapest && (
-                            <span className="text-xs font-semibold text-green-600">
-                              {t.cheapest}
+                            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+                              {isTie ? t.lowestCostTie : t.lowestCost}
                             </span>
                           )}
                           {isSelected && !r.isCheapest && (
@@ -232,16 +236,16 @@ export default function ResultsSection({
       </div>
 
       {/* Disclaimer */}
-      <div className="rounded-2xl border border-gray-100 bg-gray-50 p-4 space-y-2">
-        <p className="text-xs font-semibold text-gray-500">ข้อจำกัดความรับผิดชอบ</p>
-        <p className="text-xs text-gray-400 leading-relaxed">
+      <div className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4 space-y-2">
+        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">ข้อจำกัดความรับผิดชอบ</p>
+        <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
           เครื่องมือนี้ใช้ข้อมูลอัตราแลกเปลี่ยนแบบ mid-market จาก exchangerate.host
           และค่าธรรมเนียมที่เปิดเผยต่อสาธารณะของแต่ละธนาคาร
         </p>
-        <p className="text-xs text-gray-400 leading-relaxed">
+        <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
           ผลลัพธ์เป็นการประมาณการเพื่อการเปรียบเทียบเท่านั้น อัตราจริงอาจแตกต่างตามช่วงเวลาการตัดยอดและเครือข่ายบัตร
         </p>
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-gray-400 dark:text-gray-500">
           คำนวณจาก {amountCNY.toLocaleString("th-TH")} {currency} · {t.fxSource} {midRate.toFixed(4)} THB
         </p>
       </div>

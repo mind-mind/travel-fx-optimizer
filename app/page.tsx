@@ -31,6 +31,24 @@ export default function Home() {
     return "th";
   });
 
+  const [dark, setDark] = useState(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("theme") === "dark";
+    }
+    return false;
+  });
+
+  useEffect(() => {
+    const root = document.documentElement;
+    if (dark) {
+      root.classList.add("dark");
+      localStorage.setItem("theme", "dark");
+    } else {
+      root.classList.remove("dark");
+      localStorage.setItem("theme", "light");
+    }
+  }, [dark]);
+
   const t = translations[lang];
 
   function toggleLang() {
@@ -91,9 +109,9 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50">
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
       {/* Header */}
-      <div className="bg-blue-600 pt-12 pb-8 px-4">
+      <div className="pt-12 pb-8 px-4" style={{ background: "linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)" }}>
         <div className="max-w-md mx-auto">
           <div className="flex items-start justify-between">
             <div>
@@ -105,15 +123,24 @@ export default function Home() {
                 {t.subtitle}
               </p>
             </div>
-            <button
-              onClick={toggleLang}
-              className="mt-1 flex items-center gap-0.5 rounded-lg bg-blue-700 px-2.5 py-1.5 text-xs font-semibold"
-              aria-label="Switch language"
-            >
-              <span className={lang === "th" ? "text-white" : "text-blue-300"}>TH</span>
-              <span className="text-blue-400 mx-0.5">|</span>
-              <span className={lang === "en" ? "text-white" : "text-blue-300"}>EN</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setDark((d) => !d)}
+                className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-700 text-white text-base"
+                aria-label="Toggle dark mode"
+              >
+                {dark ? "☀️" : "🌙"}
+              </button>
+              <button
+                onClick={toggleLang}
+                className="flex items-center gap-0.5 rounded-lg bg-blue-700 px-2.5 py-1.5 text-xs font-semibold"
+                aria-label="Switch language"
+              >
+                <span className={lang === "th" ? "text-white" : "text-blue-300"}>TH</span>
+                <span className="text-blue-400 mx-0.5">|</span>
+                <span className={lang === "en" ? "text-white" : "text-blue-300"}>EN</span>
+              </button>
+            </div>
           </div>
 
           {/* Live FX rate badge */}
@@ -177,11 +204,13 @@ export default function Home() {
           onMethodChange={setMethod}
         />
 
-        {vat?.qualifies && (
+        {vat?.vatEligible && (
           <VatRefundBanner
             amount={parsedAmount}
             estimatedRefund={vat.estimatedRefund}
             vatRate={vat.vatRate}
+            minAmount={vat.minAmount}
+            meetsMinimum={vat.meetsMinimum}
             currency={currency}
             t={t}
           />

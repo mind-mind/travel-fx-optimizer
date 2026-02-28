@@ -15,8 +15,9 @@ export const th = {
   // Results
   yourSelection: "ตัวเลือกของคุณ",
   bestDeal: "ถูกที่สุด",
-  recommendedTitle: "แนะนำสำหรับคุณ",
-  recommendedSaves: "ประหยัดเทียบตัวเลือกที่แพงที่สุด",
+  lowestCost: "ต้นทุนต่ำสุด",
+  lowestCostTie: "ต้นทุนต่ำสุด (เท่ากัน)",
+  maxPotentialSaving: "ประหยัดได้สูงสุด",
   totalCost: "ยอดรวม (บาท)",
   fxFee: "ค่าธรรมเนียม FX",
   spreadCost: "ส่วนต่างอัตราแลกเปลี่ยน",
@@ -42,6 +43,10 @@ export const th = {
   vatEstRefund: "ภาษีที่คาดว่าจะได้คืน",
   vatEligible: "ยอดนี้อาจขอคืนภาษีได้",
   vatReminder: "กรุณาตรวจสอบเงื่อนไขการคืนภาษีก่อนเดินทางกลับ",
+  vatMinimum: "ยอดซื้อขั้นต่ำ",
+  vatBelowMin: "ยังไม่ถึงขั้นต่ำ — ซื้อเพิ่มอีก",
+  vatBelowMinSuffix: "เพื่อขอคืนภาษีได้",
+  vatBelowMinTitle: "ใกล้ถึงเงื่อนไขคืนภาษีแล้ว",
 
   // Disclaimer
   disclaimer: "อัตรานี้เป็นการประมาณการ อาจแตกต่างจากอัตราที่ธนาคารเรียกเก็บจริง",
@@ -66,8 +71,9 @@ export const en: typeof th = {
   // Results
   yourSelection: "Your Selection",
   bestDeal: "Best Deal",
-  recommendedTitle: "Recommended for you",
-  recommendedSaves: "vs most expensive",
+  lowestCost: "Lowest estimated cost",
+  lowestCostTie: "Lowest estimated cost (tie)",
+  maxPotentialSaving: "Max potential saving",
   totalCost: "Total Cost (THB)",
   fxFee: "FX Fee",
   spreadCost: "Spread Cost",
@@ -93,6 +99,10 @@ export const en: typeof th = {
   vatEstRefund: "Est. VAT Refund",
   vatEligible: "VAT refund may apply",
   vatReminder: "Check VAT refund conditions for your destination before returning.",
+  vatMinimum: "Minimum purchase",
+  vatBelowMin: "Below minimum — spend",
+  vatBelowMinSuffix: "more to qualify",
+  vatBelowMinTitle: "Almost there for a VAT refund",
 
   // Disclaimer
   disclaimer: "Rates are indicative and may differ from actual bank charges.",

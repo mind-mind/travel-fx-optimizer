@@ -39,16 +39,16 @@ export default function PaymentForm({
   const selectedCountry = COUNTRIES.find((c) => c.code === country);
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-5">
+    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 space-y-5">
       {/* Country */}
       <div>
-        <label className="block text-sm font-medium text-gray-600 mb-1.5">
+        <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
           {t.countryLabel}
         </label>
         <select
           value={country}
           onChange={(e) => { onCountryChange(e.target.value); }}
-          className="w-full rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {COUNTRIES.map((c) => (
             <option key={c.code} value={c.code}>
@@ -60,11 +60,11 @@ export default function PaymentForm({
 
       {/* Amount */}
       <div>
-        <label className="block text-sm font-medium text-gray-600 mb-1.5">
+        <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
           {t.amountLabel} ({selectedCountry?.currency ?? "CNY"})
         </label>
         <div className="relative">
-          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-medium text-sm">
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 font-medium text-sm">
             {selectedCountry?.currency ?? "¥"}
           </span>
           <input
@@ -74,14 +74,14 @@ export default function PaymentForm({
             placeholder={PLACEHOLDER_AMOUNT[selectedCountry?.currency ?? "CNY"] ?? "0"}
             value={amount}
             onChange={(e) => onAmountChange(e.target.value)}
-            className="w-full rounded-xl border border-gray-200 bg-gray-50 pl-12 pr-4 py-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 pl-12 pr-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
 
       {/* Bank */}
       <div>
-        <label className="block text-sm font-medium text-gray-600 mb-1.5">
+        <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
           {t.bankLabel}
         </label>
         <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
@@ -91,8 +91,8 @@ export default function PaymentForm({
               onClick={() => onBankChange(b as BankName)}
               className={`flex-none rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors ${
                 bank === b
-                  ? "border-blue-500 bg-blue-50 text-blue-700"
-                  : "border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300"
+                  ? "border-blue-500 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-400"
+                  : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
               }`}
             >
               {b}
@@ -103,7 +103,7 @@ export default function PaymentForm({
 
       {/* Payment Method */}
       <div>
-        <label className="block text-sm font-medium text-gray-600 mb-1.5">
+        <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
           {t.methodLabel}
         </label>
         <div className="grid grid-cols-2 gap-2">
@@ -113,8 +113,8 @@ export default function PaymentForm({
               onClick={() => onMethodChange(m)}
               className={`rounded-xl border py-2.5 text-sm font-medium transition-colors ${
                 method === m
-                  ? "border-blue-500 bg-blue-50 text-blue-700"
-                  : "border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300"
+                  ? "border-blue-500 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-400"
+                  : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
               }`}
             >
               {m}

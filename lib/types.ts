@@ -5,6 +5,8 @@ export interface Country {
   flag: string;
   vatEligible: boolean;
   vatRate?: number;
+  /** Minimum single-purchase amount (in local currency) required to qualify for VAT refund */
+  vatMinAmount?: number;
 }
 
 export type BankName =
