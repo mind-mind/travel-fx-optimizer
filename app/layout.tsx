@@ -20,6 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Google Search Console verification */}
+        <meta name="google-site-verification" content="AVOj9qFgtPCQrtA-OfOtnc1aCsMEDjga5elLe6JNVnk" />
+        {/* Google AdSense account */}
+        <meta name="google-adsense-account" content="ca-pub-2107207218808903" />
         {/* Prevent flash of unstyled content for dark mode */}
         <script
           dangerouslySetInnerHTML={{
