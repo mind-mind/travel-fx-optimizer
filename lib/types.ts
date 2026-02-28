@@ -12,6 +12,7 @@ export interface Country {
 export type BankName =
   | "KBank"
   | "SCB"
+  | "KTC"
   | "Bangkok Bank"
   | "Krungsri"
   | "TTB"

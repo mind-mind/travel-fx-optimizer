@@ -11,6 +11,12 @@ export const banks = {
     sourceUrl: "https://www.scb.co.th",
     lastVerified: "2026-02-28",
   },
+  ktc: {
+    name: "KTC",
+    fxFeePercent: 2.5,
+    sourceUrl: "https://www.ktc.co.th",
+    lastVerified: "2026-03-01",
+  },
   bangkok: {
     name: "Bangkok Bank",
     fxFeePercent: 2.5,
