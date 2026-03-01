@@ -16,7 +16,8 @@ export type BankName =
   | "Bangkok Bank"
   | "Krungsri"
   | "TTB"
-  | "UOB Thailand";
+  | "UOB Thailand"
+  | "Cash";
 export type PaymentMethod = "Credit Card" | "Alipay" | "WeChat Pay" | "Cash";
 
 export interface FxOption {

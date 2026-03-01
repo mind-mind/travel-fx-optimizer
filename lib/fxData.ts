@@ -29,21 +29,32 @@ export const METHOD_SPREAD_PERCENT: Record<string, number> = {
   Cash: -0.5,
 };
 
+// Non-cash payment methods — these are tied to a specific bank
+const BANK_METHODS = PAYMENT_METHODS.filter((m) => m !== "Cash");
+
 /**
- * FX options: all bank × payment-method combinations.
- * Generated dynamically from banks config — add a bank there and it appears here.
+ * FX options:
+ * - Bank × non-cash methods (Credit Card, Alipay, WeChat Pay).
+ * - A single Cash option not tied to any bank.
  *
- * FX fee applies only when payment method is Credit Card AND the transaction
- * currency is not THB. For all other methods (Alipay, WeChat Pay, Cash) the
- * fee is 0% — those channels settle in a different way and do not incur a
- * card-network foreign-transaction fee.
+ * FX fee applies to all bank-tied methods (Credit Card, Alipay, WeChat Pay)
+ * to model card-linked wallet usage. Cash has 0% bank FX fee.
  */
-export const FX_OPTIONS: FxOption[] = Object.values(banks).flatMap((b) =>
-  PAYMENT_METHODS.map((method) => ({
-    bank: b.name as BankName,
-    method,
-    // FX fee is only charged on Credit Card transactions in a foreign currency
-    fxFeePercent: method === "Credit Card" ? b.fxFeePercent : 0,
-    spreadPercent: METHOD_SPREAD_PERCENT[method],
-  }))
-);
+export const FX_OPTIONS: FxOption[] = [
+  // Bank-tied methods
+  ...Object.values(banks).flatMap((b) =>
+    BANK_METHODS.map((method) => ({
+      bank: b.name as BankName,
+      method,
+      fxFeePercent: b.fxFeePercent,
+      spreadPercent: METHOD_SPREAD_PERCENT[method],
+    }))
+  ),
+  // Cash — single standalone option, no bank fee
+  {
+    bank: "Cash" as BankName,
+    method: "Cash" as (typeof PAYMENT_METHODS)[number],
+    fxFeePercent: 0,
+    spreadPercent: METHOD_SPREAD_PERCENT["Cash"],
+  },
+];

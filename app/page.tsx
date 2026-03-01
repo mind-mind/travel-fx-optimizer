@@ -18,6 +18,8 @@ const FALLBACK_RATES: Record<string, number> = {
   TWD: 1.06,
 };
 
+const RATE_REFRESH_MS = 60_000;
+
 export default function Home() {
   const [country, setCountry] = useState("CN");
   const [amount, setAmount] = useState("");
@@ -71,23 +73,50 @@ export default function Home() {
     setResults(null);
   }
 
+  function handleMethodChange(m: PaymentMethod) {
+    setMethod(m);
+    // Cash is not tied to any bank — use "Cash" as a sentinel
+    if (m === "Cash") {
+      setBank("Cash" as BankName);
+    } else if (bank === ("Cash" as BankName)) {
+      setBank("KBank");
+    }
+  }
+
   // Fetch live FX rate; re-runs whenever the destination currency changes
   useEffect(() => {
     setRateLoading(true);
     const fallback = FALLBACK_RATES[currency] ?? 4.9;
-    fetch(`/api/fx?currency=${currency}`)
-      .then((r) => r.json())
-      .then((data) => {
-        setMidRate(data.rate ?? fallback);
-        setRateTimestamp(data.timestamp ?? null);
-        setRateFallback(!!data.fallback);
-      })
-      .catch(() => {
-        setMidRate(fallback);
-        setRateFallback(true);
-      })
-      .finally(() => setRateLoading(false));
-  }, [currency]);;
+    let disposed = false;
+
+    const fetchRate = () => {
+      fetch(`/api/fx?currency=${currency}`)
+        .then((r) => r.json())
+        .then((data) => {
+          if (disposed) return;
+          setMidRate(data.rate ?? fallback);
+          setRateTimestamp(data.timestamp ?? new Date().toISOString());
+          setRateFallback(!!data.fallback);
+        })
+        .catch(() => {
+          if (disposed) return;
+          setMidRate(fallback);
+          setRateFallback(true);
+          setRateTimestamp(new Date().toISOString());
+        })
+        .finally(() => {
+          if (!disposed) setRateLoading(false);
+        });
+    };
+
+    fetchRate();
+    const timer = setInterval(fetchRate, RATE_REFRESH_MS);
+
+    return () => {
+      disposed = true;
+      clearInterval(timer);
+    };
+  }, [currency]);
 
   // Auto-compare whenever amount or live rate changes
   useEffect(() => {
@@ -201,7 +230,7 @@ export default function Home() {
           onCountryChange={handleCountryChange}
           onAmountChange={setAmount}
           onBankChange={setBank}
-          onMethodChange={setMethod}
+          onMethodChange={handleMethodChange}
         />
 
         {vat?.vatEligible && (
@@ -224,6 +253,9 @@ export default function Home() {
             amountCNY={parsedAmount}
             midRate={midRate}
             currency={currency}
+            rateTimestamp={rateTimestamp}
+            rateFallback={rateFallback}
+            refreshSeconds={Math.floor(RATE_REFRESH_MS / 1000)}
             t={t}
           />
         )}

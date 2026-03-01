@@ -79,27 +79,29 @@ export default function PaymentForm({
         </div>
       </div>
 
-      {/* Bank */}
-      <div>
-        <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
-          {t.bankLabel}
-        </label>
-        <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
-          {BANKS.map((b) => (
-            <button
-              key={b}
-              onClick={() => onBankChange(b as BankName)}
-              className={`flex-none rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors ${
-                bank === b
-                  ? "border-blue-500 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-400"
-                  : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
-              }`}
-            >
-              {b}
-            </button>
-          ))}
+      {/* Bank — hidden when Cash is selected (cash has no bank fee) */}
+      {method !== "Cash" && (
+        <div>
+          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
+            {t.bankLabel}
+          </label>
+          <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+            {BANKS.map((b) => (
+              <button
+                key={b}
+                onClick={() => onBankChange(b as BankName)}
+                className={`flex-none rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors ${
+                  bank === b
+                    ? "border-blue-500 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-400"
+                    : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
+                }`}
+              >
+                {b}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Payment Method */}
       <div>
