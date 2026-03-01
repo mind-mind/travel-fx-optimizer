@@ -52,6 +52,10 @@ export const th = {
   disclaimer: "อัตรานี้เป็นการประมาณการ อาจแตกต่างจากอัตราที่ธนาคารเรียกเก็บจริง",
   fxSource: "mid-market rate",
   basedOn: "คำนวณจาก",
+
+  // DCC warning
+  dccWarningTitle: "ระวัง: DCC (Dynamic Currency Conversion)",
+  dccWarningBody: "หากร้านค้าหรือตู้ ATM เสนอให้ชำระเงินเป็นสกุลเงินบาท (THB) ให้ปฏิเสธทันที และเลือกชำระในสกุลเงินท้องถิ่นเสมอ การยอมรับ DCC หมายความว่าร้านค้าจะเป็นผู้กำหนดอัตราแลกเปลี่ยนเอง ซึ่งมักแพงกว่าอัตราของธนาคารมาก",
 };
 
 export const en: typeof th = {
@@ -108,6 +112,10 @@ export const en: typeof th = {
   disclaimer: "Rates are indicative and may differ from actual bank charges.",
   fxSource: "mid-market rate",
   basedOn: "Based on",
+
+  // DCC warning
+  dccWarningTitle: "Watch out: DCC (Dynamic Currency Conversion)",
+  dccWarningBody: "If a merchant or ATM offers to charge you in Thai Baht (THB), always decline and choose to pay in the local currency instead. Accepting DCC lets the merchant set the exchange rate, which is typically far worse than your card network rate.",
 };
 
 export const translations = { th, en } as const;

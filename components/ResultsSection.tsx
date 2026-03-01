@@ -235,6 +235,21 @@ export default function ResultsSection({
         </div>
       </div>
 
+      {/* DCC warning — shown whenever Credit Card is selected (transaction currency is foreign) */}
+      {selectedMethod === "Credit Card" && (
+        <div className="rounded-2xl bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 p-4 flex items-start gap-3">
+          <span className="text-2xl shrink-0">⚠️</span>
+          <div>
+            <p className="text-sm font-semibold text-red-800 dark:text-red-300">
+              {t.dccWarningTitle}
+            </p>
+            <p className="text-xs text-red-700 dark:text-red-400 mt-1 leading-relaxed">
+              {t.dccWarningBody}
+            </p>
+          </div>
+        </div>
+      )}
+
       {/* Disclaimer */}
       <div className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4 space-y-2">
         <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">ข้อจำกัดความรับผิดชอบ</p>

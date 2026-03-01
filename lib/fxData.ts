@@ -32,12 +32,18 @@ export const METHOD_SPREAD_PERCENT: Record<string, number> = {
 /**
  * FX options: all bank × payment-method combinations.
  * Generated dynamically from banks config — add a bank there and it appears here.
+ *
+ * FX fee applies only when payment method is Credit Card AND the transaction
+ * currency is not THB. For all other methods (Alipay, WeChat Pay, Cash) the
+ * fee is 0% — those channels settle in a different way and do not incur a
+ * card-network foreign-transaction fee.
  */
 export const FX_OPTIONS: FxOption[] = Object.values(banks).flatMap((b) =>
   PAYMENT_METHODS.map((method) => ({
     bank: b.name as BankName,
     method,
-    fxFeePercent: b.fxFeePercent,
+    // FX fee is only charged on Credit Card transactions in a foreign currency
+    fxFeePercent: method === "Credit Card" ? b.fxFeePercent : 0,
     spreadPercent: METHOD_SPREAD_PERCENT[method],
   }))
 );
