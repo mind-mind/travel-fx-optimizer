@@ -1,5 +1,8 @@
 import { Country, FxOption, BankName } from "./types";
 import { banks } from "@/data/banks";
+import { METHOD_SPREAD_PERCENT } from "./feeConfig";
+
+export { METHOD_SPREAD_PERCENT };
 
 export const COUNTRIES: Country[] = [
   { code: "CN", name: "China",       currency: "CNY", flag: "🇨🇳", vatEligible: true,  vatRate: 0.11, vatMinAmount: 200    },
@@ -17,17 +20,6 @@ export const PAYMENT_METHODS = [
   "WeChat Pay",
   "Cash",
 ] as const;
-
-/**
- * Spread above mid-market per payment method.
- * Negative = better rate than mid-market (Cash advantage).
- */
-export const METHOD_SPREAD_PERCENT: Record<string, number> = {
-  "Credit Card": 1.0,
-  Alipay: 1.5,
-  "WeChat Pay": 1.5,
-  Cash: -0.5,
-};
 
 // Non-cash payment methods — these are tied to a specific bank
 const BANK_METHODS = PAYMENT_METHODS.filter((m) => m !== "Cash");
