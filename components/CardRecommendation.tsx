@@ -170,7 +170,7 @@ export default function CardRecommendation({ selected, amountForeign, midRate, m
                         : "bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200"
                     }`}
                   >
-                    {card.approximate ? `~` : ""}{card.fxFeePercent}% FX
+                    ~{card.fxFeePercent}% {t.cardRecFxFeeLabel}
                   </span>
                 </div>
               </div>
@@ -196,7 +196,7 @@ export default function CardRecommendation({ selected, amountForeign, midRate, m
               {/* Potential saving vs current selection */}
               {showCardSaving && (
                 <p className="text-xs font-semibold text-green-700 dark:text-green-300">
-                  ✓ ประหยัดเพิ่มได้ ~฿{fmtThb(savingVsCurrent)} จากยอดนี้
+                  ✓ {t.cardRecCardEstSaving}{fmtThb(savingVsCurrent)} {t.cardRecCardEstSavingSuf}
                 </p>
               )}
 
