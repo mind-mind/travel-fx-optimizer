@@ -4,6 +4,10 @@ import { useState, useEffect } from "react";
 import PaymentForm from "@/components/PaymentForm";
 import ResultsSection from "@/components/ResultsSection";
 import VatRefundBanner from "@/components/VatRefundBanner";
+import InsightPanel from "@/components/InsightPanel";
+import ComparisonPanel from "@/components/ComparisonPanel";
+import LearnSection from "@/components/LearnSection";
+import CardRecommendation from "@/components/CardRecommendation";
 import { BankName, PaymentMethod, ComparisonResult } from "@/lib/types";
 import { calculateComparisons, getVatRefund } from "@/lib/calculator";
 import { COUNTRIES } from "@/lib/fxData";
@@ -18,7 +22,7 @@ const FALLBACK_RATES: Record<string, number> = {
   TWD: 1.06,
 };
 
-const RATE_REFRESH_MS = 60_000;
+const RATE_REFRESH_MS = 600_000; // 10 minutes — matches API revalidate: 600
 
 export default function Home() {
   const [country, setCountry] = useState("CN");
@@ -26,6 +30,11 @@ export default function Home() {
   const [bank, setBank] = useState<BankName>("KBank");
   const [method, setMethod] = useState<PaymentMethod>("Credit Card");
   const [results, setResults] = useState<ComparisonResult[] | null>(null);
+
+  // Comparison mode
+  const [compareMode, setCompareMode] = useState(false);
+  const [bank2, setBank2] = useState<BankName>("SCB");
+  const [method2, setMethod2] = useState<PaymentMethod>("Cash");
   const [lang, setLang] = useState<Lang>(() => {
     if (typeof window !== "undefined") {
       return (localStorage.getItem("lang") as Lang) ?? "th";
@@ -255,10 +264,75 @@ export default function Home() {
             currency={currency}
             rateTimestamp={rateTimestamp}
             rateFallback={rateFallback}
-            refreshSeconds={Math.floor(RATE_REFRESH_MS / 1000)}
+            refreshMinutes={Math.floor(RATE_REFRESH_MS / 60_000)}
             t={t}
           />
         )}
+
+        {/* Insight Panel — shown after calculation */}
+        {results && parsedAmount > 0 && (() => {
+          const selected = results.find((r) => r.bank === bank && r.method === method);
+          return selected ? (
+            <InsightPanel
+              selected={selected}
+              midRate={midRate}
+              amountForeign={parsedAmount}
+              currency={currency}
+              countryCode={country}
+              t={t}
+              lang={lang}
+            />
+          ) : null;
+        })()}
+
+        {/* Card Recommendation Engine */}
+        {results && parsedAmount > 0 && (() => {
+          const selected = results.find((r) => r.bank === bank && r.method === method);
+          return selected ? (
+            <CardRecommendation
+              selected={selected}
+              amountForeign={parsedAmount}
+              midRate={midRate}
+              method={method}
+              t={t}
+            />
+          ) : null;
+        })()}
+
+        {/* Comparison Mode Toggle + Panel */}
+        {results && parsedAmount > 0 && (
+          <div className="space-y-3">
+            <button
+              onClick={() => setCompareMode((v) => !v)}
+              className={`w-full rounded-xl border py-3 text-sm font-semibold transition-colors ${
+                compareMode
+                  ? "border-purple-500 bg-purple-50 dark:bg-purple-950 text-purple-700 dark:text-purple-300"
+                  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
+              }`}
+            >
+              {compareMode ? t.compareToggleClose : t.compareToggleOpen}
+            </button>
+
+            {compareMode && (
+              <ComparisonPanel
+                results={results}
+                midRate={midRate}
+                amountForeign={parsedAmount}
+                currency={currency}
+                bank1={bank}
+                method1={method}
+                bank2={bank2}
+                method2={method2}
+                onBank2Change={setBank2}
+                onMethod2Change={setMethod2}
+                t={t}
+              />
+            )}
+          </div>
+        )}
+
+        {/* Learn Before You Go */}
+        <LearnSection countryCode={country} t={t} lang={lang} />
       </div>
     </main>
   );
