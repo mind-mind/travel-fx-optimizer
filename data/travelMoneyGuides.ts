@@ -703,6 +703,10 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
 
 export const TRAVEL_MONEY_SLUGS = TRAVEL_MONEY_GUIDES.map((g) => g.slug);
 
+export function getGuideByCountryCode(code: string): TravelMoneyGuide | undefined {
+  return TRAVEL_MONEY_GUIDES.find((g) => g.countryCode === code);
+}
+
 export function getGuideByTravelSlug(slug: string): TravelMoneyGuide | undefined {
   return TRAVEL_MONEY_GUIDES.find(
     (g) => g.slug === slug || (g.altSlugs ?? []).includes(slug)

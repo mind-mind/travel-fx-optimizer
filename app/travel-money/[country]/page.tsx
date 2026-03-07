@@ -73,7 +73,7 @@ export default function TravelMoneyPage({ params }: Props) {
       <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
 
         {/* Best Payment Method */}
-        <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3">
+        <section id="best-card" className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3 scroll-mt-6">
           <div className="flex items-center gap-2">
             <span className="text-2xl">💳</span>
             <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
@@ -122,7 +122,7 @@ export default function TravelMoneyPage({ params }: Props) {
         )}
 
         {/* DCC Warning */}
-        <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3">
+        <section id="dcc" className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3 scroll-mt-6">
           <div className="flex items-center gap-2">
             <span className="text-2xl">⚠️</span>
             <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
@@ -146,7 +146,7 @@ export default function TravelMoneyPage({ params }: Props) {
         </section>
 
         {/* Compare Rates CTA */}
-        <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3">
+        <section id="compare-banks" className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3 scroll-mt-6">
           <div className="flex items-center gap-2">
             <span className="text-2xl">📊</span>
             <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
@@ -165,7 +165,7 @@ export default function TravelMoneyPage({ params }: Props) {
         </section>
 
         {/* Top Tips */}
-        <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3">
+        <section id="tips" className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3 scroll-mt-6">
           <div className="flex items-center gap-2">
             <span className="text-2xl">💡</span>
             <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
