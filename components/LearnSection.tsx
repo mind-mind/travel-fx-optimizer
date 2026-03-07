@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { getGuideByCode } from "@/data/countryGuides";
+import { getGuideByCountryCode } from "@/data/travelMoneyGuides";
 import { Translations, Lang } from "@/data/translations";
 
 interface Props {
@@ -18,37 +18,35 @@ interface LearnLink {
 }
 
 export default function LearnSection({ countryCode, t, lang }: Props) {
-  const guide = getGuideByCode(countryCode);
+  const guide = getGuideByCountryCode(countryCode);
   const countryName = guide
-    ? lang === "th"
-      ? guide.countryName
-      : guide.countryNameEn
+    ? guide.name
     : lang === "th" ? "ต่างประเทศ" : "Abroad";
-  const guideSlug = guide?.slug ?? "#";
+  const guideBase = guide ? `/travel-money/${guide.slug}` : null;
 
   const links: LearnLink[] = [
     {
       icon: "💳",
       label: `${t.learnLink1Pre} ${countryName}${t.learnLink1Suf}`,
-      href: `/${guideSlug}#best-card`,
+      href: guideBase ? `${guideBase}#best-card` : "/",
       description: t.learnLink1Desc,
     },
     {
       icon: "🧾",
       label: t.learnLink2,
-      href: `/${guideSlug}#fees`,
+      href: guideBase ? `${guideBase}#tips` : "/",
       description: t.learnLink2Desc,
     },
     {
       icon: "⚠️",
       label: t.learnLink3,
-      href: `/${guideSlug}#dcc`,
+      href: guideBase ? `${guideBase}#dcc` : "/",
       description: t.learnLink3Desc,
     },
     {
       icon: "📊",
       label: `${t.learnLink4Pre} ${countryName}`,
-      href: `/${guideSlug}#compare-banks`,
+      href: guideBase ? `${guideBase}#compare-banks` : "/",
       description: t.learnLink4Desc,
     },
   ];

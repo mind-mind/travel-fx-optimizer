@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { ComparisonResult } from "@/lib/types";
-import { getGuideByCode } from "@/data/countryGuides";
+import { getGuideByCountryCode } from "@/data/travelMoneyGuides";
 import { Translations, Lang } from "@/data/translations";
 
 interface Props {
@@ -40,12 +40,8 @@ export default function InsightPanel({
   const midRateHome = amountForeign * midRate;
   const lossHome = selected.totalHome - midRateHome;
   const lossPercent = midRateHome > 0 ? (lossHome / midRateHome) * 100 : 0;
-  const guide = getGuideByCode(countryCode);
-  const countryName = guide
-    ? lang === "th"
-      ? guide.countryName
-      : guide.countryNameEn
-    : "";
+  const guide = getGuideByCountryCode(countryCode);
+  const countryName = guide ? guide.name : "";
 
   if (lossHome <= 0) {
     return (
@@ -66,7 +62,7 @@ export default function InsightPanel({
 
         {guide && (
           <Link
-            href={`/${guide.slug}`}
+            href={`/travel-money/${guide.slug}`}
             className="block w-full text-center rounded-xl bg-green-600 hover:bg-green-700 text-white text-sm font-semibold py-2.5 transition-colors"
           >
             {t.insightCtaPre} {countryName} →
@@ -132,7 +128,7 @@ export default function InsightPanel({
 
       {guide && (
         <Link
-          href={`/${guide.slug}`}
+          href={`/travel-money/${guide.slug}`}
           className="block w-full text-center rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-3 transition-colors"
         >
           {t.insightCtaPre} {countryName} →
