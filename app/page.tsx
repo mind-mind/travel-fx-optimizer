@@ -8,38 +8,38 @@ import InsightPanel from "@/components/InsightPanel";
 import ComparisonPanel from "@/components/ComparisonPanel";
 import LearnSection from "@/components/LearnSection";
 import CardRecommendation from "@/components/CardRecommendation";
+import PopularPairs from "@/components/PopularPairs";
+import TravelMoneyTips from "@/components/TravelMoneyTips";
+import SharePanel from "@/components/SharePanel";
 import { BankName, PaymentMethod, ComparisonResult } from "@/lib/types";
 import { calculateComparisons, getVatRefund } from "@/lib/calculator";
-import { COUNTRIES } from "@/lib/fxData";
+import { COUNTRIES, HOME_CURRENCIES } from "@/lib/fxData";
 import { translations, Lang } from "@/data/translations";
 
-const FALLBACK_RATES: Record<string, number> = {
-  CNY: 4.90,
-  JPY: 0.23,
-  KRW: 0.026,
-  SGD: 25.0,
-  HKD: 4.50,
-  TWD: 1.06,
-};
-
-const RATE_REFRESH_MS = 600_000; // 10 minutes — matches API revalidate: 600
+const RATE_REFRESH_MS = 600_000; // 10 minutes
 
 export default function Home() {
-  const [country, setCountry] = useState("CN");
+  const [country, setCountry] = useState("JP");
+  const [homeCurrency, setHomeCurrency] = useState<string>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("homeCurrency") ?? "USD";
+    }
+    return "USD";
+  });
   const [amount, setAmount] = useState("");
-  const [bank, setBank] = useState<BankName>("KBank");
+  const [bank, setBank] = useState<BankName>("Standard card");
   const [method, setMethod] = useState<PaymentMethod>("Credit Card");
   const [results, setResults] = useState<ComparisonResult[] | null>(null);
 
   // Comparison mode
   const [compareMode, setCompareMode] = useState(false);
-  const [bank2, setBank2] = useState<BankName>("SCB");
+  const [bank2, setBank2] = useState<BankName>("No-fee card");
   const [method2, setMethod2] = useState<PaymentMethod>("Cash");
   const [lang, setLang] = useState<Lang>(() => {
     if (typeof window !== "undefined") {
-      return (localStorage.getItem("lang") as Lang) ?? "th";
+      return (localStorage.getItem("lang") as Lang) ?? "en";
     }
-    return "th";
+    return "en";
   });
 
   const [dark, setDark] = useState(() => {
@@ -60,6 +60,27 @@ export default function Home() {
     }
   }, [dark]);
 
+  // Auto-detect home currency from IP on first visit (no saved preference)
+  useEffect(() => {
+    if (localStorage.getItem("homeCurrency")) return;
+    fetch("/api/geo")
+      .then((r) => r.json())
+      .then((data) => {
+        const currency = data.currency as string;
+        const supported = HOME_CURRENCIES.map((c) => c.code);
+        if (currency && supported.includes(currency)) {
+          setHomeCurrency(currency);
+          localStorage.setItem("homeCurrency", currency);
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  function handleHomeCurrencyChange(v: string) {
+    setHomeCurrency(v);
+    localStorage.setItem("homeCurrency", v);
+  }
+
   const t = translations[lang];
 
   function toggleLang() {
@@ -68,7 +89,7 @@ export default function Home() {
     localStorage.setItem("lang", next);
   }
 
-  const [midRate, setMidRate] = useState<number>(FALLBACK_RATES["CNY"]);
+  const [midRate, setMidRate] = useState<number>(1.0);
   const [rateTimestamp, setRateTimestamp] = useState<string | null>(null);
   const [rateFallback, setRateFallback] = useState(false);
   const [rateLoading, setRateLoading] = useState(true);
@@ -84,32 +105,31 @@ export default function Home() {
 
   function handleMethodChange(m: PaymentMethod) {
     setMethod(m);
-    // Cash is not tied to any bank — use "Cash" as a sentinel
     if (m === "Cash") {
       setBank("Cash" as BankName);
     } else if (bank === ("Cash" as BankName)) {
-      setBank("KBank");
+      setBank("Standard card");
     }
+    // ATM and all other methods keep the current card tier selection
   }
 
-  // Fetch live FX rate; re-runs whenever the destination currency changes
+  // Fetch live FX rate; re-runs whenever the destination currency or home currency changes
   useEffect(() => {
     setRateLoading(true);
-    const fallback = FALLBACK_RATES[currency] ?? 4.9;
     let disposed = false;
 
     const fetchRate = () => {
-      fetch(`/api/fx?currency=${currency}`)
+      fetch(`/api/fx?from=${currency}&to=${homeCurrency}`)
         .then((r) => r.json())
         .then((data) => {
           if (disposed) return;
-          setMidRate(data.rate ?? fallback);
+          setMidRate(data.rate ?? 1.0);
           setRateTimestamp(data.timestamp ?? new Date().toISOString());
           setRateFallback(!!data.fallback);
         })
         .catch(() => {
           if (disposed) return;
-          setMidRate(fallback);
+          setMidRate(1.0);
           setRateFallback(true);
           setRateTimestamp(new Date().toISOString());
         })
@@ -125,7 +145,7 @@ export default function Home() {
       disposed = true;
       clearInterval(timer);
     };
-  }, [currency]);
+  }, [currency, homeCurrency]);
 
   // Auto-compare whenever amount or live rate changes
   useEffect(() => {
@@ -140,9 +160,9 @@ export default function Home() {
   const parsedAmount = parseFloat(amount);
   const vat = parsedAmount > 0 ? getVatRefund(parsedAmount, country) : null;
 
-  /** Decimal places for displayed FX rate depend on currency magnitude */
-  function formatRate(rate: number, curr: string): string {
-    const decimals = ["SGD", "HKD", "TWD"].includes(curr) ? 2 : 4;
+  /** Format rate — use more decimals for small-unit currencies */
+  function formatRate(rate: number, foreignCurr: string): string {
+    const decimals = ["JPY", "KRW", "IDR", "VND"].includes(foreignCurr) ? 6 : 4;
     return rate.toFixed(decimals);
   }
 
@@ -174,9 +194,9 @@ export default function Home() {
                 className="flex items-center gap-0.5 rounded-lg bg-blue-700 px-2.5 py-1.5 text-xs font-semibold"
                 aria-label="Switch language"
               >
-                <span className={lang === "th" ? "text-white" : "text-blue-300"}>TH</span>
-                <span className="text-blue-400 mx-0.5">|</span>
                 <span className={lang === "en" ? "text-white" : "text-blue-300"}>EN</span>
+                <span className="text-blue-400 mx-0.5">|</span>
+                <span className={lang === "th" ? "text-white" : "text-blue-300"}>TH</span>
               </button>
             </div>
           </div>
@@ -190,7 +210,7 @@ export default function Home() {
                 {/* Rate row */}
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-semibold text-white">
-                    1 {currency} = {formatRate(midRate, currency)} THB
+                    1 {currency} = {formatRate(midRate, currency)} {homeCurrency}
                   </span>
                   <span
                     title="อัตรากลางจากตลาด (Mid-market rate) อาจแตกต่างจากอัตราที่ธนาคารเรียกเก็บจริง"
@@ -206,19 +226,18 @@ export default function Home() {
                 {/* Source row */}
                 <div className="mt-1 space-y-0.5 opacity-70">
                   <p className="text-xs text-blue-200">
-                    แหล่งที่มา: exchangerate.host (Mid-market rate)
+                    Source: exchangerate.host (mid-market rate)
                   </p>
                   {rateTimestamp && (
                     <p className="text-xs text-blue-200">
-                      อัปเดตล่าสุด:{" "}
-                      {new Date(rateTimestamp).toLocaleString("th-TH", {
+                      Updated:{" "}
+                      {new Date(rateTimestamp).toLocaleString("en", {
                         day: "numeric",
                         month: "short",
                         year: "numeric",
                         hour: "2-digit",
                         minute: "2-digit",
-                      })}{" "}
-                      น.
+                      })}
                     </p>
                   )}
                 </div>
@@ -235,11 +254,13 @@ export default function Home() {
           amount={amount}
           bank={bank}
           method={method}
+          homeCurrency={homeCurrency}
           t={t}
           onCountryChange={handleCountryChange}
           onAmountChange={setAmount}
           onBankChange={setBank}
           onMethodChange={handleMethodChange}
+          onHomeCurrencyChange={handleHomeCurrencyChange}
         />
 
         {vat?.vatEligible && (
@@ -259,9 +280,10 @@ export default function Home() {
             results={results}
             selectedBank={bank}
             selectedMethod={method}
-            amountCNY={parsedAmount}
+            amountForeign={parsedAmount}
             midRate={midRate}
             currency={currency}
+            homeCurrency={homeCurrency}
             rateTimestamp={rateTimestamp}
             rateFallback={rateFallback}
             refreshMinutes={Math.floor(RATE_REFRESH_MS / 60_000)}
@@ -278,6 +300,7 @@ export default function Home() {
               midRate={midRate}
               amountForeign={parsedAmount}
               currency={currency}
+              homeCurrency={homeCurrency}
               countryCode={country}
               t={t}
               lang={lang}
@@ -294,7 +317,26 @@ export default function Home() {
               amountForeign={parsedAmount}
               midRate={midRate}
               method={method}
+              homeCurrency={homeCurrency}
               t={t}
+            />
+          ) : null;
+        })()}
+
+        {/* Share result */}
+        {results && parsedAmount > 0 && (() => {
+          const cheapest = results.find((r) => r.isCheapest);
+          const selected = results.find((r) => r.bank === bank && r.method === method);
+          const mostExpensive = results.reduce((a, b) => (a.totalHome > b.totalHome ? a : b));
+          const savings = cheapest ? mostExpensive.totalHome - cheapest.totalHome : 0;
+          return selected ? (
+            <SharePanel
+              homeCurrency={homeCurrency}
+              currency={currency}
+              amountForeign={parsedAmount}
+              totalHome={selected.totalHome}
+              bestMethod={cheapest ? `${cheapest.bank} (${cheapest.method})` : `${selected.bank} (${selected.method})`}
+              savings={savings}
             />
           ) : null;
         })()}
@@ -319,6 +361,7 @@ export default function Home() {
                 midRate={midRate}
                 amountForeign={parsedAmount}
                 currency={currency}
+                homeCurrency={homeCurrency}
                 bank1={bank}
                 method1={method}
                 bank2={bank2}
@@ -333,6 +376,12 @@ export default function Home() {
 
         {/* Learn Before You Go */}
         <LearnSection countryCode={country} t={t} lang={lang} />
+
+        {/* Popular currency pair quick links */}
+        <PopularPairs />
+
+        {/* Travel money tips */}
+        <TravelMoneyTips />
       </div>
     </main>
   );

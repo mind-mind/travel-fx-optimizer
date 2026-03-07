@@ -1,127 +1,92 @@
 /**
- * cards.ts — Credit card recommendation config for the smart card engine.
+ * cards.ts — Generic card tier recommendations for international travelers.
  *
- * How to update:
- *   - Add / remove entries in RECOMMENDED_CARDS.
- *   - Update fxFeePercent and lastVerified whenever you re-verify fees.
- *   - Set approximate: true for any value not taken from a primary bank source.
- *
- * IMPORTANT: This data is for educational comparison only.
- * Always link users to the bank's official page (sourceUrl) for final verification.
+ * These replace Thai-bank-specific suggestions with globally relevant
+ * card categories that any traveler worldwide can identify with.
  */
 
 export interface CardSuggestion {
   id: string;
-  /** Card display name */
   name: string;
-  /** Issuing bank */
   bank: string;
-  /** Bank FX transaction fee as % of converted amount */
   fxFeePercent: number;
-  /** Annual fee display label (e.g. "฿895/ปี" or "ฟรี") */
   annualFeeLabel: string;
-  /** Whether annual fee can typically be waived (e.g. by spending threshold) */
   annualFeeWaivable: boolean;
-  /** Key selling points — Thai */
   highlights: string[];
-  /** Key selling points — English */
   highlightsEn: string[];
-  /** Whether fxFeePercent is an exact verified figure (false = approximate) */
   approximate: boolean;
-  /** Primary source URL for fee verification */
   sourceUrl: string;
-  /** ISO date when data was last checked */
   lastVerified: string;
 }
 
-/**
- * Below the fee level that triggers the savings simulation.
- * "Switching to a ~2% FX card" is used as the reference benchmark.
- */
-export const SAVINGS_BENCHMARK_FX_PERCENT = 2.0;
+export const SAVINGS_BENCHMARK_FX_PERCENT = 1.5;
 
-/**
- * totalTHB threshold above which we show the savings simulation.
- * Spec: show when trip amount > 10,000 THB equivalent.
- */
-export const SAVINGS_SIMULATION_THRESHOLD_THB = 10_000;
+/** Always show savings simulation regardless of trip amount */
+export const SAVINGS_SIMULATION_THRESHOLD_HOME = 0;
 
-/**
- * FX fee thresholds that drive the green / yellow / red badge.
- *
- * green  : fxFeePercent ≤ LOW_FX_THRESHOLD
- * yellow : LOW_FX_THRESHOLD < fxFeePercent ≤ HIGH_FX_THRESHOLD
- * red    : fxFeePercent > HIGH_FX_THRESHOLD
- */
-export const LOW_FX_THRESHOLD = 2.0;   // ≤ 2.0% → green
+export const LOW_FX_THRESHOLD = 1.5;   // ≤ 1.5% → green
 export const HIGH_FX_THRESHOLD = 2.5;  // > 2.5% → red
 
-/**
- * Recommended cards — sorted ascending by fxFeePercent.
- * The UI renders the top N (default 3) lowest-fee cards from this list.
- */
 export const RECOMMENDED_CARDS: CardSuggestion[] = [
   {
-    id: "ttb-flash",
-    name: "TTB Flash Card",
-    bank: "TTB",
-    fxFeePercent: 1.5,
-    annualFeeLabel: "ฟรี",
+    id: "zero-fee-digital",
+    name: "Zero-fee travel card",
+    bank: "e.g. Wise, Revolut, Charles Schwab",
+    fxFeePercent: 0,
+    annualFeeLabel: "Free",
     annualFeeWaivable: false,
     highlights: [
-      "ค่าธรรมเนียม FX ประมาณการ ~1.5%",
-      "ไม่มีค่าธรรมเนียมรายปี",
-      "เหมาะสำหรับนักเดินทางบ่อย",
+      "ค่าธรรมเนียม FX 0% — ไม่มีค่าอัตราแลกเปลี่ยน",
+      "ใช้อัตราแลกเปลี่ยนระหว่างธนาคาร (interbank rate)",
+      "เหมาะที่สุดสำหรับนักเดินทางบ่อย",
     ],
     highlightsEn: [
-      "Competitive estimated FX fee ~1.5%",
-      "No annual fee",
-      "May suit frequent travelers",
+      "0% foreign transaction fee",
+      "True interbank exchange rates — no markup",
+      "Best option for frequent travelers",
     ],
     approximate: true,
-    sourceUrl: "https://www.ttbbank.com/en/personal/credit-card",
-    lastVerified: "2026-03-03",
+    sourceUrl: "https://wise.com",
+    lastVerified: "2026-03-07",
   },
   {
-    id: "uob-yolo",
-    name: "UOB YOLO Card",
-    bank: "UOB Thailand",
-    fxFeePercent: 1.85,
-    annualFeeLabel: "฿895/ปี",
-    annualFeeWaivable: true,
+    id: "travel-rewards",
+    name: "Travel rewards card",
+    bank: "e.g. Chase Sapphire, Amex Platinum",
+    fxFeePercent: 0,
+    annualFeeLabel: "$95–$695/yr",
+    annualFeeWaivable: false,
     highlights: [
-      "ค่าธรรมเนียม FX ประมาณการ 1.85%",
-      "ค่าธรรมเนียมรายปีอาจยกเว้นได้",
-      "ใช้งานออนไลน์และต่างประเทศ",
+      "ค่าธรรมเนียม FX 0% พร้อม rewards points",
+      "สิทธิพิเศษสำหรับนักเดินทาง lounge access",
+      "เหมาะสำหรับผู้ที่เดินทางปีละหลายครั้ง",
     ],
     highlightsEn: [
-      "Estimated FX fee: 1.85%",
-      "Annual fee may be waivable",
-      "May suit online & overseas spending",
-    ],
-    approximate: false,
-    sourceUrl: "https://www.uob.co.th/personal/announcement/index.page",
-    lastVerified: "2026-03-03",
-  },
-  {
-    id: "krungsri-visa-signature",
-    name: "Krungsri Visa Signature",
-    bank: "Krungsri",
-    fxFeePercent: 2.0,
-    annualFeeLabel: "฿2,000/ปี",
-    annualFeeWaivable: true,
-    highlights: [
-      "ค่าธรรมเนียม FX ประมาณการ ~2.0%",
-      "สิทธิประโยชน์ท่องเที่ยวเพิ่มเติม",
-      "ค่ารายปีอาจยกเว้นได้เมื่อใช้ครบเงื่อนไข",
-    ],
-    highlightsEn: [
-      "Estimated FX fee: ~2.0%",
-      "Travel benefits may be included",
-      "Annual fee may be waivable",
+      "0% foreign transaction fee with travel rewards",
+      "Travel perks: lounge access, trip protection",
+      "Ideal for frequent flyers and travelers",
     ],
     approximate: true,
-    sourceUrl: "https://www.krungsri.com/en/personal/credit-card",
-    lastVerified: "2026-03-03",
+    sourceUrl: "https://creditcards.chase.com/travel-credit-cards/sapphire/preferred",
+    lastVerified: "2026-03-07",
+  },
+  {
+    id: "low-fee-travel",
+    name: "Low-fee travel card",
+    bank: "Various issuers (1.5% FX)",
+    fxFeePercent: 1.5,
+    annualFeeLabel: "Free – $95/yr",
+    annualFeeWaivable: true,
+    highlights: [
+      "ค่าธรรมเนียม FX ต่ำ (~1.5%)",
+      "ดีกว่าบัตรธนาคารทั่วไป",
+    ],
+    highlightsEn: [
+      "Low FX fee (~1.5%) — better than a standard bank card",
+      "Widely available from many issuers",
+    ],
+    approximate: true,
+    sourceUrl: "https://www.nerdwallet.com/best/credit-cards/no-foreign-transaction-fee",
+    lastVerified: "2026-03-07",
   },
 ];

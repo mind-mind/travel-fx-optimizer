@@ -1,63 +1,50 @@
 /**
- * Thai bank credit card FX fee reference data.
+ * Generic card fee tiers for international travelers.
  *
- * FX fee = the "Foreign Transaction Fee" (ค่าธรรมเนียมการแปลงสกุลเงิน) charged
- * by the ISSUING Thai bank on top of the Visa/Mastercard mid-market rate.
+ * FX fee = the "Foreign Transaction Fee" charged by the card issuer on every
+ * foreign-currency purchase, on top of the Visa/Mastercard/Amex mid-market rate.
  *
- * Regulatory context (BOT):
- *   The Bank of Thailand sets the MAXIMUM foreign transaction fee at 2.5%.
- *   Most Thai banks charge exactly this maximum. UOB Thailand is the only
- *   major issuer currently offering a below-maximum rate (1.85%).
+ * These four tiers cover the range of cards available worldwide:
+ *   no_fee   : Wise, Revolut, Charles Schwab, Starling, Monzo — 0% FX fee
+ *   travel   : Chase Sapphire, Capital One Venture, Barclaycard Rewards — ~1.5%
+ *   standard : Most typical bank debit/credit cards — ~2.5%
+ *   basic    : Some older or regional bank cards — ~3.5%
  *
- * Last bulk review: 2026-03-03
- * Source: each bank's publicly published fee schedule (linked per entry).
- * Note: These rates are stable and change infrequently; verify with each
- *       bank's official fee table before any customer-facing publication.
+ * Always verify the exact rate with your card issuer before traveling.
+ * Last reviewed: 2026-03-07
  */
 export const banks = {
-  kbank: {
-    name: "KBank",
-    fxFeePercent: 2.5,
-    sourceUrl: "https://www.kasikornbank.com/th/personal/credit-card/pages/default.aspx",
-    lastVerified: "2026-03-03",
+  no_fee: {
+    name: "No-fee card" as const,
+    fxFeePercent: 0,
+    examples: "Wise, Revolut, Charles Schwab, Starling",
+    description: "0% FX fee (e.g. Wise, Revolut, Charles Schwab, Starling)",
+    sourceUrl: "https://wise.com",
+    lastVerified: "2026-03-07",
   },
-  scb: {
-    name: "SCB",
-    fxFeePercent: 2.5,
-    sourceUrl: "https://www.scb.co.th/th/personal-banking/cards/credit-cards/credit-card-service-fees.html",
-    lastVerified: "2026-03-03",
+  travel: {
+    name: "Travel card" as const,
+    fxFeePercent: 1.5,
+    examples: "Chase Sapphire, Capital One, Barclaycard",
+    description: "Low-fee travel/rewards card (e.g. Chase Sapphire, Capital One Venture)",
+    sourceUrl: "https://www.nerdwallet.com/best/credit-cards/no-foreign-transaction-fee",
+    lastVerified: "2026-03-07",
   },
-  ktc: {
-    name: "KTC",
+  standard: {
+    name: "Standard card" as const,
     fxFeePercent: 2.5,
-    sourceUrl: "https://www.ktc.co.th/en/credit-card/fees-and-rates",
-    lastVerified: "2026-03-03",
+    examples: "Most Visa / Mastercard",
+    description: "Typical bank credit/debit card (~2–2.5% FX fee)",
+    sourceUrl: "https://www.nerdwallet.com/article/credit-cards/foreign-transaction-fees",
+    lastVerified: "2026-03-07",
   },
-  bangkok: {
-    name: "Bangkok Bank",
-    fxFeePercent: 2.5,
-    sourceUrl: "https://www.bangkokbank.com/th-TH/Personal/Other-Services/View-Rates/Fees-and-Conditions-for-Bangkok-Bank-Credit-Cards",
-    lastVerified: "2026-03-03",
-  },
-  krungsri: {
-    name: "Krungsri",
-    fxFeePercent: 2.5,
-    sourceUrl: "https://www.krungsri.com/en/personal/credit-card",
-    lastVerified: "2026-03-03",
-  },
-  ttb: {
-    name: "TTB",
-    fxFeePercent: 2.5,
-    sourceUrl: "https://www.ttbbank.com/en/personal/credit-card",
-    lastVerified: "2026-03-03",
-  },
-  uob: {
-    name: "UOB Thailand",
-    // UOB Thailand charges 1.85% — the lowest published FX fee among major
-    // Thai issuers, confirmed via their official announcement page.
-    fxFeePercent: 1.85,
-    sourceUrl: "https://www.uob.co.th/personal/announcement/index.page",
-    lastVerified: "2026-03-03",
+  basic: {
+    name: "Basic card" as const,
+    fxFeePercent: 3.5,
+    examples: "Older / regional bank cards",
+    description: "Older or basic bank card (~3–3.5% FX fee)",
+    sourceUrl: "https://www.nerdwallet.com/article/credit-cards/foreign-transaction-fees",
+    lastVerified: "2026-03-07",
   },
 } as const;
 

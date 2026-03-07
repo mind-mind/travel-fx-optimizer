@@ -1,15 +1,16 @@
 export const th = {
   // Header
-  forTravelers: "สำหรับนักเดินทางชาวไทย",
-  title: "เครื่องมือเปรียบเทียบวิธีจ่ายเงินต่างประเทศ",
-  subtitle: "เช็คก่อนจ่าย ป้องกันเสียเงินฟรี",
+  forTravelers: "สำหรับนักเดินทางทุกสัญชาติ",
+  title: "TravelWiseRate — เปรียบเทียบอัตราแลกเปลี่ยน",
+  subtitle: "เช็คก่อนจ่าย ป้องกันเสียเงินโดยไม่จำเป็น",
 
   // Form labels
   countryLabel: "ประเทศปลายทาง",
   cityLabel: "เลือกเมือง",
   cityOptional: "(ถ้ามี)",
   amountLabel: "จำนวนเงิน",
-  bankLabel: "ธนาคารของคุณ",
+  bankLabel: "ประเภทบัตรของคุณ",
+  homeCurrencyLabel: "สกุลเงินของคุณ",
   methodLabel: "วิธีการชำระเงิน",
 
   // Results
@@ -18,7 +19,7 @@ export const th = {
   lowestCost: "ต้นทุนต่ำสุด",
   lowestCostTie: "ต้นทุนต่ำสุด (เท่ากัน)",
   maxPotentialSaving: "ประหยัดได้สูงสุด",
-  totalCost: "ยอดรวม (บาท)",
+  totalCost: "ยอดรวม (เงินล้าน)",
   fxFee: "ค่าธรรมเนียม FX",
   spreadCost: "ส่วนต่างอัตราแลกเปลี่ยน",
   effectiveRate: "อัตราที่ใช้จริง",
@@ -59,7 +60,7 @@ export const th = {
 
   // Best-option callout
   bestMethodNow: "🏆 วิธีที่คุ้มที่สุดตอนนี้:",
-  estimationNote: "ผลการคำนวณเป็นการประมาณจากอัตรากลางและค่าธรรมเนียมเฉลี่ยของบัตรไทย",
+  estimationNote: "ผลการคำนวณเป็นการประมาณจากอัตรากลางและค่าธรรมเนียมเฉลี่ยของบัตรแต่ละประเภท",
 
   // Insight Panel
   insightTitle: "เทียบกับราคาจริงในตลาด (Mid-rate)",
@@ -111,7 +112,7 @@ export const th = {
   guideBack: "← กลับหน้าคำนวณ",
   guideHero: "คู่มือการเดินทาง",
   guideHeroTitle: "วิธีจ่ายเงินใน",
-  guideHeroSuf: "ฉบับนักเดินทางไทย",
+  guideHeroSuf: "คู่มือสำหรับนักเดินทาง",
   guideBestCardTitle: "ใช้บัตรอะไรดี?",
   guideBestCardPre: "ไป",
   guideBestCardRec: "คำแนะนำ",
@@ -152,22 +153,23 @@ export const th = {
   cardRecTransparencyNote: "ค่าธรรมเนียม FX เป็นการประมาณการจากข้อมูลที่เปิดเผยต่อสาธารณะ และอาจแตกต่างกันตามประเภทบัตรและโปรโมชัน กรุณาตรวจสอบรายละเอียดกับธนาคารผู้ออกบัตรก่อนสมัคร เนื้อหานี้เป็นข้อมูลเพื่อการศึกษาเท่านั้น ไม่ใช่คำแนะนำด้านการเงิน",
   cardRecOnlyCreditCard: "คำแนะนำบัตรใช้ได้เฉพาะการชำระด้วยบัตรเครดิต",
   cardRecTopN: "บัตรที่มีค่าธรรมเนียม FX ประมาณการต่ำ",
-  cardRecCardEstSaving: "อาจประหยัดได้โดยประมาณ ~฿",
+  cardRecCardEstSaving: "อาจประหยัดได้โดยประมาณ ~",
   cardRecCardEstSavingSuf: "จากยอดนี้ (ประมาณการ)",
 };
 
 export const en: typeof th = {
   // Header
-  forTravelers: "For Thai Travelers",
-  title: "Travel Payment Optimizer",
-  subtitle: "Check before you pay — stop wasting money on bad FX",
+  forTravelers: "For International Travelers",
+  title: "TravelWiseRate — Compare FX Rates",
+  subtitle: "Check before you pay — stop losing money on bad exchange rates",
 
   // Form labels
   countryLabel: "Destination Country",
   cityLabel: "City",
   cityOptional: "(optional)",
   amountLabel: "Amount",
-  bankLabel: "Your Bank",
+  bankLabel: "Your Card Type",
+  homeCurrencyLabel: "Your Currency",
   methodLabel: "Payment Method",
 
   // Results
@@ -176,7 +178,7 @@ export const en: typeof th = {
   lowestCost: "Lowest estimated cost",
   lowestCostTie: "Lowest estimated cost (tie)",
   maxPotentialSaving: "Max potential saving",
-  totalCost: "Total Cost (THB)",
+  totalCost: "Total Cost",
   fxFee: "FX Fee",
   spreadCost: "Spread Cost",
   effectiveRate: "Effective Rate",
@@ -217,7 +219,7 @@ export const en: typeof th = {
 
   // Best-option callout
   bestMethodNow: "🏆 Best method right now:",
-  estimationNote: "Calculations are estimates based on mid-market rates and average Thai bank card fees.",
+  estimationNote: "Calculations are estimates based on mid-market rates and typical card fee tiers. Actual rates charged by your card issuer may vary.",
 
   // Insight Panel
   insightTitle: "Compare vs Mid-market Rate",
@@ -240,12 +242,12 @@ export const en: typeof th = {
   learnLink1Pre: "Best card to use in",
   learnLink1Suf: "?",
   learnLink1Desc: "Compare Thai credit cards for the best value in this country",
-  learnLink2: "What fees apply when using Thai cards abroad?",
+  learnLink2: "What fees apply when using your card abroad?",
   learnLink2Desc: "FX Fee, Spread, Foreign Transaction Fee — know before you pay",
-  learnLink3: "What is DCC and why avoid paying in THB?",
+  learnLink3: "What is DCC and why should you avoid it?",
   learnLink3Desc: "The risks of Dynamic Currency Conversion and how to avoid it",
-  learnLink4Pre: "Compare Thai bank rates for",
-  learnLink4Desc: "View fees and spread for each bank",
+  learnLink4Pre: "Compare card rates for",
+  learnLink4Desc: "View FX fees and spread for each card tier",
 
   // Comparison Panel
   compareBadge: "Comparison Mode",
@@ -269,7 +271,7 @@ export const en: typeof th = {
   guideBack: "← Back to Calculator",
   guideHero: "Travel Guide",
   guideHeroTitle: "How to Pay in",
-  guideHeroSuf: "— A Guide for Thai Travelers",
+  guideHeroSuf: "— International Traveler's Guide",
   guideBestCardTitle: "Best card to use?",
   guideBestCardPre: "Going to",
   guideBestCardRec: "Recommendation",
@@ -310,10 +312,10 @@ export const en: typeof th = {
   cardRecTransparencyNote: "FX fees are estimated based on publicly available information and may vary by card type and promotion. Please confirm details with the issuing bank before applying. This is financial educational content only, not investment or financial advice.",
   cardRecOnlyCreditCard: "Card suggestions are shown for Credit Card payment method only.",
   cardRecTopN: "Cards with Competitive Estimated FX Fees",
-  cardRecCardEstSaving: "Potential saving ~฿",
-  cardRecCardEstSavingSuf: "based on this amount (estimated)",
+  cardRecCardEstSaving: "Potential saving ~",
+  cardRecCardEstSavingSuf: "on this amount (estimated)",
 };
 
-export const translations = { th, en } as const;
+export const translations = { en, th } as const;
 export type Lang = keyof typeof translations;
 export type Translations = typeof th;

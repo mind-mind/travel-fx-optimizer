@@ -3,8 +3,8 @@ import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Travel Payment Optimizer",
-  description: "Find the cheapest way to pay abroad as a Thai traveler",
+  title: "TravelWiseRate — Compare Currency Exchange Rates",
+  description: "Compare currency exchange rates and payment method costs for international travelers. Find the cheapest way to pay abroad — credit card, cash, or mobile pay.",
   verification: {
     google: "AVOj9qFgtPCQrtA-OfOtnc1aCsMEDjga5elLe6JNVnk",
   },

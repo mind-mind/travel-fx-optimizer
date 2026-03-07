@@ -3,38 +3,39 @@
 import { ComparisonResult } from "@/lib/types";
 import { BankName, PaymentMethod } from "@/lib/types";
 import { Translations } from "@/data/translations";
-import { banks } from "@/data/banks";
-
-// Lookup bank metadata (sourceUrl, lastVerified) by display name
-const bankMeta = Object.fromEntries(
-  Object.values(banks).map((b) => [b.name, { sourceUrl: b.sourceUrl, lastVerified: b.lastVerified }])
-) as Record<string, { sourceUrl: string; lastVerified: string }>;
 
 interface Props {
   results: ComparisonResult[];
   selectedBank: BankName;
   selectedMethod: PaymentMethod;
-  amountCNY: number;
+  amountForeign: number;
   midRate: number;
   currency: string;
+  homeCurrency: string;
   rateTimestamp: string | null;
   rateFallback: boolean;
   refreshMinutes: number;
   t: Translations;
 }
 
-const fmt = (n: number) =>
-  new Intl.NumberFormat("th-TH", {
-    style: "currency",
-    currency: "THB",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(n);
+function makeFmt(homeCurrency: string) {
+  return (n: number) =>
+    new Intl.NumberFormat("en", {
+      style: "currency",
+      currency: homeCurrency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(n);
+}
 
 const methodIcon: Record<string, string> = {
   "Credit Card": "💳",
+  "Debit Card": "🏧",
+  "Apple Pay": "🍎",
+  "Google Pay": "🔵",
   Alipay: "🔵",
   "WeChat Pay": "🟢",
+  ATM: "🏧",
   Cash: "💵",
 };
 
@@ -42,32 +43,34 @@ export default function ResultsSection({
   results,
   selectedBank,
   selectedMethod,
-  amountCNY,
+  amountForeign,
   midRate,
   currency,
+  homeCurrency,
   rateTimestamp,
   rateFallback,
   refreshMinutes,
   t,
 }: Props) {
+  const fmt = makeFmt(homeCurrency);
   const selected = results.find(
     (r) => r.bank === selectedBank && r.method === selectedMethod
   );
   const cheapestAll = results.filter((r) => r.isCheapest);
   const cheapest = cheapestAll[0] ?? null;
   const isTie = cheapestAll.length > 1;
-  const mostExpensive = results.reduce((a, b) => (a.totalTHB > b.totalTHB ? a : b));
-  const maxSavings = cheapest ? mostExpensive.totalTHB - cheapest.totalTHB : 0;
+  const mostExpensive = results.reduce((a, b) => (a.totalHome > b.totalHome ? a : b));
+  const maxSavings = cheapest ? mostExpensive.totalHome - cheapest.totalHome : 0;
 
   const isSelectedCheapest = selected?.isCheapest ?? false;
   const potentialSaving =
-    selected && cheapest && !isSelectedCheapest ? selected.totalTHB - cheapest.totalTHB : 0;
+    selected && cheapest && !isSelectedCheapest ? selected.totalHome - cheapest.totalHome : 0;
 
   // Separate cash from bank-tied results
   const cashResult = results.find((r) => r.bank === "Cash");
   const bankNames = [...new Set(results.filter((r) => r.bank !== "Cash").map((r) => r.bank))];
   const updatedAtLabel = rateTimestamp
-    ? new Date(rateTimestamp).toLocaleTimeString("th-TH", {
+    ? new Date(rateTimestamp).toLocaleTimeString("en", {
         hour: "2-digit",
         minute: "2-digit",
       })
@@ -119,25 +122,25 @@ export default function ResultsSection({
             <div className="bg-white dark:bg-gray-800 rounded-xl p-3 text-center">
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">{t.totalCost}</p>
               <p className="text-base font-bold text-gray-800 dark:text-gray-100">
-                {fmt(selected.totalTHB)}
+                {fmt(selected.totalHome)}
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-xl p-3 text-center">
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">{t.fxFee}</p>
               <p className="text-base font-bold text-red-500">
-                {fmt(selected.fxFeeTHB)}
+                {fmt(selected.fxFeeHome)}
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-xl p-3 text-center">
               <p className="text-xs text-gray-500 dark:text-gray-400 mb-0.5">{t.spreadCost}</p>
               <p className="text-base font-bold text-orange-500">
-                {fmt(selected.spreadCostTHB)}
+                {fmt(selected.spreadCostHome)}
               </p>
             </div>
           </div>
 
           <p className="text-xs text-gray-500 dark:text-gray-400">
-            {t.effectiveRate}: {selected.effectiveRate.toFixed(4)} THB/{currency} &nbsp;·&nbsp;
+            {t.effectiveRate}: {selected.effectiveRate.toFixed(4)} {homeCurrency}/{currency} &nbsp;·&nbsp;
             {t.fee}: {selected.fxFeePercent}%
           </p>
         </div>
@@ -159,8 +162,8 @@ export default function ResultsSection({
                   ))
                 : <><strong>{cheapest.bank}</strong> — <strong>{cheapest.method}</strong></>
               }{" "}
-              {t.totalOf} {fmt(cheapest.totalTHB)}{" "}
-              (rate {cheapest.effectiveRate.toFixed(4)} THB/{currency})
+              {t.totalOf} {fmt(cheapest.totalHome)}{" "}
+              (rate {cheapest.effectiveRate.toFixed(4)} {homeCurrency}/{currency})
             </p>
           </div>
         </div>
@@ -181,9 +184,9 @@ export default function ResultsSection({
                   <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">💵 Cash</p>
                   <div className="text-right">
                     <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
-                      ประเมินแบบเรียลไทม์ · อัปเดต {updatedAtLabel}
+                      Live estimate · Updated {updatedAtLabel}
                     </p>
-                    <p className="text-xs text-emerald-600 dark:text-emerald-400">ไม่มีค่าธรรมเนียมธนาคาร · อัปเดตทุก {refreshMinutes} นาที</p>
+                    <p className="text-xs text-emerald-600 dark:text-emerald-400">No card fee · Refreshes every {refreshMinutes} min</p>
                   </div>
                 </div>
                 <div
@@ -196,13 +199,13 @@ export default function ResultsSection({
                     <div>
                       <p className="text-sm font-medium text-gray-800 dark:text-gray-100">Cash</p>
                       <p className="text-xs text-gray-400 dark:text-gray-500">
-                        {cashResult.effectiveRate.toFixed(4)} THB/{currency} · 0% fee
+                        {cashResult.effectiveRate.toFixed(4)} {homeCurrency}/{currency} · 0% fee
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-sm font-bold text-gray-800 dark:text-gray-100">
-                      {fmt(cashResult.totalTHB)}
+                      {fmt(cashResult.totalHome)}
                     </p>
                     {cashResult.isCheapest && (
                       <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
@@ -236,24 +239,11 @@ export default function ResultsSection({
                       {rateFallback ? "Estimated" : "Live estimate"}
                     </span>
                   </div>
-                  {bankMeta[bankName] && (
-                    <div className="text-right shrink-0">
-                      <p className="text-xs text-gray-400 dark:text-gray-500">
-                        อัปเดต {updatedAtLabel} · อัปเดตทุก {refreshMinutes} นาที
-                      </p>
-                      <p className="text-xs text-gray-400 dark:text-gray-500">
-                        ตรวจสอบล่าสุด: {bankMeta[bankName].lastVerified}
-                      </p>
-                      <a
-                        href={bankMeta[bankName].sourceUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-blue-500 hover:underline"
-                      >
-                        ดูแหล่งที่มา
-                      </a>
-                    </div>
-                  )}
+                  <div className="text-right shrink-0">
+                    <p className="text-xs text-gray-400 dark:text-gray-500">
+                      Updated {updatedAtLabel} · every {refreshMinutes} min
+                    </p>
+                  </div>
                 </div>
                 <div className="divide-y divide-gray-50 dark:divide-gray-800">
                   {bankResults.map((r) => {
@@ -273,14 +263,14 @@ export default function ResultsSection({
                               {r.method}
                             </p>
                             <p className="text-xs text-gray-400 dark:text-gray-500">
-                              {r.effectiveRate.toFixed(4)} THB/{currency}
+                              {r.effectiveRate.toFixed(4)} {homeCurrency}/{currency}
                               {r.fxFeePercent > 0 ? ` + ${r.fxFeePercent}% fee` : ""}
                             </p>
                           </div>
                         </div>
                         <div className="text-right">
                           <p className="text-sm font-bold text-gray-800 dark:text-gray-100">
-                            {fmt(r.totalTHB)}
+                              {fmt(r.totalHome)}
                           </p>
                           {r.isCheapest && (
                             <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
@@ -320,26 +310,21 @@ export default function ResultsSection({
 
       {/* Disclaimer */}
       <div className="rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-900 p-4 space-y-2">
-        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">ข้อจำกัดความรับผิดชอบ</p>
-        {/* Estimation transparency note — exact wording per spec */}
+        <p className="text-xs font-semibold text-gray-500 dark:text-gray-400">Disclaimer</p>
         <p className="text-xs text-gray-500 dark:text-gray-400 leading-relaxed font-medium">
           {t.estimationNote}
         </p>
         <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
-          เครื่องมือนี้ใช้ข้อมูลอัตราแลกเปลี่ยนแบบ mid-market จาก exchangerate.host
-          และค่าธรรมเนียมที่เปิดเผยต่อสาธารณะของแต่ละธนาคาร
+          Rates from exchangerate.host (mid-market). Actual rates charged by your card issuer may differ.
         </p>
         <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
-          ผลลัพธ์เป็นการประมาณการเพื่อการเปรียบเทียบเท่านั้น อัตราจริงอาจแตกต่างตามช่วงเวลาการตัดยอดและเครือข่ายบัตร
-        </p>
-        <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
-          หมายเหตุ: Alipay/WeChat Pay ในเครื่องมือนี้คำนวณแบบผูกบัตร (card-linked) จึงใช้ % ค่าธรรมเนียม FX ของธนาคารเดียวกับบัตรเครดิต/เดบิต
+          Note: Alipay/WeChat Pay calculations use the card-linked fee (same % as your selected card tier).
         </p>
         <p className="text-xs text-gray-400 dark:text-gray-500">
-          คำนวณจาก {amountCNY.toLocaleString("th-TH")} {currency} · {t.fxSource} {midRate.toFixed(4)} THB
+          Calculated on {amountForeign.toLocaleString("en")} {currency} · mid-market rate {midRate.toFixed(4)} {homeCurrency}/{currency}
         </p>
         <p className="text-xs text-gray-400 dark:text-gray-500">
-          สถานะเรท: {rateFallback ? "Estimated" : "Live estimate"} · อัปเดต {updatedAtLabel} · อัปเดตทุก {refreshMinutes} นาที
+          Rate status: {rateFallback ? "Estimated (fallback)" : "Live estimate"} · Updated {updatedAtLabel} · every {refreshMinutes} min
         </p>
       </div>
     </div>

@@ -9,21 +9,27 @@ export interface Country {
   vatMinAmount?: number;
 }
 
+// Generic card fee tier — replaces Thai-bank-specific names
 export type BankName =
-  | "KBank"
-  | "SCB"
-  | "KTC"
-  | "Bangkok Bank"
-  | "Krungsri"
-  | "TTB"
-  | "UOB Thailand"
+  | "No-fee card"
+  | "Travel card"
+  | "Standard card"
+  | "Basic card"
   | "Cash";
-export type PaymentMethod = "Credit Card" | "Alipay" | "WeChat Pay" | "Cash";
+export type PaymentMethod =
+  | "Credit Card"
+  | "Debit Card"
+  | "Apple Pay"
+  | "Google Pay"
+  | "Alipay"
+  | "WeChat Pay"
+  | "Cash"
+  | "ATM";
 
 export interface FxOption {
   bank: BankName;
   method: PaymentMethod;
-  /** Bank FX fee as a percentage of converted amount */
+  /** Card FX fee as a percentage of converted amount */
   fxFeePercent: number;
   /** Spread above (or below) mid-market as a percentage */
   spreadPercent: number;
@@ -34,16 +40,16 @@ export interface ComparisonResult {
   method: PaymentMethod;
   fxFeePercent: number;
   spreadPercent: number;
-  /** Effective THB/CNY rate = midRate × (1 + spreadPercent/100) */
+  /** Effective home-currency per 1 foreign-currency unit */
   effectiveRate: number;
-  /** FX fee portion in THB */
-  fxFeeTHB: number;
-  /** Spread cost vs mid-market in THB */
-  spreadCostTHB: number;
-  /** Total THB paid */
-  totalTHB: number;
+  /** FX fee portion in home currency */
+  fxFeeHome: number;
+  /** Spread cost vs mid-market in home currency */
+  spreadCostHome: number;
+  /** Total home-currency cost */
+  totalHome: number;
   /** Whether this is the cheapest option */
   isCheapest: boolean;
-  /** How much the user saves vs the most expensive option (THB) */
+  /** How much the user saves vs the most expensive option (home currency) */
   savings: number;
 }

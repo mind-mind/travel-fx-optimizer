@@ -6,7 +6,7 @@ import { Translations } from "@/data/translations";
 import {
   RECOMMENDED_CARDS,
   SAVINGS_BENCHMARK_FX_PERCENT,
-  SAVINGS_SIMULATION_THRESHOLD_THB,
+  SAVINGS_SIMULATION_THRESHOLD_HOME,
   LOW_FX_THRESHOLD,
   HIGH_FX_THRESHOLD,
 } from "@/data/cards";
@@ -16,17 +16,22 @@ interface Props {
   amountForeign: number;
   midRate: number;
   method: PaymentMethod;
+  homeCurrency: string;
   t: Translations;
 }
 
-const fmt = (n: number) =>
-  new Intl.NumberFormat("th-TH", {
+const fmt = (n: number, currency: string) =>
+  new Intl.NumberFormat("en", {
+    style: "currency",
+    currency,
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(n);
 
-const fmtThb = (n: number) =>
-  new Intl.NumberFormat("th-TH", {
+const fmtRound = (n: number, currency: string) =>
+  new Intl.NumberFormat("en", {
+    style: "currency",
+    currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
   }).format(Math.round(n));
@@ -41,21 +46,20 @@ function getFxTier(fee: number): "low" | "mid" | "high" {
 // How many card suggestions to display
 const TOP_N = 3;
 
-export default function CardRecommendation({ selected, amountForeign, midRate, method, t }: Props) {
+export default function CardRecommendation({ selected, amountForeign, midRate, method, homeCurrency, t }: Props) {
   // Only meaningful for card-linked payment methods
   if (method === "Cash") return null;
   if (selected.fxFeePercent === 0) return null;
 
   const tier = getFxTier(selected.fxFeePercent);
-  const midRateTHB = amountForeign * midRate;
+  const midRateHome = amountForeign * midRate;
 
-  // Savings simulation — only if amount > threshold AND switching would help
   const showSavings =
-    selected.totalTHB >= SAVINGS_SIMULATION_THRESHOLD_THB &&
+    selected.totalHome >= SAVINGS_SIMULATION_THRESHOLD_HOME &&
     selected.fxFeePercent > SAVINGS_BENCHMARK_FX_PERCENT;
 
   const potentialSaving = showSavings
-    ? midRateTHB * (selected.fxFeePercent - SAVINGS_BENCHMARK_FX_PERCENT) / 100
+    ? midRateHome * (selected.fxFeePercent - SAVINGS_BENCHMARK_FX_PERCENT) / 100
     : 0;
 
   // Top N lowest-fee cards, sorted ascending
@@ -123,12 +127,12 @@ export default function CardRecommendation({ selected, amountForeign, midRate, m
           </p>
           <p className="text-sm text-blue-800 dark:text-blue-200 leading-relaxed">
             {t.cardRecSavingsPre}{" "}
-            <span className="font-bold">฿{fmtThb(selected.totalTHB)}</span>{" "}
+            <span className="font-bold">{fmtRound(selected.totalHome, homeCurrency)}</span>{" "}
             {t.cardRecSavingsMid}{" "}
             <span className="font-bold">{selected.fxFeePercent}%</span>{" "}
             {t.cardRecSavingsTo}
             <span className="font-bold text-blue-700 dark:text-blue-300">
-              ฿{fmtThb(potentialSaving)}
+              {fmtRound(potentialSaving, homeCurrency)}
             </span>{" "}
             {t.cardRecSavingsSuf}
           </p>
@@ -142,7 +146,7 @@ export default function CardRecommendation({ selected, amountForeign, midRate, m
         </p>
         {topCards.map((card) => {
           const isCurrent = card.fxFeePercent === selected.fxFeePercent;
-          const savingVsCurrent = midRateTHB * (selected.fxFeePercent - card.fxFeePercent) / 100;
+          const savingVsCurrent = midRateHome * (selected.fxFeePercent - card.fxFeePercent) / 100;
           const showCardSaving = !isCurrent && savingVsCurrent > 0;
 
           return (
@@ -196,7 +200,7 @@ export default function CardRecommendation({ selected, amountForeign, midRate, m
               {/* Potential saving vs current selection */}
               {showCardSaving && (
                 <p className="text-xs font-semibold text-green-700 dark:text-green-300">
-                  ✓ {t.cardRecCardEstSaving}{fmtThb(savingVsCurrent)} {t.cardRecCardEstSavingSuf}
+                  ✓ {t.cardRecCardEstSaving}{fmtRound(savingVsCurrent, homeCurrency)} {t.cardRecCardEstSavingSuf}
                 </p>
               )}
 

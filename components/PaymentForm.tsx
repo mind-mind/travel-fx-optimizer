@@ -1,6 +1,7 @@
 "use client";
 
-import { COUNTRIES, BANKS, PAYMENT_METHODS } from "@/lib/fxData";
+import { COUNTRIES, HOME_CURRENCIES, getAvailableMethods } from "@/lib/fxData";
+import { banks } from "@/data/banks";
 import { BankName, PaymentMethod } from "@/lib/types";
 import { Translations } from "@/data/translations";
 
@@ -8,9 +9,29 @@ const PLACEHOLDER_AMOUNT: Record<string, string> = {
   CNY: "5000",
   JPY: "10000",
   KRW: "100000",
-  SGD: "1000",
-  HKD: "5000",
-  TWD: "5000",
+  SGD: "500",
+  HKD: "2000",
+  TWD: "3000",
+  USD: "500",
+  EUR: "500",
+  GBP: "300",
+  THB: "5000",
+  AUD: "500",
+  CAD: "500",
+  INR: "20000",
+  AED: "500",
+  CHF: "300",
+};
+
+const METHOD_ICON: Record<string, string> = {
+  "Credit Card": "💳",
+  "Debit Card": "🏧",
+  "Apple Pay": "🍎",
+  "Google Pay": "🔵",
+  "Alipay": "🔵",
+  "WeChat Pay": "🟢",
+  "ATM": "🏧",
+  "Cash": "💵",
 };
 
 interface Props {
@@ -18,11 +39,13 @@ interface Props {
   amount: string;
   bank: BankName;
   method: PaymentMethod;
+  homeCurrency: string;
   t: Translations;
   onCountryChange: (v: string) => void;
   onAmountChange: (v: string) => void;
   onBankChange: (v: BankName) => void;
   onMethodChange: (v: PaymentMethod) => void;
+  onHomeCurrencyChange: (v: string) => void;
 }
 
 export default function PaymentForm({
@@ -30,17 +53,38 @@ export default function PaymentForm({
   amount,
   bank,
   method,
+  homeCurrency,
   t,
   onCountryChange,
   onAmountChange,
   onBankChange,
   onMethodChange,
+  onHomeCurrencyChange,
 }: Props) {
   const selectedCountry = COUNTRIES.find((c) => c.code === country);
+  const availableMethods = getAvailableMethods(country);
 
   return (
     <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 p-6 space-y-5">
-      {/* Country */}
+      {/* Home Currency */}
+      <div>
+        <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
+          {t.homeCurrencyLabel}
+        </label>
+        <select
+          value={homeCurrency}
+          onChange={(e) => onHomeCurrencyChange(e.target.value)}
+          className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          {HOME_CURRENCIES.map((c) => (
+            <option key={c.code} value={c.code}>
+              {c.flag} {c.name} ({c.code})
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Destination Country */}
       <div>
         <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
           {t.countryLabel}
@@ -61,42 +105,50 @@ export default function PaymentForm({
       {/* Amount */}
       <div>
         <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
-          {t.amountLabel} ({selectedCountry?.currency ?? "CNY"})
+          {t.amountLabel} ({selectedCountry?.currency ?? "USD"})
         </label>
         <div className="relative">
           <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500 font-medium text-sm">
-            {selectedCountry?.currency ?? "¥"}
+            {selectedCountry?.currency ?? ""}
           </span>
           <input
             type="number"
             min="0"
             step="any"
-            placeholder={PLACEHOLDER_AMOUNT[selectedCountry?.currency ?? "CNY"] ?? "0"}
+            placeholder={PLACEHOLDER_AMOUNT[selectedCountry?.currency ?? "USD"] ?? "0"}
             value={amount}
             onChange={(e) => onAmountChange(e.target.value)}
-            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 pl-12 pr-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 pl-16 pr-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>
 
-      {/* Bank — hidden when Cash is selected (cash has no bank fee) */}
-      {method !== "Cash" && (
+      {/* Card Type — hidden when Cash or ATM is selected */}
+      {method !== "Cash" && method !== "ATM" && (
         <div>
           <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
             {t.bankLabel}
           </label>
-          <div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
-            {BANKS.map((b) => (
+          <div className="flex flex-col gap-2">
+            {Object.values(banks).map((b) => (
               <button
-                key={b}
-                onClick={() => onBankChange(b as BankName)}
-                className={`flex-none rounded-xl border px-3 py-2.5 text-sm font-medium transition-colors ${
-                  bank === b
+                key={b.name}
+                onClick={() => onBankChange(b.name as BankName)}
+                className={`w-full rounded-xl border px-3 py-2.5 text-left transition-colors ${
+                  bank === b.name
                     ? "border-blue-500 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-400"
                     : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
                 }`}
               >
-                {b}
+                <div className="flex items-center justify-between">
+                  <span className="text-sm font-medium">{b.name}</span>
+                  <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
+                    {b.fxFeePercent === 0 ? "0% fee" : `~${b.fxFeePercent}% fee`}
+                  </span>
+                </div>
+                <p className="text-[11px] text-gray-400 dark:text-gray-500 mt-0.5">
+                  e.g. {b.examples}
+                </p>
               </button>
             ))}
           </div>
@@ -109,20 +161,24 @@ export default function PaymentForm({
           {t.methodLabel}
         </label>
         <div className="grid grid-cols-2 gap-2">
-          {PAYMENT_METHODS.map((m) => (
+          {availableMethods.map((m) => (
             <button
               key={m}
               onClick={() => onMethodChange(m)}
-              className={`rounded-xl border py-2.5 text-sm font-medium transition-colors ${
+              className={`rounded-xl border py-2.5 px-3 text-sm font-medium transition-colors flex items-center gap-2 ${
                 method === m
                   ? "border-blue-500 bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-400"
                   : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
               }`}
             >
-              {m}
+              <span>{METHOD_ICON[m] ?? "💳"}</span>
+              <span>{m}</span>
             </button>
           ))}
         </div>
+        <p className="text-xs text-gray-400 dark:text-gray-500 mt-1.5">
+          Apple Pay & Google Pay use your card&apos;s FX rate.
+        </p>
       </div>
     </div>
   );

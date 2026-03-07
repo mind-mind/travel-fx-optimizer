@@ -10,29 +10,36 @@ interface Props {
   midRate: number;
   amountForeign: number;
   currency: string;
+  homeCurrency: string;
   countryCode: string;
   t: Translations;
   lang: Lang;
 }
 
-const fmt = (n: number) =>
-  new Intl.NumberFormat("th-TH", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(n);
+function makeFmt(homeCurrency: string) {
+  return (n: number) =>
+    new Intl.NumberFormat("en", {
+      style: "currency",
+      currency: homeCurrency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(n);
+}
 
 export default function InsightPanel({
   selected,
   midRate,
   amountForeign,
   currency,
+  homeCurrency,
   countryCode,
   t,
   lang,
 }: Props) {
-  const midRateTHB = amountForeign * midRate;
-  const lossTHB = selected.totalTHB - midRateTHB;
-  const lossPercent = midRateTHB > 0 ? (lossTHB / midRateTHB) * 100 : 0;
+  const fmt = makeFmt(homeCurrency);
+  const midRateHome = amountForeign * midRate;
+  const lossHome = selected.totalHome - midRateHome;
+  const lossPercent = midRateHome > 0 ? (lossHome / midRateHome) * 100 : 0;
   const guide = getGuideByCode(countryCode);
   const countryName = guide
     ? lang === "th"
@@ -40,8 +47,7 @@ export default function InsightPanel({
       : guide.countryNameEn
     : "";
 
-  if (lossTHB <= 0) {
-    // Selected option is at or below mid-rate — show positive framing
+  if (lossHome <= 0) {
     return (
       <div className="rounded-2xl bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 p-5 space-y-3">
         <div className="flex items-center gap-2">
@@ -52,7 +58,7 @@ export default function InsightPanel({
             </p>
             <p className="text-xs text-green-700 dark:text-green-400 mt-0.5">
               {t.insightBetterPre}{" "}
-              <span className="font-semibold">฿{fmt(Math.abs(lossTHB))}</span>{" "}
+              <span className="font-semibold">{fmt(Math.abs(lossHome))}</span>{" "}
               {t.insightBetterSuf}
             </p>
           </div>
@@ -72,7 +78,6 @@ export default function InsightPanel({
 
   return (
     <div className="rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm p-5 space-y-4">
-      {/* Header */}
       <div className="flex items-center gap-2">
         <span className="text-xl">📊</span>
         <p className="text-sm font-bold text-gray-800 dark:text-gray-100">
@@ -80,30 +85,28 @@ export default function InsightPanel({
         </p>
       </div>
 
-      {/* Mid-rate vs actual */}
       <div className="grid grid-cols-2 gap-3">
         <div className="rounded-xl bg-gray-50 dark:bg-gray-800 p-3 text-center">
           <p className="text-xs text-gray-500 dark:text-gray-400 mb-1">{t.insightMidRateLabel}</p>
           <p className="text-base font-bold text-gray-600 dark:text-gray-300">
-            ฿{fmt(midRateTHB)}
+            {fmt(midRateHome)}
           </p>
         </div>
         <div className="rounded-xl bg-red-50 dark:bg-red-950 border border-red-100 dark:border-red-800 p-3 text-center">
           <p className="text-xs text-red-500 dark:text-red-400 mb-1">{t.insightActualCostLabel}</p>
           <p className="text-base font-bold text-red-600 dark:text-red-400">
-            ฿{fmt(selected.totalTHB)}
+            {fmt(selected.totalHome)}
           </p>
         </div>
       </div>
 
-      {/* Loss highlight */}
       <div className="rounded-xl bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 px-4 py-3 space-y-1">
         <div className="flex items-center justify-between">
           <p className="text-sm font-semibold text-red-700 dark:text-red-400">
             {t.insightDiffLabel}
           </p>
           <p className="text-base font-bold text-red-600 dark:text-red-400">
-            +฿{fmt(lossTHB)}
+            +{fmt(lossHome)}
           </p>
         </div>
         <div className="flex items-center justify-between">
@@ -116,19 +119,17 @@ export default function InsightPanel({
         </div>
       </div>
 
-      {/* Explanation */}
       <div className="flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400">
         <span className="shrink-0 mt-0.5">💬</span>
         <p>
           {t.insightLossPre}{" "}
           <span className="font-bold text-red-600 dark:text-red-400">
-            ฿{fmt(lossTHB)}
+            {fmt(lossHome)}
           </span>{" "}
           ({lossPercent.toFixed(2)}%) {t.insightLossSuf}
         </p>
       </div>
 
-      {/* CTA */}
       {guide && (
         <Link
           href={`/${guide.slug}`}
