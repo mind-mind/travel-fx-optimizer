@@ -77,7 +77,7 @@ const FEE_DATA = {
 };
 
 export function GuideContent({ guide }: Props) {
-  const [lang, setLang] = useState<Lang>("th");
+  const [lang, setLang] = useState<Lang>("en");
   const [dark, setDark] = useState(false);
 
   useEffect(() => {
@@ -140,9 +140,9 @@ export function GuideContent({ guide }: Props) {
                 onClick={toggleLang}
                 className="flex items-center gap-0.5 rounded-lg bg-blue-700 px-2.5 py-1.5 text-xs font-semibold"
               >
-                <span className={lang === "th" ? "text-white" : "text-blue-300"}>TH</span>
-                <span className="text-blue-400 mx-0.5">|</span>
                 <span className={lang === "en" ? "text-white" : "text-blue-300"}>EN</span>
+                <span className="text-blue-400 mx-0.5">|</span>
+                <span className={lang === "th" ? "text-white" : "text-blue-300"}>TH</span>
               </button>
             </div>
           </div>
