@@ -1,36 +1,36 @@
 export interface CalculateInput {
-  amountCNY: number;
+  amountForeign: number;
   midRate: number;
   fxFeePercent: number;
   spreadPercent: number;
 }
 
 export interface CalculateOutput {
-  totalTHB: number;
+  totalHome: number;
   fxFeeCost: number;
   spreadCost: number;
 }
 
 /**
- * Calculates total THB cost of a CNY payment, broken down into
- * FX fee and spread components.
+ * Calculates total home-currency cost of a foreign-currency payment, broken
+ * down into FX fee and spread components.
  *
- * @param amountCNY    - Purchase amount in CNY
- * @param midRate      - Mid-market THB per 1 CNY (no markup)
- * @param fxFeePercent - Bank/card FX fee percentage (e.g. 3.0 = 3 %)
- * @param spreadPercent - Exchange-rate spread percentage above mid-market
+ * @param amountForeign - Purchase amount in destination currency
+ * @param midRate       - Mid-market home-currency per 1 foreign-currency unit
+ * @param fxFeePercent  - Card FX fee percentage (e.g. 2.5 = 2.5 %)
+ * @param spreadPercent - Exchange-rate spread % above mid-market
  *                        (negative = better rate than mid, e.g. Cash = -0.5)
  */
 export function calculateTotal({
-  amountCNY,
+  amountForeign,
   midRate,
   fxFeePercent,
   spreadPercent,
 }: CalculateInput): CalculateOutput {
-  const baseTHB = amountCNY * midRate;
-  const fxFeeCost = baseTHB * (fxFeePercent / 100);
-  const spreadCost = baseTHB * (spreadPercent / 100);
-  const totalTHB = baseTHB + fxFeeCost + spreadCost;
+  const baseHome = amountForeign * midRate;
+  const fxFeeCost = baseHome * (fxFeePercent / 100);
+  const spreadCost = baseHome * (spreadPercent / 100);
+  const totalHome = baseHome + fxFeeCost + spreadCost;
 
-  return { totalTHB, fxFeeCost, spreadCost };
+  return { totalHome, fxFeeCost, spreadCost };
 }

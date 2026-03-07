@@ -27,6 +27,13 @@ export const METHOD_SPREAD_PERCENT: Record<string, number> = {
   /** ~1% over mid-market — typical Visa/Mastercard network spread */
   "Credit Card": 1.0,
 
+  /** Same as credit card — debit uses same Visa/Mastercard network */
+  "Debit Card": 1.0,
+
+  /** Apple Pay / Google Pay pass through to the underlying card — identical spread */
+  "Apple Pay": 1.0,
+  "Google Pay": 1.0,
+
   /** ~1.5% — card-linked Alipay applies the card's FX fee + a slightly wider spread */
   "Alipay": 1.5,
 
@@ -34,9 +41,14 @@ export const METHOD_SPREAD_PERCENT: Record<string, number> = {
   "WeChat Pay": 1.5,
 
   /**
+   * ATM: the Visa/Mastercard network gives near mid-market (0.5% spread).
+   * Your card's FX fee still applies. May also have a flat ATM fee (not modelled).
+   */
+  "ATM": 0.5,
+
+  /**
    * −0.5% — a competitive SuperRich / money-changer kiosk can sometimes
    * slightly beat mid-rate; modelled as a small negative spread.
-   * Adjust toward 0% for airport counters, which are less competitive.
    */
   "Cash": -0.5,
 };

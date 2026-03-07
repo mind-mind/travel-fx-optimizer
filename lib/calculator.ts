@@ -8,19 +8,19 @@ export { calculateTotal as calculateCost };
 export type { CalculateOutput as CalculationResult } from "./calculate";
 
 /**
- * Compares all bank × payment-method combinations for a given amount and
- * live mid-market rate.
+ * Compares all card-tier × payment-method combinations for a given amount
+ * and live mid-market rate.
  *
- * @param amountCNY - Purchase amount in CNY
- * @param midRate   - Live mid-market THB per 1 CNY (from /api/fx)
+ * @param amountForeign - Purchase amount in the destination currency
+ * @param midRate       - Live mid-market home-currency per 1 destination-currency unit
  */
 export function calculateComparisons(
-  amountCNY: number,
+  amountForeign: number,
   midRate: number
 ): ComparisonResult[] {
   const base = FX_OPTIONS.map((opt) => {
-    const { totalTHB, fxFeeCost, spreadCost } = calculateTotal({
-      amountCNY,
+    const { totalHome, fxFeeCost, spreadCost } = calculateTotal({
+      amountForeign,
       midRate,
       fxFeePercent: opt.fxFeePercent,
       spreadPercent: opt.spreadPercent,
@@ -29,36 +29,35 @@ export function calculateComparisons(
     return {
       ...opt,
       effectiveRate,
-      fxFeeTHB: fxFeeCost,
-      spreadCostTHB: spreadCost,
-      totalTHB,
+      fxFeeHome: fxFeeCost,
+      spreadCostHome: spreadCost,
+      totalHome,
     };
   });
 
-  const minTotal = Math.min(...base.map((r) => r.totalTHB));
-  const maxTotal = Math.max(...base.map((r) => r.totalTHB));
-  // Epsilon tolerance to handle floating-point rounding (0.001 THB)
+  const minTotal = Math.min(...base.map((r) => r.totalHome));
+  const maxTotal = Math.max(...base.map((r) => r.totalHome));
   const EPSILON = 0.001;
 
   return base.map((r) => ({
     ...r,
-    isCheapest: Math.abs(r.totalTHB - minTotal) < EPSILON,
-    savings: Math.abs(r.totalTHB - minTotal) < EPSILON ? maxTotal - minTotal : 0,
+    isCheapest: Math.abs(r.totalHome - minTotal) < EPSILON,
+    savings: Math.abs(r.totalHome - minTotal) < EPSILON ? maxTotal - minTotal : 0,
   }));
 }
 
 /** @deprecated Use calculateComparisons instead */
 export function calculateOptions(
-  amountCNY: number,
+  amountForeign: number,
   _bank: BankName,
   _method: PaymentMethod,
-  _currency: string = "CNY",
-  midRate: number = 4.9
+  _currency: string = "USD",
+  midRate: number = 1.0
 ): ComparisonResult[] {
-  return calculateComparisons(amountCNY, midRate);
+  return calculateComparisons(amountForeign, midRate);
 }
 
-/** Return only the result for the user's chosen bank + method */
+/** Return only the result for the user's chosen card tier + method */
 export function getSelectedResult(
   results: ComparisonResult[],
   bank: BankName,
@@ -79,24 +78,14 @@ export function getCheapestResult(
 // ---------------------------------------------------------------------------
 
 export interface VatRefundResult {
-  /** Whether the country has any VAT refund scheme at all */
   vatEligible: boolean;
-  /** Whether the entered amount meets the minimum purchase threshold */
   meetsMinimum: boolean;
-  /** Both vatEligible and meetsMinimum are true */
   qualifies: boolean;
-  /** VAT/GST rate as a decimal (e.g. 0.10 for 10%) */
   vatRate: number;
-  /** Minimum purchase amount required in local currency (0 if N/A) */
   minAmount: number;
-  /** Estimated refund in the destination currency (0 if !qualifies) */
   estimatedRefund: number;
 }
 
-/**
- * Returns VAT refund eligibility and estimated refund amount
- * based on verified country-specific thresholds.
- */
 export function getVatRefund(
   amount: number,
   countryCode: string

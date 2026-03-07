@@ -15,8 +15,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const guide = getGuideBySlug(params.slug);
   if (!guide) return { title: "Not Found" };
   return {
-    title: `${guide.countryNameEn} Payment Guide for Thai Travelers`,
-    description: `Compare credit cards, cash, and the best payment methods for Thai travelers in ${guide.countryNameEn} (${guide.currency}). Tips, DCC warnings, and bank comparisons.`,
+    title: `How to Pay in ${guide.countryNameEn} (Avoid FX Fees) | TravelWiseRate`,
+    description: `Learn how to pay in ${guide.countryNameEn} without losing money on exchange rates. Best cards, ATM tips, DCC warnings, and bank comparisons for international travelers.`,
   };
 }
 

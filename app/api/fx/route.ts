@@ -1,50 +1,79 @@
 import { NextRequest, NextResponse } from "next/server";
 
-/** Indicative fallback mid-market rates (X per 1 THB, inverted below) */
-const FALLBACK_RATES: Record<string, number> = {
-  CNY: 4.90,
-  JPY: 0.23,
-  KRW: 0.026,
-  SGD: 25.0,
-  HKD: 4.50,
-  TWD: 1.06,
+/**
+ * Approximate indicative rates as USD per 1 unit of each currency.
+ * Used only when the live API is unavailable.
+ * Source: approximate market rates as of early 2026.
+ */
+const USD_PER_UNIT: Record<string, number> = {
+  USD: 1.0,
+  EUR: 1.08,
+  GBP: 1.27,
+  JPY: 0.0066,
+  THB: 0.028,
+  SGD: 0.74,
+  KRW: 0.00069,
+  CNY: 0.138,
+  AUD: 0.63,
+  CAD: 0.74,
+  HKD: 0.129,
+  TWD: 0.031,
+  CHF: 1.11,
+  AED: 0.272,
+  INR: 0.012,
+  NZD: 0.58,
+  MYR: 0.22,
+  IDR: 0.000062,
+  PHP: 0.017,
+  VND: 0.000040,
+  SAR: 0.267,
+  PLN: 0.246,
+  MXN: 0.049,
+  TRY: 0.028,
 };
 
+/** Cross-rate: units of `to` per 1 `from`, computed via USD as pivot */
+function getFallbackRate(from: string, to: string): number {
+  const fromUSD = USD_PER_UNIT[from];
+  const toUSD = USD_PER_UNIT[to];
+  if (!fromUSD || !toUSD) return 1;
+  return fromUSD / toUSD;
+}
+
 export async function GET(req: NextRequest) {
-  const currency = req.nextUrl.searchParams.get("currency") ?? "CNY";
-  const fallbackRate = FALLBACK_RATES[currency] ?? 4.9;
+  // Support both legacy ?currency=XXX (assumes to=USD) and ?from=XXX&to=YYY
+  const from = req.nextUrl.searchParams.get("from")
+    ?? req.nextUrl.searchParams.get("currency")
+    ?? "USD";
+  const to = req.nextUrl.searchParams.get("to") ?? "USD";
+
+  const fallbackRate = getFallbackRate(from, to);
 
   try {
     const res = await fetch(
-      `https://api.exchangerate.host/latest?base=${currency}&symbols=THB`,
-      {
-        // Cache for 10 minutes via Next.js fetch revalidation
-        next: { revalidate: 600 },
-      }
+      `https://api.exchangerate.host/latest?base=${encodeURIComponent(from)}&symbols=${encodeURIComponent(to)}`,
+      { next: { revalidate: 600 } }
     );
 
-    if (!res.ok) {
-      throw new Error(`exchangerate.host responded with ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`exchangerate.host status ${res.status}`);
 
     const data = await res.json();
-    const rate: number = data?.rates?.THB;
+    const rate: number = data?.rates?.[to];
 
-    if (!rate || typeof rate !== "number") {
-      throw new Error("Invalid rate in response");
-    }
+    if (!rate || typeof rate !== "number") throw new Error("Invalid rate");
 
     return NextResponse.json({
       rate,
-      currency,
+      from,
+      to,
       timestamp: new Date().toISOString(),
     });
   } catch {
-    // Fallback to indicative mid-market rate when API is unavailable
     return NextResponse.json(
       {
         rate: fallbackRate,
-        currency,
+        from,
+        to,
         timestamp: new Date().toISOString(),
         fallback: true,
       },

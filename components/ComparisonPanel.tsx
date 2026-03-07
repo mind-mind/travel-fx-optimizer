@@ -9,6 +9,7 @@ interface Props {
   midRate: number;
   amountForeign: number;
   currency: string;
+  homeCurrency: string;
   bank1: BankName;
   method1: PaymentMethod;
   bank2: BankName;
@@ -18,11 +19,15 @@ interface Props {
   t: Translations;
 }
 
-const fmt = (n: number) =>
-  new Intl.NumberFormat("th-TH", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(n);
+function makeFmt(homeCurrency: string) {
+  return (n: number) =>
+    new Intl.NumberFormat("en", {
+      style: "currency",
+      currency: homeCurrency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(n);
+}
 
 const methodIcon: Record<string, string> = {
   "Credit Card": "💳",
@@ -36,6 +41,7 @@ export default function ComparisonPanel({
   midRate,
   amountForeign,
   currency,
+  homeCurrency,
   bank1,
   method1,
   bank2,
@@ -44,24 +50,23 @@ export default function ComparisonPanel({
   onMethod2Change,
   t,
 }: Props) {
+  const fmt = makeFmt(homeCurrency);
   const r1 = results.find((r) => r.bank === bank1 && r.method === method1);
   const r2 = results.find((r) => r.bank === bank2 && r.method === method2);
-  const midRateTHB = amountForeign * midRate;
+  const midRateHome = amountForeign * midRate;
 
   function lossVsMid(r: ComparisonResult) {
-    return r.totalTHB - midRateTHB;
+    return r.totalHome - midRateHome;
   }
 
   function lossPercent(r: ComparisonResult) {
-    return midRateTHB > 0 ? ((r.totalTHB - midRateTHB) / midRateTHB) * 100 : 0;
+    return midRateHome > 0 ? ((r.totalHome - midRateHome) / midRateHome) * 100 : 0;
   }
 
-  const r1Cheaper =
-    r1 && r2 ? r1.totalTHB < r2.totalTHB : false;
-  const r2Cheaper =
-    r1 && r2 ? r2.totalTHB < r1.totalTHB : false;
-  const isTie = r1 && r2 ? r1.totalTHB === r2.totalTHB : false;
-  const diff = r1 && r2 ? Math.abs(r1.totalTHB - r2.totalTHB) : 0;
+  const r1Cheaper = r1 && r2 ? r1.totalHome < r2.totalHome : false;
+  const r2Cheaper = r1 && r2 ? r2.totalHome < r1.totalHome : false;
+  const isTie = r1 && r2 ? r1.totalHome === r2.totalHome : false;
+  const diff = r1 && r2 ? Math.abs(r1.totalHome - r2.totalHome) : 0;
 
   const isCash2 = method2 === "Cash";
 
@@ -152,14 +157,14 @@ export default function ComparisonPanel({
             <div>
               <p className="text-[10px] text-gray-500 dark:text-gray-400">{t.compareTotal}</p>
               <p className={`text-base font-bold ${r1Cheaper ? "text-green-700 dark:text-green-300" : "text-gray-800 dark:text-gray-100"}`}>
-                ฿{fmt(r1.totalTHB)}
+                {fmt(r1.totalHome)}
               </p>
             </div>
 
             <div>
               <p className="text-[10px] text-gray-500 dark:text-gray-400">{t.compareDiffMid}</p>
               <p className={`text-xs font-semibold ${lossVsMid(r1) > 0 ? "text-red-500" : "text-green-600"}`}>
-                {lossVsMid(r1) > 0 ? "+" : ""}฿{fmt(lossVsMid(r1))}
+                {lossVsMid(r1) > 0 ? "+" : ""}{fmt(lossVsMid(r1))}
                 <span className="text-[10px] ml-1">({lossPercent(r1).toFixed(1)}%)</span>
               </p>
             </div>
@@ -196,14 +201,14 @@ export default function ComparisonPanel({
             <div>
               <p className="text-[10px] text-gray-500 dark:text-gray-400">{t.compareTotal}</p>
               <p className={`text-base font-bold ${r2Cheaper ? "text-green-700 dark:text-green-300" : "text-gray-800 dark:text-gray-100"}`}>
-                ฿{fmt(r2.totalTHB)}
+                {fmt(r2.totalHome)}
               </p>
             </div>
 
             <div>
               <p className="text-[10px] text-gray-500 dark:text-gray-400">{t.compareDiffMid}</p>
               <p className={`text-xs font-semibold ${lossVsMid(r2) > 0 ? "text-red-500" : "text-green-600"}`}>
-                {lossVsMid(r2) > 0 ? "+" : ""}฿{fmt(lossVsMid(r2))}
+                {lossVsMid(r2) > 0 ? "+" : ""}{fmt(lossVsMid(r2))}
                 <span className="text-[10px] ml-1">({lossPercent(r2).toFixed(1)}%)</span>
               </p>
             </div>
@@ -235,7 +240,7 @@ export default function ComparisonPanel({
           ) : r1Cheaper ? (
             <div>
               <p className="text-sm font-bold text-green-800 dark:text-green-300">
-                {t.compareR1CheaperTitle} ฿{fmt(diff)}
+                {t.compareR1CheaperTitle} {fmt(diff)}
               </p>
               <p className="text-xs text-green-600 dark:text-green-400 mt-0.5">
                 {method1} {bank1 !== "Cash" ? `(${bank1})` : ""} {t.compareR1SavesThan} {method2}{" "}
@@ -245,11 +250,11 @@ export default function ComparisonPanel({
           ) : (
             <div>
               <p className="text-sm font-bold text-amber-800 dark:text-amber-300">
-                {t.compareR2CheaperTitle} ฿{fmt(diff)}
+                {t.compareR2CheaperTitle} {fmt(diff)}
               </p>
               <p className="text-xs text-amber-600 dark:text-amber-400 mt-0.5">
                 {method2} {bank2 !== "Cash" ? `(${bank2})` : ""} {t.compareR2CheaperThan} {method1}{" "}
-                {bank1 !== "Cash" ? `(${bank1})` : ""} {t.compareR2CheaperBy} ฿{fmt(diff)}
+                {bank1 !== "Cash" ? `(${bank1})` : ""} {t.compareR2CheaperBy} {fmt(diff)}
               </p>
             </div>
           )}
