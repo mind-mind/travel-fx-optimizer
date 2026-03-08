@@ -97,6 +97,23 @@ export default function Home() {
   const selectedCountry = COUNTRIES.find((c) => c.code === country);
   const currency = selectedCountry?.currency ?? "CNY";
 
+  const destCurrency = selectedCountry?.currency;
+  const canSwap =
+    !!destCurrency &&
+    HOME_CURRENCIES.some((c) => c.code === destCurrency) &&
+    COUNTRIES.some((c) => c.currency === homeCurrency);
+
+  function handleSwap() {
+    if (!canSwap || !destCurrency) return;
+    const newCountry = COUNTRIES.find((c) => c.currency === homeCurrency);
+    if (!newCountry) return;
+    setHomeCurrency(destCurrency);
+    localStorage.setItem("homeCurrency", destCurrency);
+    setCountry(newCountry.code);
+    setAmount("");
+    setResults(null);
+  }
+
   function handleCountryChange(v: string) {
     setCountry(v);
     setAmount("");
@@ -261,6 +278,8 @@ export default function Home() {
           onBankChange={setBank}
           onMethodChange={handleMethodChange}
           onHomeCurrencyChange={handleHomeCurrencyChange}
+          onSwap={handleSwap}
+          canSwap={canSwap}
         />
 
         {vat?.vatEligible && (
