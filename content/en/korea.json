@@ -20,5 +20,37 @@
     { "name": "Spread", "detail": "The gap between mid-market rate and the rate your bank actually gives — usually 0.5%–2%." },
     { "name": "ATM Fee", "detail": "Withdrawal fees from both your home bank and the local ATM — combined can reach $5–$10 per transaction." },
     { "name": "DCC Markup", "detail": "Extra markup when you choose to pay in your home currency — often 3%–10% above the true market rate." }
+  ],
+  "attractions": [
+    {
+      "name": "Gyeongbokgung Palace",
+      "detail": "Seoul's grandest Joseon-dynasty palace — catch the royal changing-of-guard ceremony and rent a hanbok for free entry.",
+      "price": "₩3,000 (free in hanbok)",
+      "tip": "Cards accepted at the main ticket booth. Nearby hanbok rental shops also take cards."
+    },
+    {
+      "name": "Bukchon Hanok Village",
+      "detail": "Hillside neighbourhood of preserved traditional Korean houses with stunning views over Seoul — most scenic in the early morning.",
+      "price": "Free to explore",
+      "tip": "Teahouses and craft shops accept cards; street market stalls prefer cash KRW."
+    },
+    {
+      "name": "N Seoul Tower",
+      "detail": "Iconic landmark on Namsan Mountain — famous love locks, panoramic Seoul views, and a revolving restaurant at the top.",
+      "price": "₩16,000 (observatory)",
+      "tip": "Cards and T-money card accepted for cable car and observatory entrance."
+    },
+    {
+      "name": "Jeju Island",
+      "detail": "Volcanic island paradise with Hallasan National Park, Manjanggul lava tube caves, and black-sand beaches.",
+      "price": "₩0–₩3,000 (sites vary)",
+      "tip": "Cards accepted widely on Jeju. Download Kakao Pay for quick payment at local restaurants."
+    },
+    {
+      "name": "Insadong",
+      "detail": "Traditional arts district with craft galleries, tea houses, antiques, and the lively Ssamziegil courtyard marketplace.",
+      "price": "Free to explore",
+      "tip": "Carry cash KRW for market stalls and street food; restaurants and cafes accept cards."
+    }
   ]
 }

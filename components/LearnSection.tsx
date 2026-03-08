@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { CODE_TO_COUNTRY } from "@/lib/guideConfig";
+import { getGuideByCountryCode } from "@/data/travelMoneyGuides";
 import { Translations, Lang } from "@/data/translations";
 
 interface Props {
@@ -19,35 +20,42 @@ interface LearnLink {
 
 export default function LearnSection({ countryCode, t, lang }: Props) {
   const guideCountry = CODE_TO_COUNTRY[countryCode] ?? null;
-  const guideBase = guideCountry ? `/${lang}/how-to-pay/${guideCountry}` : null;
-  // Country name comes from the loaded content page; use a generic fallback here
-  const countryName = guideBase
-    ? guideCountry!.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())
+  // /how-to-pay/ is only used for section anchors
+  const howToPayBase = guideCountry ? `/${lang}/how-to-pay/${guideCountry}` : null;
+  // /travel-money/ is always the primary hub link
+  const travelMoneyGuide = getGuideByCountryCode(countryCode) ?? null;
+  const travelMoneyBase = travelMoneyGuide ? `/travel-money/${travelMoneyGuide.slug}` : null;
+  // Primary CTA → travel-money hub; fallback → how-to-pay
+  const effectiveBase = travelMoneyBase ?? howToPayBase;
+  const countryName = travelMoneyGuide
+    ? travelMoneyGuide.name
+    : guideCountry
+    ? guideCountry.replace("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())
     : lang === "th" ? "ต่างประเทศ" : "Abroad";
 
   const links: LearnLink[] = [
     {
       icon: "💳",
       label: `${t.learnLink1Pre} ${countryName}${t.learnLink1Suf}`,
-      href: guideBase ? `${guideBase}#best-card` : "/",
+      href: howToPayBase ? `${howToPayBase}#best-card` : effectiveBase ?? "/",
       description: t.learnLink1Desc,
     },
     {
       icon: "🧾",
       label: t.learnLink2,
-      href: guideBase ? `${guideBase}#tips` : "/",
+      href: howToPayBase ? `${howToPayBase}#tips` : effectiveBase ?? "/",
       description: t.learnLink2Desc,
     },
     {
       icon: "⚠️",
       label: t.learnLink3,
-      href: guideBase ? `${guideBase}#dcc` : "/",
+      href: howToPayBase ? `${howToPayBase}#dcc` : effectiveBase ?? "/",
       description: t.learnLink3Desc,
     },
     {
       icon: "📊",
       label: `${t.learnLink4Pre} ${countryName}`,
-      href: guideBase ? `${guideBase}#compare-banks` : "/",
+      href: howToPayBase ? `${howToPayBase}#compare-banks` : effectiveBase ?? "/",
       description: t.learnLink4Desc,
     },
   ];
@@ -68,9 +76,9 @@ export default function LearnSection({ countryCode, t, lang }: Props) {
       </div>
 
       {/* Primary guide CTA — full-width, prominent */}
-      {guideBase && (
+      {effectiveBase && (
         <Link
-          href={guideBase}
+          href={effectiveBase}
           className="flex items-center gap-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white px-4 py-3.5 transition-colors group"
         >
           <span className="text-2xl shrink-0">🗺️</span>

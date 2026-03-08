@@ -16,9 +16,53 @@
   "avoidTip": "หลีกเลี่ยงการแลกเงินที่ธนาคารในสนามบิน — เรทต่ำกว่าในเมือง",
   "dccNote": "ในไต้หวัน เมื่อรูดบัตรเลือกจ่ายเป็น TWD เสมอ ไม่ใช่ THB",
   "fxFeeItems": [
-    { "name": "FX Fee (Foreign Transaction Fee)", "detail": "ค่าธรรมเนียมที่ธนาคารไทยเก็บจากการรูดบัตรในต่างประเทศ — ปกติ 1.5%–2.5% ของยอดที่รูด" },
-    { "name": "Spread", "detail": "ส่วนต่างระหว่างเรทกลาง (mid-rate) กับเรทที่ธนาคารหรือบริการให้จริง — ปกติ 0.5%–2%" },
-    { "name": "ATM Fee", "detail": "ค่าธรรมเนียมถอนเงินต่างประเทศ — ทั้งจากธนาคารไทยและธนาคารปลายทาง รวมกันอาจสูงถึง 200–300 บาทต่อครั้ง" },
-    { "name": "DCC Markup", "detail": "มาร์คอัพพิเศษที่ร้านค้าเก็บเมื่อคุณเลือกจ่ายเป็นเงินบาท — มักสูงกว่าเรทธนาคาร 3%–10%" }
+    {
+      "name": "FX Fee (Foreign Transaction Fee)",
+      "detail": "ค่าธรรมเนียมที่ธนาคารไทยเก็บจากการรูดบัตรในต่างประเทศ — ปกติ 1.5%–2.5% ของยอดที่รูด"
+    },
+    {
+      "name": "Spread",
+      "detail": "ส่วนต่างระหว่างเรทกลาง (mid-rate) กับเรทที่ธนาคารหรือบริการให้จริง — ปกติ 0.5%–2%"
+    },
+    {
+      "name": "ATM Fee",
+      "detail": "ค่าธรรมเนียมถอนเงินต่างประเทศ — ทั้งจากธนาคารไทยและธนาคารปลายทาง รวมกันอาจสูงถึง 200–300 บาทต่อครั้ง"
+    },
+    {
+      "name": "DCC Markup",
+      "detail": "มาร์คอัพพิเศษที่ร้านค้าเก็บเมื่อคุณเลือกจ่ายเป็นเงินบาท — มักสูงกว่าเรทธนาคาร 3%–10%"
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Taipei 101",
+      "detail": "Former world's tallest tower at 508m — iconic bamboo-stalk architecture with a premium shopping mall and observatory.",
+      "price": "TWD$600 (observatory)",
+      "tip": "Cards accepted at the ticket counter and all shops inside. Excellent food court on B1 accepts cards too."
+    },
+    {
+      "name": "Jiufen Old Street",
+      "detail": "Dramatic hilltop former gold-rush town with narrow lantern-lit alleyways — said to have inspired Studio Ghibli's Spirited Away.",
+      "price": "Free to visit",
+      "tip": "Most stalls prefer cash TWD — bring plenty before heading up. ATMs available at the base bus stop."
+    },
+    {
+      "name": "Sun Moon Lake",
+      "detail": "Serene alpine lake at 748m with cycling paths, Thao aboriginal culture villages, and a ropeway to the hilltop.",
+      "price": "TWD$160 (ropeway); boats vary",
+      "tip": "Cards accepted at ropeway and major facilities; carry TWD for lakeside food stalls and small ferries."
+    },
+    {
+      "name": "National Palace Museum",
+      "detail": "World's largest collection of Chinese imperial art — 700,000+ objects spanning 8,000 years of history.",
+      "price": "TWD$350",
+      "tip": "Cards accepted. Allow at least half a day — the famous jade cabbage alone draws hour-long queues."
+    },
+    {
+      "name": "Shilin Night Market",
+      "detail": "Taipei's largest and most famous night market — giant fried chicken, bubble tea, oyster vermicelli, and more.",
+      "price": "Free entry",
+      "tip": "Cash TWD is king here — bring plenty. Some larger food vendors accept LINE Pay QR codes."
+    }
   ]
 }

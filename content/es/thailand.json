@@ -18,9 +18,53 @@
   "avoidTip": "Evita cambiar dinero en los aeropuertos de Suvarnabhumi o Don Mueang — los tipos suelen ser un 3–5% peores que en la ciudad.",
   "dccNote": "En zonas turísticas de Tailandia, muchas terminales ofrecerán cobrar en tu moneda local. Elige siempre Baht tailandés — la tasa DCC del comercio suele ser un 3–10% peor que el tipo real.",
   "fxFeeItems": [
-    { "name": "Comisión FX (Comisión por Transacción Extranjera)", "detail": "Comisión que cobra tu banco por usar la tarjeta en el extranjero — normalmente el 1,5%–2,5% de la transacción." },
-    { "name": "Diferencial (Spread)", "detail": "La diferencia entre el tipo de cambio interbancario y el que te aplica tu banco — normalmente el 0,5%–2%." },
-    { "name": "Comisión de Cajero ATM", "detail": "Los cajeros tailandeses cobran una comisión fija de ฿220 por retiro con tarjeta extranjera, además de la comisión de tu banco." },
-    { "name": "DCC Markup", "detail": "Cargo adicional cuando pagas en tu moneda local — suele estar entre el 3%–10% por encima del tipo real." }
+    {
+      "name": "Comisión FX (Comisión por Transacción Extranjera)",
+      "detail": "Comisión que cobra tu banco por usar la tarjeta en el extranjero — normalmente el 1,5%–2,5% de la transacción."
+    },
+    {
+      "name": "Diferencial (Spread)",
+      "detail": "La diferencia entre el tipo de cambio interbancario y el que te aplica tu banco — normalmente el 0,5%–2%."
+    },
+    {
+      "name": "Comisión de Cajero ATM",
+      "detail": "Los cajeros tailandeses cobran una comisión fija de ฿220 por retiro con tarjeta extranjera, además de la comisión de tu banco."
+    },
+    {
+      "name": "DCC Markup",
+      "detail": "Cargo adicional cuando pagas en tu moneda local — suele estar entre el 3%–10% por encima del tipo real."
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Grand Palace & Wat Phra Kaew",
+      "detail": "Thailand's most sacred site — the revered Emerald Buddha temple and opulent Grand Palace complex in central Bangkok.",
+      "price": "฿500",
+      "tip": "Cash only at ticket booths. Dress code strictly enforced — cover shoulders and knees or rent a sarong on-site."
+    },
+    {
+      "name": "Wat Arun (Temple of Dawn)",
+      "detail": "Striking riverside temple covered in colourful porcelain tile mosaics — most magical at sunset viewed from across the Chao Phraya.",
+      "price": "฿100",
+      "tip": "Cash only at the entrance. Cross by Chao Phraya express ferry — ฿15 per person, paid in cash."
+    },
+    {
+      "name": "Chatuchak Weekend Market",
+      "detail": "Bangkok's iconic weekend market with 15,000+ stalls selling street food, vintage clothes, antiques, and handcrafts.",
+      "price": "Free entry",
+      "tip": "Cash THB dominates — most stalls are cash-only. Some shops accept PromptPay QR but carry baht."
+    },
+    {
+      "name": "Phi Phi Islands",
+      "detail": "Spectacular limestone cliffs, turquoise waters, and white sand beaches — accessible by speedboat from Phuket or Krabi.",
+      "price": "฿600–฿900 (boat tours)",
+      "tip": "Bring cash THB for island activities, food, and national park fees. ATMs on Phi Phi charge high fees."
+    },
+    {
+      "name": "Chiang Mai Old City",
+      "detail": "Ancient walled northern city with 300+ temples including Doi Suthep, Wat Chedi Luang, and vibrant Sunday Walking Street.",
+      "price": "฿0–฿300 (sites vary)",
+      "tip": "Walking Street vendors are cash-only. Cards accepted at tourist restaurants and hotels."
+    }
   ]
 }

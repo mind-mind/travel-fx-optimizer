@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ComparisonResult } from "@/lib/types";
 import { fmtCurrency } from "@/lib/formatCurrency";
 import { CODE_TO_COUNTRY } from "@/lib/guideConfig";
+import { getGuideByCountryCode } from "@/data/travelMoneyGuides";
 
 interface Props {
   results: ComparisonResult[];
@@ -29,8 +30,13 @@ export default function BestMethodCard({
   countryCode,
   lang,
 }: Props) {
+  const travelMoneyGuide = countryCode ? (getGuideByCountryCode(countryCode) ?? null) : null;
   const guideCountry = countryCode ? (CODE_TO_COUNTRY[countryCode] ?? null) : null;
-  const guideHref = guideCountry && lang ? `/${lang}/how-to-pay/${guideCountry}` : null;
+  const howToPayHref = guideCountry && lang ? `/${lang}/how-to-pay/${guideCountry}` : null;
+  // Prefer /travel-money/ as primary; fall back to /how-to-pay/ if no travel-money guide exists
+  const guideHref = travelMoneyGuide
+    ? `/travel-money/${travelMoneyGuide.slug}`
+    : howToPayHref;
   const cheapestAll = results.filter((r) => r.isCheapest);
   const cheapest = cheapestAll[0] ?? null;
   const mostExpensive = results.reduce((a, b) =>

@@ -16,9 +16,53 @@
   "avoidTip": "中国のお店やホテルでカードを使う際は DCC を拒否してください。",
   "dccNote": "中国では多くのお店が自国通貨での請求を提案してきます — 常に断り、CNY での支払いを選択してください。",
   "fxFeeItems": [
-    { "name": "FX 手数料（海外利用手数料）", "detail": "海外でカードを使用した際に銀行が請求する手数料 — 通常、取引額の 1.5%〜2.5%。" },
-    { "name": "スプレッド", "detail": "仲値と銀行が実際に提供するレートのギャップ — 通常 0.5%〜2%。" },
-    { "name": "ATM 手数料", "detail": "自国銀行と現地 ATM 双方から請求される引き出し手数料 — 合計で 1 回あたり 500〜1,000 円相当になることも。" },
-    { "name": "DCC マークアップ", "detail": "自国通貨で支払う場合に課される追加マークアップ — 実際の市場レートより 3%〜10% 高いことが多い。" }
+    {
+      "name": "FX 手数料（海外利用手数料）",
+      "detail": "海外でカードを使用した際に銀行が請求する手数料 — 通常、取引額の 1.5%〜2.5%。"
+    },
+    {
+      "name": "スプレッド",
+      "detail": "仲値と銀行が実際に提供するレートのギャップ — 通常 0.5%〜2%。"
+    },
+    {
+      "name": "ATM 手数料",
+      "detail": "自国銀行と現地 ATM 双方から請求される引き出し手数料 — 合計で 1 回あたり 500〜1,000 円相当になることも。"
+    },
+    {
+      "name": "DCC マークアップ",
+      "detail": "自国通貨で支払う場合に課される追加マークアップ — 実際の市場レートより 3%〜10% 高いことが多い。"
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Great Wall of China (Mutianyu)",
+      "detail": "Most scenic and well-preserved section of the Great Wall with cable car access and far fewer crowds than Badaling.",
+      "price": "¥65 (+ ¥35 cable car)",
+      "tip": "Foreign cards rarely work on-site — bring cash CNY. WeChat Pay and Alipay accepted at some stalls."
+    },
+    {
+      "name": "Forbidden City",
+      "detail": "World's largest palace complex with 9,999 rooms and 600 years of imperial history at the heart of Beijing.",
+      "price": "¥40–¥60",
+      "tip": "Tickets must be booked online via WeChat Pay or Alipay — foreign cards are often declined."
+    },
+    {
+      "name": "Terracotta Army",
+      "detail": "Over 8,000 life-size clay soldiers guarding the tomb of China's first emperor — a UNESCO World Heritage site in Xi'an.",
+      "price": "¥110",
+      "tip": "Cash CNY or local payment apps accepted. Bring a VPN for Google Maps navigation en route."
+    },
+    {
+      "name": "The Bund, Shanghai",
+      "detail": "Iconic 1.5km waterfront promenade of heritage colonial buildings facing the futuristic Pudong skyline across the Huangpu River.",
+      "price": "¥0 (free)",
+      "tip": "Bund restaurants and cafes settle bills via Alipay/WeChat Pay or cash CNY — have both ready."
+    },
+    {
+      "name": "West Lake, Hangzhou",
+      "detail": "Serene lake immortalized in classical Chinese poetry with pagodas, willow-lined causeways, and Dragon Well tea gardens nearby.",
+      "price": "¥0 (free; boat tour ¥90)",
+      "tip": "Boat ticket booths accept cash; nearby tea houses often use QR code payment apps."
+    }
   ]
 }

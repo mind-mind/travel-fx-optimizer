@@ -16,9 +16,53 @@
   "avoidTip": "重慶大厦の地下階の両替所は避けてください — レートが不透明で安全でない場合もあります。",
   "dccNote": "香港でカードを使う際は、常に HKD（香港ドル）を選択してください。他の通貨を提示されたら断ってください。",
   "fxFeeItems": [
-    { "name": "FX 手数料（海外利用手数料）", "detail": "海外でカードを使用した際に銀行が請求する手数料 — 通常、取引額の 1.5%〜2.5%。" },
-    { "name": "スプレッド", "detail": "仲値と銀行が実際に提供するレートのギャップ — 通常 0.5%〜2%。" },
-    { "name": "ATM 手数料", "detail": "自国銀行と現地 ATM 双方から請求される引き出し手数料 — 合計で 1 回あたり 500〜1,000 円相当になることも。" },
-    { "name": "DCC マークアップ", "detail": "自国通貨で支払う場合に課される追加マークアップ — 実際の市場レートより 3%〜10% 高いことが多い。" }
+    {
+      "name": "FX 手数料（海外利用手数料）",
+      "detail": "海外でカードを使用した際に銀行が請求する手数料 — 通常、取引額の 1.5%〜2.5%。"
+    },
+    {
+      "name": "スプレッド",
+      "detail": "仲値と銀行が実際に提供するレートのギャップ — 通常 0.5%〜2%。"
+    },
+    {
+      "name": "ATM 手数料",
+      "detail": "自国銀行と現地 ATM 双方から請求される引き出し手数料 — 合計で 1 回あたり 500〜1,000 円相当になることも。"
+    },
+    {
+      "name": "DCC マークアップ",
+      "detail": "自国通貨で支払う場合に課される追加マークアップ — 実際の市場レートより 3%〜10% 高いことが多い。"
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Victoria Peak",
+      "detail": "Most iconic viewpoint in Hong Kong — sweeping harbour views via the world's steepest funicular Peak Tram.",
+      "price": "HKD$228 (return tram)",
+      "tip": "Use Octopus card for the Peak Tram and adjacent shops. Cards accepted at Sky Terrace 428 entrance."
+    },
+    {
+      "name": "Tian Tan Buddha (Lantau Island)",
+      "detail": "Giant 34m bronze Buddha statue with a serene hilltop setting — arrive by the spectacular Ngong Ping 360 cable car.",
+      "price": "HKD$220 (cable car return)",
+      "tip": "Cable car accepts cards; small souvenir stalls in Ngong Ping Village are cash-only."
+    },
+    {
+      "name": "Hong Kong Disneyland",
+      "detail": "Compact Disney park with unique Mystic Manor ride and stunning views of Lantau Island and Discovery Bay.",
+      "price": "HKD$619–$820",
+      "tip": "Cards accepted throughout the park. Take the MTR Disneyland Resort Line — Octopus card accepted."
+    },
+    {
+      "name": "Temple Street Night Market",
+      "detail": "Authentic Kowloon night market with street food, fortune tellers, electronics, antiques, and jade jewellery.",
+      "price": "Free entry",
+      "tip": "Cash HKD is essential here — almost all stalls are cash-only. Stock up at a nearby Hang Seng ATM."
+    },
+    {
+      "name": "Mong Kok Markets",
+      "detail": "Sensory overload at its best — Ladies' Market, Flower Market, Bird Garden, and Goldfish Market within walking distance.",
+      "price": "Free entry",
+      "tip": "Haggling is expected and cash HKD is preferred. Cards accepted at some larger fixed-price stalls."
+    }
   ]
 }

@@ -16,9 +16,53 @@
   "avoidTip": "공항에서의 환전은 피하세요 — 환율이 시내 ATM보다 훨씬 불리합니다.",
   "dccNote": "일본에서 카드로 결제할 때는 항상 JPY를 선택하세요. 다른 통화가 제안되더라도 거절하세요(DCC).",
   "fxFeeItems": [
-    { "name": "FX 수수료 (해외 거래 수수료)", "detail": "해외에서 카드를 사용할 때 은행이 청구하는 수수료 — 일반적으로 거래 금액의 1.5%–2.5%." },
-    { "name": "환율 스프레드", "detail": "중간 환율과 은행이 실제로 제공하는 환율 사이의 차이 — 보통 0.5%–2%." },
-    { "name": "ATM 수수료", "detail": "자국 은행과 현지 ATM 양쪽에서 부과되는 인출 수수료 — 합계가 1회당 3,000–5,000원에 달할 수 있습니다." },
-    { "name": "DCC 마크업", "detail": "자국 통화로 결제할 때 부과되는 추가 요금 — 종종 실제 시장 환율보다 3%–10% 더 높습니다." }
+    {
+      "name": "FX 수수료 (해외 거래 수수료)",
+      "detail": "해외에서 카드를 사용할 때 은행이 청구하는 수수료 — 일반적으로 거래 금액의 1.5%–2.5%."
+    },
+    {
+      "name": "환율 스프레드",
+      "detail": "중간 환율과 은행이 실제로 제공하는 환율 사이의 차이 — 보통 0.5%–2%."
+    },
+    {
+      "name": "ATM 수수료",
+      "detail": "자국 은행과 현지 ATM 양쪽에서 부과되는 인출 수수료 — 합계가 1회당 3,000–5,000원에 달할 수 있습니다."
+    },
+    {
+      "name": "DCC 마크업",
+      "detail": "자국 통화로 결제할 때 부과되는 추가 요금 — 종종 실제 시장 환율보다 3%–10% 더 높습니다."
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Senso-ji Temple",
+      "detail": "Tokyo's oldest Buddhist temple with a stunning five-story pagoda and Nakamise shopping street lined with traditional crafts and snacks.",
+      "price": "¥0 (free; inner hall ¥500)",
+      "tip": "Carry cash JPY for souvenir stalls — most vendors along the temple approach are cash-only."
+    },
+    {
+      "name": "teamLab Planets",
+      "detail": "Immersive digital art museum in Toyosu with floor-to-ceiling interactive light installations and infinite mirror reflections.",
+      "price": "¥3,200–¥4,200",
+      "tip": "Book tickets online in advance — on-site ticket machines are JPY card payment only."
+    },
+    {
+      "name": "Fushimi Inari Shrine",
+      "detail": "Iconic path of thousands of vermillion torii gates winding up the mountain behind Kyoto's most famous fox shrine.",
+      "price": "¥0 (free)",
+      "tip": "Carry small JPY coins for street food and souvenir stalls at the mountain base."
+    },
+    {
+      "name": "Tokyo Skytree",
+      "detail": "World's second-tallest tower at 634m — panoramic views of the city and Mt. Fuji on clear days.",
+      "price": "¥2,100–¥3,100",
+      "tip": "Cards accepted at the ticket counter; carry JPY for cafes and gift shops inside."
+    },
+    {
+      "name": "Universal Studios Japan",
+      "detail": "World-class theme park with Super Nintendo World (Mario Kart), Harry Potter, and Minion Park.",
+      "price": "¥8,400–¥9,400",
+      "tip": "Buy tickets online before visiting — park entry and most on-site shops accept credit cards."
+    }
   ]
 }

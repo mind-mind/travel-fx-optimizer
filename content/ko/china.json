@@ -16,9 +16,53 @@
   "avoidTip": "중국의 상점이나 호텔에서 카드 결제 시 DCC를 절대 수락하지 마세요.",
   "dccNote": "중국의 많은 상점에서 자국 통화로 결제하도록 제안합니다 — 항상 거절하고 CNY(인민폐)로 결제하세요.",
   "fxFeeItems": [
-    { "name": "FX 수수료 (해외 거래 수수료)", "detail": "해외에서 카드를 사용할 때 은행이 청구하는 수수료 — 일반적으로 거래 금액의 1.5%–2.5%." },
-    { "name": "환율 스프레드", "detail": "중간 환율과 은행이 실제로 제공하는 환율 사이의 차이 — 보통 0.5%–2%." },
-    { "name": "ATM 수수료", "detail": "자국 은행과 현지 ATM 양쪽에서 부과되는 인출 수수료 — 합계가 1회당 3,000–5,000원에 달할 수 있습니다." },
-    { "name": "DCC 마크업", "detail": "자국 통화로 결제할 때 부과되는 추가 요금 — 종종 실제 시장 환율보다 3%–10% 더 높습니다." }
+    {
+      "name": "FX 수수료 (해외 거래 수수료)",
+      "detail": "해외에서 카드를 사용할 때 은행이 청구하는 수수료 — 일반적으로 거래 금액의 1.5%–2.5%."
+    },
+    {
+      "name": "환율 스프레드",
+      "detail": "중간 환율과 은행이 실제로 제공하는 환율 사이의 차이 — 보통 0.5%–2%."
+    },
+    {
+      "name": "ATM 수수료",
+      "detail": "자국 은행과 현지 ATM 양쪽에서 부과되는 인출 수수료 — 합계가 1회당 3,000–5,000원에 달할 수 있습니다."
+    },
+    {
+      "name": "DCC 마크업",
+      "detail": "자국 통화로 결제할 때 부과되는 추가 요금 — 종종 실제 시장 환율보다 3%–10% 더 높습니다."
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Great Wall of China (Mutianyu)",
+      "detail": "Most scenic and well-preserved section of the Great Wall with cable car access and far fewer crowds than Badaling.",
+      "price": "¥65 (+ ¥35 cable car)",
+      "tip": "Foreign cards rarely work on-site — bring cash CNY. WeChat Pay and Alipay accepted at some stalls."
+    },
+    {
+      "name": "Forbidden City",
+      "detail": "World's largest palace complex with 9,999 rooms and 600 years of imperial history at the heart of Beijing.",
+      "price": "¥40–¥60",
+      "tip": "Tickets must be booked online via WeChat Pay or Alipay — foreign cards are often declined."
+    },
+    {
+      "name": "Terracotta Army",
+      "detail": "Over 8,000 life-size clay soldiers guarding the tomb of China's first emperor — a UNESCO World Heritage site in Xi'an.",
+      "price": "¥110",
+      "tip": "Cash CNY or local payment apps accepted. Bring a VPN for Google Maps navigation en route."
+    },
+    {
+      "name": "The Bund, Shanghai",
+      "detail": "Iconic 1.5km waterfront promenade of heritage colonial buildings facing the futuristic Pudong skyline across the Huangpu River.",
+      "price": "¥0 (free)",
+      "tip": "Bund restaurants and cafes settle bills via Alipay/WeChat Pay or cash CNY — have both ready."
+    },
+    {
+      "name": "West Lake, Hangzhou",
+      "detail": "Serene lake immortalized in classical Chinese poetry with pagodas, willow-lined causeways, and Dragon Well tea gardens nearby.",
+      "price": "¥0 (free; boat tour ¥90)",
+      "tip": "Boat ticket booths accept cash; nearby tea houses often use QR code payment apps."
+    }
   ]
 }

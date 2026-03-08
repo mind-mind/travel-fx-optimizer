@@ -18,9 +18,53 @@
   "avoidTip": "避免在素万那普机场或廊曼机场换汇 — 汇率通常比市区差 3–5%。",
   "dccNote": "泰国旅游区的许多刷卡终端会提示以您的本国货币结算。请始终选择泰铢（THB） — 商家的 DCC 汇率通常比真实市场汇率高 3–10%。",
   "fxFeeItems": [
-    { "name": "外汇手续费（境外交易费）", "detail": "您的银行对海外刷卡收取的费用 — 通常为交易金额的 1.5%–2.5%。" },
-    { "name": "汇率差价", "detail": "中间市场汇率与银行实际提供汇率之间的差距 — 通常为 0.5%–2%。" },
-    { "name": "ATM 手续费", "detail": "泰国 ATM 运营商对外国卡每次取款收取固定 ฿220 手续费，此外还有您本国银行的费用。" },
-    { "name": "DCC 加价", "detail": "以本国货币付款时的额外加价 — 通常比真实市场汇率高 3%–10%。" }
+    {
+      "name": "外汇手续费（境外交易费）",
+      "detail": "您的银行对海外刷卡收取的费用 — 通常为交易金额的 1.5%–2.5%。"
+    },
+    {
+      "name": "汇率差价",
+      "detail": "中间市场汇率与银行实际提供汇率之间的差距 — 通常为 0.5%–2%。"
+    },
+    {
+      "name": "ATM 手续费",
+      "detail": "泰国 ATM 运营商对外国卡每次取款收取固定 ฿220 手续费，此外还有您本国银行的费用。"
+    },
+    {
+      "name": "DCC 加价",
+      "detail": "以本国货币付款时的额外加价 — 通常比真实市场汇率高 3%–10%。"
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Grand Palace & Wat Phra Kaew",
+      "detail": "Thailand's most sacred site — the revered Emerald Buddha temple and opulent Grand Palace complex in central Bangkok.",
+      "price": "฿500",
+      "tip": "Cash only at ticket booths. Dress code strictly enforced — cover shoulders and knees or rent a sarong on-site."
+    },
+    {
+      "name": "Wat Arun (Temple of Dawn)",
+      "detail": "Striking riverside temple covered in colourful porcelain tile mosaics — most magical at sunset viewed from across the Chao Phraya.",
+      "price": "฿100",
+      "tip": "Cash only at the entrance. Cross by Chao Phraya express ferry — ฿15 per person, paid in cash."
+    },
+    {
+      "name": "Chatuchak Weekend Market",
+      "detail": "Bangkok's iconic weekend market with 15,000+ stalls selling street food, vintage clothes, antiques, and handcrafts.",
+      "price": "Free entry",
+      "tip": "Cash THB dominates — most stalls are cash-only. Some shops accept PromptPay QR but carry baht."
+    },
+    {
+      "name": "Phi Phi Islands",
+      "detail": "Spectacular limestone cliffs, turquoise waters, and white sand beaches — accessible by speedboat from Phuket or Krabi.",
+      "price": "฿600–฿900 (boat tours)",
+      "tip": "Bring cash THB for island activities, food, and national park fees. ATMs on Phi Phi charge high fees."
+    },
+    {
+      "name": "Chiang Mai Old City",
+      "detail": "Ancient walled northern city with 300+ temples including Doi Suthep, Wat Chedi Luang, and vibrant Sunday Walking Street.",
+      "price": "฿0–฿300 (sites vary)",
+      "tip": "Walking Street vendors are cash-only. Cards accepted at tourist restaurants and hotels."
+    }
   ]
 }

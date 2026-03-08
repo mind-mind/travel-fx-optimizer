@@ -18,9 +18,53 @@
   "avoidTip": "수완나품 공항이나 돈므앙 공항에서의 환전은 피하세요 — 시내보다 환율이 3–5% 불리합니다.",
   "dccNote": "태국 관광지의 많은 카드 단말기는 자국 통화로 결제하도록 제안합니다. 항상 태국 바트(THB)를 선택하세요 — 상점의 DCC 환율은 실제 시장 환율보다 3–10% 불리합니다.",
   "fxFeeItems": [
-    { "name": "FX 수수료 (해외 거래 수수료)", "detail": "해외에서 카드를 사용할 때 은행이 청구하는 수수료 — 일반적으로 거래 금액의 1.5%–2.5%." },
-    { "name": "환율 스프레드", "detail": "중간 환율과 은행이 실제로 제공하는 환율 사이의 차이 — 보통 0.5%–2%." },
-    { "name": "ATM 수수료", "detail": "태국 ATM 운영사가 외국 카드에 1회당 ฿220의 고정 수수료를 부과합니다. 자국 은행 수수료도 별도로 발생합니다." },
-    { "name": "DCC 마크업", "detail": "자국 통화로 결제할 때 부과되는 추가 요금 — 종종 실제 시장 환율보다 3%–10% 더 높습니다." }
+    {
+      "name": "FX 수수료 (해외 거래 수수료)",
+      "detail": "해외에서 카드를 사용할 때 은행이 청구하는 수수료 — 일반적으로 거래 금액의 1.5%–2.5%."
+    },
+    {
+      "name": "환율 스프레드",
+      "detail": "중간 환율과 은행이 실제로 제공하는 환율 사이의 차이 — 보통 0.5%–2%."
+    },
+    {
+      "name": "ATM 수수료",
+      "detail": "태국 ATM 운영사가 외국 카드에 1회당 ฿220의 고정 수수료를 부과합니다. 자국 은행 수수료도 별도로 발생합니다."
+    },
+    {
+      "name": "DCC 마크업",
+      "detail": "자국 통화로 결제할 때 부과되는 추가 요금 — 종종 실제 시장 환율보다 3%–10% 더 높습니다."
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Grand Palace & Wat Phra Kaew",
+      "detail": "Thailand's most sacred site — the revered Emerald Buddha temple and opulent Grand Palace complex in central Bangkok.",
+      "price": "฿500",
+      "tip": "Cash only at ticket booths. Dress code strictly enforced — cover shoulders and knees or rent a sarong on-site."
+    },
+    {
+      "name": "Wat Arun (Temple of Dawn)",
+      "detail": "Striking riverside temple covered in colourful porcelain tile mosaics — most magical at sunset viewed from across the Chao Phraya.",
+      "price": "฿100",
+      "tip": "Cash only at the entrance. Cross by Chao Phraya express ferry — ฿15 per person, paid in cash."
+    },
+    {
+      "name": "Chatuchak Weekend Market",
+      "detail": "Bangkok's iconic weekend market with 15,000+ stalls selling street food, vintage clothes, antiques, and handcrafts.",
+      "price": "Free entry",
+      "tip": "Cash THB dominates — most stalls are cash-only. Some shops accept PromptPay QR but carry baht."
+    },
+    {
+      "name": "Phi Phi Islands",
+      "detail": "Spectacular limestone cliffs, turquoise waters, and white sand beaches — accessible by speedboat from Phuket or Krabi.",
+      "price": "฿600–฿900 (boat tours)",
+      "tip": "Bring cash THB for island activities, food, and national park fees. ATMs on Phi Phi charge high fees."
+    },
+    {
+      "name": "Chiang Mai Old City",
+      "detail": "Ancient walled northern city with 300+ temples including Doi Suthep, Wat Chedi Luang, and vibrant Sunday Walking Street.",
+      "price": "฿0–฿300 (sites vary)",
+      "tip": "Walking Street vendors are cash-only. Cards accepted at tourist restaurants and hotels."
+    }
   ]
 }
