@@ -1,0 +1,24 @@
+{
+  "countryName": "Corea del Sur",
+  "currency": "KRW",
+  "countryCode": "KR",
+  "countryFlag": "🇰🇷",
+  "heroTip": "Corea del Sur acepta tarjetas de crédito prácticamente en todas partes — recarga la tarjeta T-Money para el transporte público.",
+  "bestPaymentMethod": "Tarjeta de crédito + tarjeta T-Money",
+  "bestCard": "Elige una tarjeta con bajas comisiones internacionales de tu banco o usa Wise / Revolut.",
+  "topTips": [
+    "Visa / Mastercard se acepta ampliamente, incluyendo tiendas de conveniencia y mercados.",
+    "Compra una tarjeta T-Money en el aeropuerto o estación de metro (válida en metro y autobús).",
+    "Retira KRW en cajeros de KEB Hana Bank o Shinhan Bank.",
+    "Los mercados de Namdaemun / Dongdaemun pueden preferir efectivo — lleva algo de KRW.",
+    "Solicita el reembolso del 10% de IVA en el aeropuerto al salir del país."
+  ],
+  "avoidTip": "No cambies KRW en tu país — las tasas son mucho peores que hacerlo en Corea.",
+  "dccNote": "Al pagar con tarjeta en Corea, elige siempre KRW. Rechaza si te ofrecen tu moneda local (DCC).",
+  "fxFeeItems": [
+    { "name": "Comisión FX (Comisión por Transacción Extranjera)", "detail": "Comisión que cobra tu banco por usar la tarjeta en el extranjero — normalmente el 1,5%–2,5% de la transacción." },
+    { "name": "Diferencial (Spread)", "detail": "La diferencia entre el tipo de cambio interbancario y el que te aplica tu banco — normalmente el 0,5%–2%." },
+    { "name": "Comisión de Cajero (ATM)", "detail": "Comisiones de tu banco y del cajero extranjero — combinadas pueden alcanzar 3–5 € por extracción." },
+    { "name": "DCC Markup", "detail": "Cargo adicional cuando pagas en tu moneda local — suele estar entre el 3%–10% por encima del tipo real." }
+  ]
+}

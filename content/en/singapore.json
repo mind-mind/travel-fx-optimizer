@@ -1,0 +1,24 @@
+{
+  "countryName": "Singapore",
+  "currency": "SGD",
+  "countryCode": "SG",
+  "countryFlag": "🇸🇬",
+  "heroTip": "Singapore accepts credit cards virtually everywhere — you barely need to carry cash.",
+  "bestPaymentMethod": "Credit card with low FX fee",
+  "bestCard": "KBank Visa or Bangkok Bank — broad Visa acceptance across Singapore.",
+  "topTips": [
+    "Credit cards are accepted at almost all hawker centres and shops.",
+    "PayNow / PayLah! require a Singapore bank account and aren't suitable for visitors.",
+    "Withdraw SGD from DBS / OCBC ATMs in the city — better rates than airport money changers.",
+    "Mustafa Centre or People's Park money changers offer some of the best cash exchange rates.",
+    "Claim 9% GST refund on purchases of SGD 100+ at the same retailer."
+  ],
+  "avoidTip": "Avoid exchanging money at Changi Airport — rates are lower than city money changers.",
+  "dccNote": "Singapore has many international retailers — always choose SGD when paying by card.",
+  "fxFeeItems": [
+    { "name": "FX Fee (Foreign Transaction Fee)", "detail": "Fee your bank charges for foreign card use — typically 1.5%–2.5% of the transaction." },
+    { "name": "Spread", "detail": "The gap between mid-market rate and the rate your bank actually gives — usually 0.5%–2%." },
+    { "name": "ATM Fee", "detail": "Withdrawal fees from both your home bank and the local ATM — combined can reach $5–$10 per transaction." },
+    { "name": "DCC Markup", "detail": "Extra markup when you choose to pay in your home currency — often 3%–10% above the true market rate." }
+  ]
+}

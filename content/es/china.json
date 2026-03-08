@@ -1,0 +1,24 @@
+{
+  "countryName": "China",
+  "currency": "CNY",
+  "countryCode": "CN",
+  "countryFlag": "🇨🇳",
+  "heroTip": "En China, Alipay y WeChat Pay son los métodos de pago dominantes — vincula tu tarjeta antes de salir.",
+  "bestPaymentMethod": "Alipay / WeChat Pay (vinculado a una tarjeta de crédito)",
+  "bestCard": "Elige una tarjeta con bajas comisiones internacionales. Vincúlala a Alipay o WeChat Pay antes de viajar.",
+  "topTips": [
+    "Regístrate en Alipay o WeChat Pay y vincula tu tarjeta antes de salir.",
+    "Los códigos QR están en casi todas partes — lleva poco efectivo.",
+    "Retira yuan en cajeros con UnionPay (disponibles en aeropuertos y centros comerciales).",
+    "Elige un banco con comisiones FX bajas.",
+    "Verifica siempre el tipo de cambio antes de pagar con tarjeta y rechaza el DCC."
+  ],
+  "avoidTip": "Nunca aceptes DCC al pagar con tarjeta en tiendas u hoteles en China.",
+  "dccNote": "Muchos comercios en China ofrecen cobrar en tu moneda local — siempre rechaza y elige pagar en CNY.",
+  "fxFeeItems": [
+    { "name": "Comisión FX (Comisión por Transacción Extranjera)", "detail": "Comisión que cobra tu banco por usar la tarjeta en el extranjero — normalmente el 1,5%–2,5% de la transacción." },
+    { "name": "Diferencial (Spread)", "detail": "La diferencia entre el tipo de cambio interbancario y el que te aplica tu banco — normalmente el 0,5%–2%." },
+    { "name": "Comisión de Cajero (ATM)", "detail": "Comisiones de tu banco y del cajero extranjero — combinadas pueden alcanzar 3–5 € por extracción." },
+    { "name": "DCC Markup", "detail": "Cargo adicional cuando pagas en tu moneda local — suele estar entre el 3%–10% por encima del tipo real." }
+  ]
+}

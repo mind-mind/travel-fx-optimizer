@@ -3,6 +3,7 @@
 import { ComparisonResult, BankName, PaymentMethod } from "@/lib/types";
 import { BANKS, PAYMENT_METHODS } from "@/lib/fxData";
 import { Translations } from "@/data/translations";
+import { fmtCurrency } from "@/lib/formatCurrency";
 
 interface Props {
   results: ComparisonResult[];
@@ -19,15 +20,7 @@ interface Props {
   t: Translations;
 }
 
-function makeFmt(homeCurrency: string) {
-  return (n: number) =>
-    new Intl.NumberFormat("en", {
-      style: "currency",
-      currency: homeCurrency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(n);
-}
+
 
 const methodIcon: Record<string, string> = {
   "Credit Card": "💳",
@@ -50,7 +43,7 @@ export default function ComparisonPanel({
   onMethod2Change,
   t,
 }: Props) {
-  const fmt = makeFmt(homeCurrency);
+  const fmt = (n: number) => fmtCurrency(n, homeCurrency);
   const r1 = results.find((r) => r.bank === bank1 && r.method === method1);
   const r2 = results.find((r) => r.bank === bank2 && r.method === method2);
   const midRateHome = amountForeign * midRate;

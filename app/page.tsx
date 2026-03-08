@@ -10,11 +10,18 @@ import LearnSection from "@/components/LearnSection";
 import CardRecommendation from "@/components/CardRecommendation";
 import PopularPairs from "@/components/PopularPairs";
 import TravelMoneyTips from "@/components/TravelMoneyTips";
+import TravelMistakes from "@/components/TravelMistakes";
+import InstantExample from "@/components/InstantExample";
+import MoneyLostPanel from "@/components/MoneyLostPanel";
+import BestMethodCard from "@/components/BestMethodCard";
 import SharePanel from "@/components/SharePanel";
+import Link from "next/link";
 import { BankName, PaymentMethod, ComparisonResult } from "@/lib/types";
 import { calculateComparisons, getVatRefund } from "@/lib/calculator";
 import { COUNTRIES, HOME_CURRENCIES } from "@/lib/fxData";
 import { translations, Lang } from "@/data/translations";
+import { fmtCurrency } from "@/lib/formatCurrency";
+import { CODE_TO_COUNTRY } from "@/lib/guideConfig";
 
 const RATE_REFRESH_MS = 600_000; // 10 minutes
 
@@ -31,13 +38,21 @@ export default function Home() {
   const [method, setMethod] = useState<PaymentMethod>("Credit Card");
   const [results, setResults] = useState<ComparisonResult[] | null>(null);
 
+  // Sticky bottom bar dismiss
+  const [stickyDismissed, setStickyDismissed] = useState(false);
+
   // Comparison mode
   const [compareMode, setCompareMode] = useState(false);
   const [bank2, setBank2] = useState<BankName>("No-fee card");
   const [method2, setMethod2] = useState<PaymentMethod>("Cash");
   const [lang, setLang] = useState<Lang>(() => {
     if (typeof window !== "undefined") {
-      return (localStorage.getItem("lang") as Lang) ?? "en";
+      const saved = localStorage.getItem("lang") as Lang | null;
+      if (saved && saved in translations) return saved;
+      // Auto-detect from browser language
+      const browserLang = navigator.language.toLowerCase().split("-")[0];
+      const langMap: Record<string, Lang> = { en: "en", th: "th", es: "es", zh: "zh", ja: "ja", ko: "ko" };
+      return langMap[browserLang] ?? "en";
     }
     return "en";
   });
@@ -83,8 +98,7 @@ export default function Home() {
 
   const t = translations[lang];
 
-  function toggleLang() {
-    const next: Lang = lang === "th" ? "en" : "th";
+  function setLangAndSave(next: Lang) {
     setLang(next);
     localStorage.setItem("lang", next);
   }
@@ -174,6 +188,9 @@ export default function Home() {
     setResults(calculateComparisons(parsed, midRate));
   }, [amount, midRate]);
 
+  // Reset sticky bar whenever a new result is calculated
+  useEffect(() => { setStickyDismissed(false); }, [results]);
+
   const parsedAmount = parseFloat(amount);
   const vat = parsedAmount > 0 ? getVatRefund(parsedAmount, country) : null;
 
@@ -206,15 +223,19 @@ export default function Home() {
               >
                 {dark ? "☀️" : "🌙"}
               </button>
-              <button
-                onClick={toggleLang}
-                className="flex items-center gap-0.5 rounded-lg bg-blue-700 px-2.5 py-1.5 text-xs font-semibold"
-                aria-label="Switch language"
+              <select
+                value={lang}
+                onChange={(e) => setLangAndSave(e.target.value as Lang)}
+                className="rounded-lg bg-blue-700 px-2 py-1.5 text-xs font-semibold text-white border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
+                aria-label="Select language"
               >
-                <span className={lang === "en" ? "text-white" : "text-blue-300"}>EN</span>
-                <span className="text-blue-400 mx-0.5">|</span>
-                <span className={lang === "th" ? "text-white" : "text-blue-300"}>TH</span>
-              </button>
+                <option value="en">🇺🇸 English</option>
+                <option value="th">🇹🇭 ไทย</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="zh">🇨🇳 中文</option>
+                <option value="ja">🇯🇵 日本語</option>
+                <option value="ko">🇰🇷 한국어</option>
+              </select>
             </div>
           </div>
 
@@ -265,7 +286,7 @@ export default function Home() {
       </div>
 
       {/* Content */}
-      <div className="max-w-md mx-auto px-4 -mt-4 pb-12 space-y-5">
+      <div className="max-w-md mx-auto px-4 -mt-4 pb-28 space-y-5">
         <PaymentForm
           country={country}
           amount={amount}
@@ -282,116 +303,155 @@ export default function Home() {
           canSwap={canSwap}
         />
 
-        {vat?.vatEligible && (
-          <VatRefundBanner
-            amount={parsedAmount}
-            estimatedRefund={vat.estimatedRefund}
-            vatRate={vat.vatRate}
-            minAmount={vat.minAmount}
-            meetsMinimum={vat.meetsMinimum}
-            currency={currency}
-            t={t}
-          />
-        )}
-
-        {results && (
-          <ResultsSection
-            results={results}
-            selectedBank={bank}
-            selectedMethod={method}
-            amountForeign={parsedAmount}
-            midRate={midRate}
-            currency={currency}
-            homeCurrency={homeCurrency}
-            rateTimestamp={rateTimestamp}
-            rateFallback={rateFallback}
-            refreshMinutes={Math.floor(RATE_REFRESH_MS / 60_000)}
-            t={t}
-          />
-        )}
-
-        {/* Insight Panel — shown after calculation */}
+        {/* ── AFTER CALCULATION ── */}
         {results && parsedAmount > 0 && (() => {
           const selected = results.find((r) => r.bank === bank && r.method === method);
-          return selected ? (
-            <InsightPanel
-              selected={selected}
-              midRate={midRate}
-              amountForeign={parsedAmount}
-              currency={currency}
-              homeCurrency={homeCurrency}
-              countryCode={country}
-              t={t}
-              lang={lang}
-            />
-          ) : null;
-        })()}
-
-        {/* Card Recommendation Engine */}
-        {results && parsedAmount > 0 && (() => {
-          const selected = results.find((r) => r.bank === bank && r.method === method);
-          return selected ? (
-            <CardRecommendation
-              selected={selected}
-              amountForeign={parsedAmount}
-              midRate={midRate}
-              method={method}
-              homeCurrency={homeCurrency}
-              t={t}
-            />
-          ) : null;
-        })()}
-
-        {/* Share result */}
-        {results && parsedAmount > 0 && (() => {
           const cheapest = results.find((r) => r.isCheapest);
-          const selected = results.find((r) => r.bank === bank && r.method === method);
           const mostExpensive = results.reduce((a, b) => (a.totalHome > b.totalHome ? a : b));
           const savings = cheapest ? mostExpensive.totalHome - cheapest.totalHome : 0;
-          return selected ? (
-            <SharePanel
-              homeCurrency={homeCurrency}
-              currency={currency}
-              amountForeign={parsedAmount}
-              totalHome={selected.totalHome}
-              bestMethod={cheapest ? `${cheapest.bank} (${cheapest.method})` : `${selected.bank} (${selected.method})`}
-              savings={savings}
-            />
-          ) : null;
-        })()}
+          const lossVsMid = selected ? selected.totalHome - parsedAmount * midRate : 0;
+          const midRateTotal = parsedAmount * midRate;
+          const lossVsMidPercent = midRateTotal > 0 ? (lossVsMid / midRateTotal) * 100 : 0;
+          return (
+            <>
+              {/* 1. Money Lost — most prominent result */}
+              {selected && (
+                <MoneyLostPanel
+                  selected={selected}
+                  midRate={midRate}
+                  amountForeign={parsedAmount}
+                  currency={currency}
+                  homeCurrency={homeCurrency}
+                  results={results}
+                  countryCode={country}
+                  lang={lang}
+                />
+              )}
 
-        {/* Comparison Mode Toggle + Panel */}
-        {results && parsedAmount > 0 && (
-          <div className="space-y-3">
-            <button
-              onClick={() => setCompareMode((v) => !v)}
-              className={`w-full rounded-xl border py-3 text-sm font-semibold transition-colors ${
-                compareMode
-                  ? "border-purple-500 bg-purple-50 dark:bg-purple-950 text-purple-700 dark:text-purple-300"
-                  : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
-              }`}
-            >
-              {compareMode ? t.compareToggleClose : t.compareToggleOpen}
-            </button>
+              {/* 2. Best Method Card */}
+              <BestMethodCard results={results} homeCurrency={homeCurrency} countryCode={country} lang={lang} />
 
-            {compareMode && (
-              <ComparisonPanel
+              {/* 3. VAT refund banner */}
+              {vat?.vatEligible && (
+                <VatRefundBanner
+                  amount={parsedAmount}
+                  estimatedRefund={vat.estimatedRefund}
+                  vatRate={vat.vatRate}
+                  minAmount={vat.minAmount}
+                  meetsMinimum={vat.meetsMinimum}
+                  currency={currency}
+                  t={t}
+                />
+              )}
+
+              {/* 4. Full comparison table — best callout suppressed (rendered above as BestMethodCard) */}
+              <ResultsSection
                 results={results}
-                midRate={midRate}
+                selectedBank={bank}
+                selectedMethod={method}
                 amountForeign={parsedAmount}
+                midRate={midRate}
                 currency={currency}
                 homeCurrency={homeCurrency}
-                bank1={bank}
-                method1={method}
-                bank2={bank2}
-                method2={method2}
-                onBank2Change={setBank2}
-                onMethod2Change={setMethod2}
+                rateTimestamp={rateTimestamp}
+                rateFallback={rateFallback}
+                refreshMinutes={Math.floor(RATE_REFRESH_MS / 60_000)}
                 t={t}
+                showBestCallout={false}
               />
-            )}
-          </div>
+
+              {/* 4. Insight panel */}
+              {selected && (
+                <InsightPanel
+                  selected={selected}
+                  midRate={midRate}
+                  amountForeign={parsedAmount}
+                  currency={currency}
+                  homeCurrency={homeCurrency}
+                  countryCode={country}
+                  t={t}
+                  lang={lang}
+                />
+              )}
+
+              {/* 5. Card recommendation */}
+              {selected && (
+                <CardRecommendation
+                  selected={selected}
+                  amountForeign={parsedAmount}
+                  midRate={midRate}
+                  method={method}
+                  homeCurrency={homeCurrency}
+                  t={t}
+                />
+              )}
+
+              {/* 7. Comparison mode */}
+              <div className="space-y-3">
+                <button
+                  onClick={() => setCompareMode((v) => !v)}
+                  className={`w-full rounded-xl border py-3 text-sm font-semibold transition-colors ${
+                    compareMode
+                      ? "border-purple-500 bg-purple-50 dark:bg-purple-950 text-purple-700 dark:text-purple-300"
+                      : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-600 dark:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600"
+                  }`}
+                >
+                  {compareMode ? t.compareToggleClose : t.compareToggleOpen}
+                </button>
+
+                {compareMode && (
+                  <ComparisonPanel
+                    results={results}
+                    midRate={midRate}
+                    amountForeign={parsedAmount}
+                    currency={currency}
+                    homeCurrency={homeCurrency}
+                    bank1={bank}
+                    method1={method}
+                    bank2={bank2}
+                    method2={method2}
+                    onBank2Change={setBank2}
+                    onMethod2Change={setMethod2}
+                    t={t}
+                  />
+                )}
+              </div>
+
+              {/* 8. Share result — placed after Compare vs Mid-market Rate */}
+              {selected && (
+                <SharePanel
+                  homeCurrency={homeCurrency}
+                  currency={currency}
+                  amountForeign={parsedAmount}
+                  totalHome={selected.totalHome}
+                  bestMethod={cheapest ? `${cheapest.bank} (${cheapest.method})` : `${selected.bank} (${selected.method})`}
+                  savings={savings}
+                  lossVsMid={lossVsMid}
+                  lossVsMidPercent={lossVsMidPercent}
+                  countryCode={country}
+                  countryName={selectedCountry?.name ?? ""}
+                  countryFlag={selectedCountry?.flag ?? ""}
+                  midRate={midRate}
+                />
+              )}
+            </>
+          );
+        })()}
+
+        {/* ── BEFORE CALCULATION: instant example ── */}
+        {!results && (
+          <InstantExample
+            currency={currency}
+            homeCurrency={homeCurrency}
+            midRate={midRate}
+            rateLoading={rateLoading}
+          />
         )}
+
+        {/* ── ALWAYS VISIBLE ── */}
+
+        {/* Travel mistakes */}
+        <TravelMistakes />
 
         {/* Learn Before You Go */}
         <LearnSection countryCode={country} t={t} lang={lang} />
@@ -402,6 +462,57 @@ export default function Home() {
         {/* Travel money tips */}
         <TravelMoneyTips />
       </div>
+
+      {/* Sticky action bar ── shown when user is overpaying and hasn't dismissed */}
+      {results && parsedAmount > 0 && !stickyDismissed && (() => {
+        const sel = results.find((r) => r.bank === bank && r.method === method);
+        if (!sel) return null;
+        const loss = sel.totalHome - parsedAmount * midRate;
+        if (loss < 0.5) return null;
+        const cheap = results.find((r) => r.isCheapest);
+        const saving = cheap ? sel.totalHome - cheap.totalHome : 0;
+        const gc = CODE_TO_COUNTRY[country] ?? null;
+        const gp = gc ? `/${lang}/how-to-pay/${gc}` : null;
+        return (
+          <div className="fixed bottom-0 inset-x-0 z-50 shadow-2xl">
+            <div
+              className="text-white"
+              style={{ background: "linear-gradient(90deg, #b91c1c 0%, #dc2626 100%)" }}
+            >
+              <div className="max-w-md mx-auto px-4 py-3 flex items-center gap-3">
+                <span className="text-xl shrink-0" aria-hidden>💸</span>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-bold leading-tight">
+                    Overpaying {fmtCurrency(loss, homeCurrency)} right now
+                  </p>
+                  {saving > 0.5 && (
+                    <p className="text-xs text-red-200 leading-tight mt-0.5">
+                      Switch method — save {fmtCurrency(saving, homeCurrency)}
+                    </p>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
+                  {gp && (
+                    <Link
+                      href={gp}
+                      className="rounded-lg bg-white text-red-700 font-bold text-xs px-3 py-2 hover:bg-red-50 transition-colors whitespace-nowrap"
+                    >
+                      How to save →
+                    </Link>
+                  )}
+                  <button
+                    onClick={() => setStickyDismissed(true)}
+                    className="text-red-200 hover:text-white text-sm leading-none"
+                    aria-label="Dismiss"
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
     </main>
   );
 }

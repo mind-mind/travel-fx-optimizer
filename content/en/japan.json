@@ -1,0 +1,24 @@
+{
+  "countryName": "Japan",
+  "currency": "JPY",
+  "countryCode": "JP",
+  "countryFlag": "🇯🇵",
+  "heroTip": "Japan is still a cash-heavy society — carry JPY alongside your credit card.",
+  "bestPaymentMethod": "Cash JPY + low-fee credit card",
+  "bestCard": "Choose a credit card with low foreign transaction fees. KBank or TTB Flash Card (some variants) have zero overseas fees.",
+  "topTips": [
+    "Withdraw JPY from Japan Post Bank or 7-Eleven (7Bank) ATMs — they accept foreign cards.",
+    "Many small shops in Japan are cash-only.",
+    "Convenience stores (Lawson, FamilyMart) often accept IC cards — Suica works.",
+    "Use your credit card at department stores, large restaurants, and hotels.",
+    "Claim 10% VAT refund when you spend ¥5,000+ at the same store."
+  ],
+  "avoidTip": "Avoid exchanging money at the airport — rates are significantly worse than ATMs in the city.",
+  "dccNote": "When swiping your card in Japan, always choose JPY. Never select another currency even if offered.",
+  "fxFeeItems": [
+    { "name": "FX Fee (Foreign Transaction Fee)", "detail": "Fee your bank charges for foreign card use — typically 1.5%–2.5% of the transaction." },
+    { "name": "Spread", "detail": "The gap between mid-market rate and the rate your bank actually gives — usually 0.5%–2%." },
+    { "name": "ATM Fee", "detail": "Withdrawal fees from both your home bank and the local ATM — combined can reach $5–$10 per transaction." },
+    { "name": "DCC Markup", "detail": "Extra markup when you choose to pay in your home currency — often 3%–10% above the true market rate." }
+  ]
+}

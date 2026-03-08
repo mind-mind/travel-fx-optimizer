@@ -3,6 +3,7 @@
 import { ComparisonResult } from "@/lib/types";
 import { BankName, PaymentMethod } from "@/lib/types";
 import { Translations } from "@/data/translations";
+import { fmtCurrency } from "@/lib/formatCurrency";
 
 interface Props {
   results: ComparisonResult[];
@@ -16,17 +17,11 @@ interface Props {
   rateFallback: boolean;
   refreshMinutes: number;
   t: Translations;
+  /** If false, suppresses the green best-method callout (rendered separately by parent) */
+  showBestCallout?: boolean;
 }
 
-function makeFmt(homeCurrency: string) {
-  return (n: number) =>
-    new Intl.NumberFormat("en", {
-      style: "currency",
-      currency: homeCurrency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(n);
-}
+
 
 const methodIcon: Record<string, string> = {
   "Credit Card": "💳",
@@ -51,8 +46,9 @@ export default function ResultsSection({
   rateFallback,
   refreshMinutes,
   t,
+  showBestCallout = true,
 }: Props) {
-  const fmt = makeFmt(homeCurrency);
+  const fmt = (n: number) => fmtCurrency(n, homeCurrency);
   const selected = results.find(
     (r) => r.bank === selectedBank && r.method === selectedMethod
   );
@@ -61,6 +57,11 @@ export default function ResultsSection({
   const isTie = cheapestAll.length > 1;
   const mostExpensive = results.reduce((a, b) => (a.totalHome > b.totalHome ? a : b));
   const maxSavings = cheapest ? mostExpensive.totalHome - cheapest.totalHome : 0;
+
+  // Reference total for "extra cost vs standard" labels
+  const standardRef = results.find(
+    (r) => r.bank === "Standard card" && r.method === "Credit Card"
+  ) ?? mostExpensive;
 
   const isSelectedCheapest = selected?.isCheapest ?? false;
   const potentialSaving =
@@ -78,8 +79,8 @@ export default function ResultsSection({
 
   return (
     <div className="space-y-5">
-      {/* 🏆 Best-option callout */}
-      {cheapest && maxSavings > 0 && (
+      {/* 🏆 Best-option callout — hidden when rendered separately by parent */}
+      {showBestCallout && cheapest && maxSavings > 0 && (
         <div className="rounded-2xl bg-green-50 dark:bg-green-950 border border-green-300 dark:border-green-700 p-4 flex items-center justify-between gap-3">
           <div className="min-w-0">
             <p className="text-xs font-semibold uppercase tracking-wide text-green-600 dark:text-green-400 mb-0.5">
@@ -147,27 +148,29 @@ export default function ResultsSection({
       )}
 
       {/* Savings banner */}
-      {!isSelectedCheapest && potentialSaving > 0 && cheapest && (
-        <div className="rounded-2xl bg-amber-50 dark:bg-amber-950 border border-amber-300 dark:border-amber-800 p-4 flex items-start gap-3">
-          <span className="text-2xl">💡</span>
-          <div>
-            <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">
-              {t.youCouldSave} {fmt(potentialSaving)}
-            </p>
-            <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
-              {t.switchTo}{" "}
-              {isTie
-                ? cheapestAll.map((r, i) => (
-                    <span key={i}>{i > 0 ? " / " : ""}<strong>{r.bank}</strong> — <strong>{r.method}</strong></span>
-                  ))
-                : <><strong>{cheapest.bank}</strong> — <strong>{cheapest.method}</strong></>
-              }{" "}
-              {t.totalOf} {fmt(cheapest.totalHome)}{" "}
-              (rate {cheapest.effectiveRate.toFixed(4)} {homeCurrency}/{currency})
-            </p>
+      {!isSelectedCheapest && potentialSaving > 0 && cheapest && (() => {
+        let payLabel = "Switch to a better option";
+        if (cheapest.bank === "Cash") payLabel = "Pay with cash";
+        else if (cheapest.bank === "No-fee card") payLabel = "Use a no-FX-fee card (e.g. Wise, Revolut)";
+        else if (cheapest.bank === "Travel card") payLabel = "Use a travel card";
+        else if (cheapest.method === "ATM") payLabel = "Withdraw at an ATM";
+        else payLabel = `Switch to ${cheapest.bank}`;
+        return (
+          <div className="rounded-2xl bg-amber-50 dark:bg-amber-950 border border-amber-300 dark:border-amber-800 p-4 flex items-start gap-3">
+            <span className="text-2xl">💡</span>
+            <div>
+              <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">
+                {payLabel} and save{" "}
+                <span className="font-extrabold text-base">{fmt(potentialSaving)}</span>{" "}
+                on this payment
+              </p>
+              <p className="text-xs text-amber-700 dark:text-amber-400 mt-0.5">
+                Total would be {fmt(cheapest.totalHome)} instead of {fmt(selected!.totalHome)}
+              </p>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* All options by bank */}
       <div>
@@ -184,15 +187,17 @@ export default function ResultsSection({
                   <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">💵 Cash</p>
                   <div className="text-right">
                     <p className="text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
-                      Live estimate · Updated {updatedAtLabel}
+                      {rateFallback ? "Estimated" : "Live estimate"} · Updated {updatedAtLabel}
                     </p>
-                    <p className="text-xs text-emerald-600 dark:text-emerald-400">No card fee · Refreshes every {refreshMinutes} min</p>
+                    <p className="text-xs text-emerald-600 dark:text-emerald-400">
+                      Based on mid-market FX rate · No card fee · Refreshes every {refreshMinutes} min
+                    </p>
                   </div>
                 </div>
                 <div
                   className={`flex items-center justify-between px-4 py-3 ${
                     isSelected ? "ring-1 ring-inset ring-blue-400" : ""
-                  }`}
+                  }${cashResult.isCheapest ? " bg-green-50/50 dark:bg-green-950/30" : ""}`}
                 >
                   <div className="flex items-center gap-2">
                     <span className="text-lg">💵</span>
@@ -208,12 +213,17 @@ export default function ResultsSection({
                       {fmt(cashResult.totalHome)}
                     </p>
                     {cashResult.isCheapest && (
-                      <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                        {isTie ? t.lowestCostTie : t.lowestCost}
+                      <span className="text-xs font-semibold text-green-600 dark:text-green-400">
+                        {isTie ? t.lowestCostTie : "✓ Cheapest"}
+                      </span>
+                    )}
+                    {!cashResult.isCheapest && cheapest && (
+                      <span className="text-xs font-medium text-orange-500 dark:text-orange-400">
+                        +{fmt(cashResult.totalHome - cheapest.totalHome)} vs cheapest
                       </span>
                     )}
                     {isSelected && !cashResult.isCheapest && (
-                      <span className="text-xs font-semibold text-blue-500">{t.selected}</span>
+                      <span className="text-xs font-semibold text-blue-500 block">{t.selected}</span>
                     )}
                   </div>
                 </div>
@@ -243,6 +253,9 @@ export default function ResultsSection({
                     <p className="text-xs text-gray-400 dark:text-gray-500">
                       Updated {updatedAtLabel} · every {refreshMinutes} min
                     </p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500">
+                      Based on mid-market FX rate
+                    </p>
                   </div>
                 </div>
                 <div className="divide-y divide-gray-50 dark:divide-gray-800">
@@ -254,7 +267,7 @@ export default function ResultsSection({
                         key={`${r.bank}-${r.method}`}
                         className={`flex items-center justify-between px-4 py-3 ${
                           isSelected ? "ring-1 ring-inset ring-blue-400" : ""
-                        }`}
+                        }${r.isCheapest ? " bg-green-50/50 dark:bg-green-950/30" : ""}`}
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-lg">{methodIcon[r.method]}</span>
@@ -270,15 +283,25 @@ export default function ResultsSection({
                         </div>
                         <div className="text-right">
                           <p className="text-sm font-bold text-gray-800 dark:text-gray-100">
-                              {fmt(r.totalHome)}
+                            {fmt(r.totalHome)}
                           </p>
                           {r.isCheapest && (
-                            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">
-                              {isTie ? t.lowestCostTie : t.lowestCost}
+                            <span className="text-xs font-semibold text-green-600 dark:text-green-400">
+                              {isTie ? t.lowestCostTie : "✓ Cheapest"}
+                            </span>
+                          )}
+                          {!r.isCheapest && r.totalHome < standardRef.totalHome && (
+                            <span className="text-xs font-medium text-green-600 dark:text-green-400">
+                              Saves {fmt(standardRef.totalHome - r.totalHome)} vs standard
+                            </span>
+                          )}
+                          {!r.isCheapest && r.totalHome >= standardRef.totalHome && cheapest && (
+                            <span className="text-xs font-medium text-orange-500 dark:text-orange-400">
+                              +{fmt(r.totalHome - cheapest.totalHome)} extra cost
                             </span>
                           )}
                           {isSelected && !r.isCheapest && (
-                            <span className="text-xs font-semibold text-blue-500">
+                            <span className="text-xs font-semibold text-blue-500 block">
                               {t.selected}
                             </span>
                           )}

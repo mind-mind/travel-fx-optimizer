@@ -1,0 +1,24 @@
+{
+  "countryName": "China",
+  "currency": "CNY",
+  "countryCode": "CN",
+  "countryFlag": "🇨🇳",
+  "heroTip": "In China, Alipay and WeChat Pay are the dominant payment methods — link your card before you go.",
+  "bestPaymentMethod": "Alipay / WeChat Pay (linked to a credit card)",
+  "bestCard": "KBank Mastercard or SCB Visa — among the lowest FX fees available.",
+  "topTips": [
+    "Register Alipay or WeChat Pay before departure and link your credit card.",
+    "Scan-to-pay QR codes work almost everywhere in China — carry minimal cash.",
+    "If you need cash, withdraw CNY from ATMs that support UnionPay (available at airports).",
+    "Choose a bank with a low FX fee such as KBank or SCB.",
+    "Always check the rate before swiping — never accept billing in your home currency (DCC)."
+  ],
+  "avoidTip": "Never accept DCC when paying by card at merchants or hotels in China.",
+  "dccNote": "Many merchants in China offer to charge in your home currency — always decline and choose to pay in CNY.",
+  "fxFeeItems": [
+    { "name": "FX Fee (Foreign Transaction Fee)", "detail": "Fee your bank charges for foreign card use — typically 1.5%–2.5% of the transaction." },
+    { "name": "Spread", "detail": "The gap between mid-market rate and the rate your bank actually gives — usually 0.5%–2%." },
+    { "name": "ATM Fee", "detail": "Withdrawal fees from both your home bank and the local ATM — combined can reach $5–$10 per transaction." },
+    { "name": "DCC Markup", "detail": "Extra markup when you choose to pay in your home currency — often 3%–10% above the true market rate." }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "countryName": "Hong Kong",
+  "currency": "HKD",
+  "countryCode": "HK",
+  "countryFlag": "🇭🇰",
+  "heroTip": "Octopus Card is essential for transit and everyday purchases throughout Hong Kong.",
+  "bestPaymentMethod": "Octopus Card + credit card",
+  "bestCard": "SCB JCB or Krungsri — both offer benefits on Hong Kong spending.",
+  "topTips": [
+    "Buy an Octopus Card at the MTR Airport Express station — works on MTR, buses, ferries, and 7-Eleven.",
+    "Credit cards are widely accepted at shopping malls and restaurants.",
+    "Withdraw HKD from HSBC or Hang Seng Bank ATMs for competitive rates.",
+    "Night markets and small grocery stores may be cash-only — carry some HKD.",
+    "Hong Kong does not have a VAT refund scheme for tourists."
+  ],
+  "avoidTip": "Avoid ground-floor money changers in Chungking Mansions — rates can be misleading and some are unsafe.",
+  "dccNote": "In Hong Kong, always choose HKD when paying by card. Decline if your home currency is offered.",
+  "fxFeeItems": [
+    { "name": "FX Fee (Foreign Transaction Fee)", "detail": "Fee your bank charges for foreign card use — typically 1.5%–2.5% of the transaction." },
+    { "name": "Spread", "detail": "The gap between mid-market rate and the rate your bank actually gives — usually 0.5%–2%." },
+    { "name": "ATM Fee", "detail": "Withdrawal fees from both your home bank and the local ATM — combined can reach $5–$10 per transaction." },
+    { "name": "DCC Markup", "detail": "Extra markup when you choose to pay in your home currency — often 3%–10% above the true market rate." }
+  ]
+}
