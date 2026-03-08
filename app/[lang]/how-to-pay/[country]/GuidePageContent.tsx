@@ -1,0 +1,375 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import type { CountryContent, GuideCountry, GuideLang } from "@/lib/guideConfig";
+import { VALID_COUNTRIES, COUNTRY_META } from "@/lib/guideConfig";
+import type { Translations } from "@/data/translations";
+import { fmtCurrency } from "@/lib/formatCurrency";
+
+interface Props {
+  content: CountryContent;
+  t: Translations;
+  lang: GuideLang;
+  country: GuideCountry;
+}
+
+function FeeItem({
+  name,
+  detail,
+  badge,
+}: {
+  name: string;
+  detail: string;
+  badge: "red" | "orange";
+}) {
+  const badgeClass =
+    badge === "red"
+      ? "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
+      : "bg-orange-100 text-orange-700 dark:bg-orange-900 dark:text-orange-300";
+  return (
+    <div className="flex items-start gap-3 py-2 border-b border-gray-50 dark:border-gray-800 last:border-0">
+      <span
+        className={`shrink-0 mt-0.5 rounded-full px-2 py-0.5 text-[10px] font-bold ${badgeClass}`}
+      >
+        Fee
+      </span>
+      <div>
+        <p className="text-sm font-semibold text-gray-800 dark:text-gray-100">{name}</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">{detail}</p>
+      </div>
+    </div>
+  );
+}
+
+function TouristCostExample({
+  country,
+  currency,
+  t,
+}: {
+  country: GuideCountry;
+  currency: string;
+  t: Translations;
+}) {
+  const { atmFeeLocal, exampleWithdrawal, fxFeePercent } = COUNTRY_META[country];
+  const fxFeeAmount = Math.round(exampleWithdrawal * fxFeePercent / 100);
+  const totalExtra = atmFeeLocal + fxFeeAmount;
+  const fmt = (n: number) => fmtCurrency(n, currency);
+
+  return (
+    <section className="bg-amber-50 dark:bg-amber-950 rounded-2xl border border-amber-200 dark:border-amber-800 shadow-sm p-6 space-y-4">
+      <div className="flex items-center gap-2">
+        <span className="text-2xl">💸</span>
+        <h2 className="text-lg font-bold text-amber-900 dark:text-amber-100">
+          {t.costExampleTitle}
+        </h2>
+      </div>
+
+      <p className="text-sm font-semibold text-amber-800 dark:text-amber-200">
+        {t.costExampleSubtitle} {fmt(exampleWithdrawal)}
+      </p>
+
+      <div className="rounded-xl bg-white dark:bg-gray-900 border border-amber-100 dark:border-amber-800 divide-y divide-amber-100 dark:divide-amber-800 overflow-hidden">
+        <div className="flex items-center justify-between px-4 py-2.5 text-sm">
+          <span className="text-gray-600 dark:text-gray-400">{t.costExampleWithdrawal}</span>
+          <span className="font-semibold text-gray-800 dark:text-gray-100">{fmt(exampleWithdrawal)}</span>
+        </div>
+        <div className="flex items-center justify-between px-4 py-2.5 text-sm">
+          <span className="text-gray-600 dark:text-gray-400">{t.costExampleAtmFee}</span>
+          <span className="font-semibold text-red-600 dark:text-red-400">+{fmt(atmFeeLocal)}</span>
+        </div>
+        <div className="flex items-center justify-between px-4 py-2.5 text-sm">
+          <span className="text-gray-600 dark:text-gray-400">
+            {t.costExampleFxFeePre} {fxFeePercent}%{t.costExampleFxFeeSuf}
+          </span>
+          <span className="font-semibold text-red-600 dark:text-red-400">+{fmt(fxFeeAmount)}</span>
+        </div>
+        <div className="flex items-center justify-between px-4 py-3 text-sm bg-amber-50 dark:bg-amber-950">
+          <span className="font-bold text-amber-900 dark:text-amber-100">{t.costExampleTotal}</span>
+          <span className="font-bold text-red-600 dark:text-red-400">+{fmt(totalExtra)}</span>
+        </div>
+      </div>
+
+      <p className="text-xs text-amber-700 dark:text-amber-300 leading-relaxed">
+        {t.costExampleNote}
+      </p>
+
+      <div className="rounded-xl bg-amber-100 dark:bg-amber-900 border border-amber-200 dark:border-amber-700 px-4 py-3">
+        <p className="text-xs font-semibold text-amber-800 dark:text-amber-200">
+          💡 {t.costExampleTip}
+        </p>
+      </div>
+    </section>
+  );
+}
+
+function getCountryName(t: Translations, c: GuideCountry): string {
+  const map: Record<GuideCountry, string> = {
+    china: t.countryChina,
+    japan: t.countryJapan,
+    korea: t.countryKorea,
+    singapore: t.countrySingapore,
+    "hong-kong": t.countryHongKong,
+    taiwan: t.countryTaiwan,
+    thailand: t.countryThailand,
+  };
+  return map[c];
+}
+
+export function GuidePageContent({ content, t, lang, country }: Props) {
+  const [dark, setDark] = useState(false);
+  const router = useRouter();
+
+  useEffect(() => {
+    const storedDark = localStorage.getItem("theme") === "dark";
+    setDark(storedDark);
+    if (storedDark) document.documentElement.classList.add("dark");
+
+    // Redirect to the user's preferred language if different from URL
+    const validLangs = ["en", "th", "es", "zh", "ja", "ko"];
+    const storedLang = localStorage.getItem("lang");
+    if (storedLang && validLangs.includes(storedLang) && storedLang !== lang) {
+      router.replace(`/${storedLang}/how-to-pay/${country}`);
+      return;
+    }
+    if (!storedLang) {
+      const browserLang = navigator.language.toLowerCase().split("-")[0];
+      const langMap: Record<string, string> = { en: "en", th: "th", es: "es", zh: "zh", ja: "ja", ko: "ko" };
+      const detected = langMap[browserLang];
+      if (detected && detected !== lang) {
+        localStorage.setItem("lang", detected);
+        router.replace(`/${detected}/how-to-pay/${country}`);
+      }
+    }
+  }, []);
+
+  function toggleDark() {
+    const next = !dark;
+    setDark(next);
+    localStorage.setItem("theme", next ? "dark" : "light");
+    document.documentElement.classList.toggle("dark", next);
+  }
+
+  function handleLangChange(newLang: string) {
+    localStorage.setItem("lang", newLang);
+    router.push(`/${newLang}/how-to-pay/${country}`);
+  }
+
+  const otherCountries = VALID_COUNTRIES.filter((c) => c !== country);
+
+  return (
+    <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
+      {/* Hero */}
+      <div
+        className="pt-12 pb-10 px-4"
+        style={{ background: "linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)" }}
+      >
+        <div className="max-w-2xl mx-auto">
+          <div className="flex items-center justify-between mb-5">
+            <Link
+              href="/"
+              className="inline-flex items-center gap-1.5 text-blue-300 hover:text-white text-sm transition-colors"
+            >
+              {t.guideBack}
+            </Link>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={toggleDark}
+                className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-700 text-white text-base"
+                aria-label="Toggle dark mode"
+              >
+                {dark ? "☀️" : "🌙"}
+              </button>
+              <select
+                value={lang}
+                onChange={(e) => handleLangChange(e.target.value)}
+                className="rounded-lg bg-blue-700 px-2 py-1.5 text-xs font-semibold text-white border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
+                aria-label="Select language"
+              >
+                <option value="en">🇺🇸 English</option>
+                <option value="th">🇹🇭 ไทย</option>
+                <option value="es">🇪🇸 Español</option>
+                <option value="zh">🇨🇳 中文</option>
+                <option value="ja">🇯🇵 日本語</option>
+                <option value="ko">🇰🇷 한국어</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 mb-3">
+            <span className="text-4xl">{content.countryFlag}</span>
+            <div>
+              <p className="text-blue-200 text-sm font-medium">{t.guideHero}</p>
+              <h1 className="text-2xl font-bold text-white leading-tight">
+                {t.guideHeroTitle} {content.countryName} {t.guideHeroSuf}
+              </h1>
+            </div>
+          </div>
+          <p className="text-blue-100 text-sm leading-relaxed">{content.heroTip}</p>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+        {/* Best Card */}
+        <section
+          id="best-card"
+          className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3 scroll-mt-6"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">💳</span>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+              {t.guideBestCardPre} {content.countryName} — {t.guideBestCardTitle}
+            </h2>
+          </div>
+          <div className="rounded-xl bg-blue-50 dark:bg-blue-950 border border-blue-100 dark:border-blue-900 p-4">
+            <p className="text-sm font-semibold text-blue-800 dark:text-blue-300 mb-1">
+              {t.guideBestCardRec}
+            </p>
+            <p className="text-sm text-blue-700 dark:text-blue-400">{content.bestCard}</p>
+          </div>
+          <p className="text-sm font-medium text-gray-700 dark:text-gray-200">
+            {t.guideBestCardMethod}{" "}
+            <span className="font-bold">{content.bestPaymentMethod}</span>
+          </p>
+          <p className="text-xs text-gray-400 dark:text-gray-500">
+            {t.guideBestCardCompare}{" "}
+            <Link
+              href={`/?country=${content.countryCode}`}
+              className="text-blue-500 hover:underline"
+            >
+              {t.guideBestCardLink}
+            </Link>
+          </p>
+        </section>
+
+        {/* Fees */}
+        <section
+          id="fees"
+          className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3 scroll-mt-6"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">🧾</span>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+              {t.guideFeesIntlTitle}
+            </h2>
+          </div>
+          <div className="space-y-1">
+            {content.fxFeeItems.map((fee, i) => (
+              <FeeItem key={i} name={fee.name} detail={fee.detail} badge={i === 1 ? "orange" : "red"} />
+            ))}
+          </div>
+        </section>
+
+        {/* DCC */}
+        <section
+          id="dcc"
+          className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3 scroll-mt-6"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">⚠️</span>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+              {t.guideDccIntlTitle}
+            </h2>
+          </div>
+          <div className="rounded-xl bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 p-4 space-y-2">
+            <p className="text-sm font-bold text-red-800 dark:text-red-300">
+              DCC = Dynamic Currency Conversion
+            </p>
+            <p className="text-sm text-red-700 dark:text-red-400 leading-relaxed">
+              {t.guideDccExplanation}
+            </p>
+            <p className="text-sm font-bold text-red-700 dark:text-red-300">
+              ✋ {t.guideDccDecline} {content.currency} {t.guideDccDeclineSuf}
+            </p>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            {content.dccNote}
+          </p>
+        </section>
+
+        {/* Tourist Cost Example */}
+        <TouristCostExample country={country} currency={content.currency} t={t} />
+
+        {/* Bank Compare */}
+        <section
+          id="compare-banks"
+          className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3 scroll-mt-6"
+        >
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">📊</span>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+              {t.guideBankIntlTitle} {content.countryName}
+            </h2>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{t.guideBankCompareDesc}</p>
+          <Link
+            href={`/?country=${content.countryCode}`}
+            className="block w-full text-center rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-3 transition-colors"
+          >
+            {t.guideBankCompareCta} {content.countryName} →
+          </Link>
+        </section>
+
+        {/* Tips */}
+        <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">💡</span>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+              {t.guideTipsTitle} {content.countryName}
+            </h2>
+          </div>
+          <ul className="space-y-2">
+            {content.topTips.map((tip, i) => (
+              <li
+                key={i}
+                className="flex items-start gap-2 text-sm text-gray-700 dark:text-gray-300"
+              >
+                <span className="shrink-0 font-bold text-blue-500 mt-0.5">{i + 1}.</span>
+                <span>{tip}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="rounded-xl bg-amber-50 dark:bg-amber-950 border border-amber-100 dark:border-amber-900 p-3">
+            <p className="text-xs font-semibold text-amber-800 dark:text-amber-300">
+              {t.guideTipsAvoid}
+            </p>
+            <p className="text-xs text-amber-700 dark:text-amber-400 mt-1">{content.avoidTip}</p>
+          </div>
+        </section>
+
+        {/* Other guides */}
+        <section className="space-y-3">
+          <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
+            {t.guideOtherGuides}
+          </h2>
+          <div className="grid grid-cols-2 gap-2">
+            {otherCountries.map((c) => {
+              const meta = COUNTRY_META[c];
+              const name = getCountryName(t, c);
+              return (
+                <Link
+                  key={c}
+                  href={`/${lang}/how-to-pay/${c}`}
+                  className="flex items-center gap-2 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-900 hover:bg-blue-50 dark:hover:bg-blue-950 hover:border-blue-200 dark:hover:border-blue-800 px-3 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-200 transition-colors"
+                >
+                  <span>{meta.flag}</span>
+                  <span>{name}</span>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Back */}
+        <Link
+          href="/"
+          className="block w-full text-center rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        >
+          {t.guideBackBtn}
+        </Link>
+      </div>
+    </main>
+  );
+}

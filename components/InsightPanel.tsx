@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { ComparisonResult } from "@/lib/types";
-import { getGuideByCountryCode } from "@/data/travelMoneyGuides";
+import { CODE_TO_COUNTRY } from "@/lib/guideConfig";
 import { Translations, Lang } from "@/data/translations";
+import { fmtCurrency } from "@/lib/formatCurrency";
 
 interface Props {
   selected: ComparisonResult;
@@ -16,15 +17,7 @@ interface Props {
   lang: Lang;
 }
 
-function makeFmt(homeCurrency: string) {
-  return (n: number) =>
-    new Intl.NumberFormat("en", {
-      style: "currency",
-      currency: homeCurrency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(n);
-}
+
 
 export default function InsightPanel({
   selected,
@@ -36,12 +29,15 @@ export default function InsightPanel({
   t,
   lang,
 }: Props) {
-  const fmt = makeFmt(homeCurrency);
+  const fmt = (n: number) => fmtCurrency(n, homeCurrency);
   const midRateHome = amountForeign * midRate;
   const lossHome = selected.totalHome - midRateHome;
   const lossPercent = midRateHome > 0 ? (lossHome / midRateHome) * 100 : 0;
-  const guide = getGuideByCountryCode(countryCode);
-  const countryName = guide ? guide.name : "";
+  const guideCountry = CODE_TO_COUNTRY[countryCode] ?? null;
+  const guideHref = guideCountry ? `/${lang}/how-to-pay/${guideCountry}` : null;
+  const guideDisplayName = guideCountry
+    ? guideCountry.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+    : countryCode;
 
   if (lossHome <= 0) {
     return (
@@ -60,12 +56,12 @@ export default function InsightPanel({
           </div>
         </div>
 
-        {guide && (
+        {guideHref && (
           <Link
-            href={`/travel-money/${guide.slug}`}
+            href={guideHref}
             className="block w-full text-center rounded-xl bg-green-600 hover:bg-green-700 text-white text-sm font-semibold py-2.5 transition-colors"
           >
-            {t.insightCtaPre} {countryName} →
+            📖 {t.insightCtaPre} {guideDisplayName} →
           </Link>
         )}
       </div>
@@ -126,12 +122,12 @@ export default function InsightPanel({
         </p>
       </div>
 
-      {guide && (
+      {guideHref && (
         <Link
-          href={`/travel-money/${guide.slug}`}
+          href={guideHref}
           className="block w-full text-center rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-3 transition-colors"
         >
-          {t.insightCtaPre} {countryName} →
+          📖 {t.insightCtaPre} {guideDisplayName} →
         </Link>
       )}
     </div>

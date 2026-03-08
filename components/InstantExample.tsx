@@ -7,14 +7,7 @@ interface Props {
   rateLoading: boolean;
 }
 
-function fmt(n: number, currency: string) {
-  return new Intl.NumberFormat("en", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(n);
-}
+import { fmtCurrency } from "@/lib/formatCurrency";
 
 const EXAMPLE_AMOUNT: Record<string, number> = {
   JPY: 10000,
@@ -73,13 +66,13 @@ export default function InstantExample({
     {
       label: "Standard credit card",
       total: standardTotal,
-      tag: `+${fmt(lossStandard, homeCurrency)}`,
+      tag: `+${fmtCurrency(lossStandard, homeCurrency)}`,
       tagClass: "bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400",
     },
     {
       label: "Airport exchange",
       total: airportTotal,
-      tag: `+${fmt(lossAirport, homeCurrency)}`,
+      tag: `+${fmtCurrency(lossAirport, homeCurrency)}`,
       tagClass: "bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400",
     },
   ];
@@ -106,7 +99,7 @@ export default function InstantExample({
             </span>
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">
-                {fmt(row.total, homeCurrency)}
+                {fmtCurrency(row.total, homeCurrency)}
               </span>
               <span
                 className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${row.tagClass}`}
@@ -120,7 +113,7 @@ export default function InstantExample({
 
       <p className="text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
         A standard card costs you an extra{" "}
-        <span className="font-bold">{fmt(lossStandard, homeCurrency)}</span>{" "}
+        <span className="font-bold">{fmtCurrency(lossStandard, homeCurrency)}</span>{" "}
         vs a no-fee card.{" "}
         <span className="font-semibold">Enter your amount above</span> to see
         your exact cost.

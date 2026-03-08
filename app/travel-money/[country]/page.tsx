@@ -72,6 +72,191 @@ export default function TravelMoneyPage({ params }: Props) {
       {/* Content */}
       <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
 
+        {/* ── Overview: why FX fees hurt ─────────────────────────────── */}
+        <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">💰</span>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+              How Much Do You Lose on FX Fees in {guide.name}?
+            </h2>
+          </div>
+          <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+            Most travelers silently pay{" "}
+            <strong className="text-gray-800 dark:text-gray-100">3–6% more</strong> than the fair
+            exchange rate every time they pay by card or withdraw from an ATM abroad. The cost comes
+            from two sources stacked on top of each other:
+          </p>
+          <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400">
+            <li className="flex items-start gap-2">
+              <span className="shrink-0 text-red-500 mt-0.5">①</span>
+              <span>
+                <strong className="text-gray-800 dark:text-gray-200">Foreign transaction fee</strong>{" "}
+                — charged by your card issuer (typically 2.5–3.5% for a standard bank card).
+              </span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="shrink-0 text-red-500 mt-0.5">②</span>
+              <span>
+                <strong className="text-gray-800 dark:text-gray-200">Exchange rate spread</strong>{" "}
+                — the gap between the mid-market rate and what Visa/Mastercard charge (typically
+                0.5–1.5%).
+              </span>
+            </li>
+            <li className="flex items-start gap-2">
+              <span className="shrink-0 text-orange-500 mt-0.5">③</span>
+              <span>
+                <strong className="text-gray-800 dark:text-gray-200">Dynamic Currency Conversion (DCC)</strong>{" "}
+                — an optional trap where the merchant converts to your home currency at a rate 3–8%
+                worse. Always decline.
+              </span>
+            </li>
+          </ul>
+        </section>
+
+        {/* ── Typical FX fee table ───────────────────────────────────── */}
+        <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
+          <div className="flex items-center gap-2">
+            <span className="text-2xl">📊</span>
+            <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+              Typical Hidden FX Fees When Paying in {guide.name}
+            </h2>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm border-collapse">
+              <thead>
+                <tr className="border-b border-gray-100 dark:border-gray-800">
+                  <th className="text-left py-2 pr-4 font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wide">Payment method</th>
+                  <th className="text-right py-2 pr-4 font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wide">Card FX fee</th>
+                  <th className="text-right py-2 pr-4 font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wide">Rate spread</th>
+                  <th className="text-right py-2 font-semibold text-gray-500 dark:text-gray-400 text-xs uppercase tracking-wide">Total extra cost</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-50 dark:divide-gray-800">
+                {[
+                  { icon: "💳", label: "Standard bank card",   fxFee: 2.5,  spread: 1.0, best: false },
+                  { icon: "💳", label: "Basic / older card",   fxFee: 3.5,  spread: 1.0, best: false },
+                  { icon: "✈️", label: "Travel rewards card",  fxFee: 1.5,  spread: 1.0, best: false },
+                  { icon: "🏧", label: "ATM (standard card)",  fxFee: 2.5,  spread: 0.5, best: false },
+                  { icon: "⭐", label: "No-fee card (Wise etc)", fxFee: 0,  spread: 1.0, best: false },
+                  { icon: "💵", label: "Cash (good exchange booth)", fxFee: 0, spread: -0.5, best: true },
+                ].map((row) => {
+                  const total = row.fxFee + row.spread;
+                  return (
+                    <tr key={row.label} className={row.best ? "bg-green-50/60 dark:bg-green-950/30" : ""}>
+                      <td className="py-2.5 pr-4 text-gray-800 dark:text-gray-100">
+                        {row.icon} {row.label}
+                        {row.best && (
+                          <span className="ml-2 text-[10px] font-bold text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900 px-1.5 py-0.5 rounded-full">
+                            Best rate
+                          </span>
+                        )}
+                      </td>
+                      <td className={`py-2.5 pr-4 text-right tabular-nums ${row.fxFee > 0 ? "text-red-500" : "text-green-600 dark:text-green-400"}`}>
+                        {row.fxFee > 0 ? `+${row.fxFee}%` : "0%"}
+                      </td>
+                      <td className={`py-2.5 pr-4 text-right tabular-nums ${row.spread > 0 ? "text-orange-500" : "text-green-600 dark:text-green-400"}`}>
+                        {row.spread > 0 ? `+${row.spread}%` : `${row.spread}%`}
+                      </td>
+                      <td className={`py-2.5 text-right font-bold tabular-nums ${total > 2 ? "text-red-500" : total > 0 ? "text-orange-500" : "text-green-600 dark:text-green-400"}`}>
+                        {total > 0 ? `+${total.toFixed(1)}%` : `${total.toFixed(1)}%`}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <p className="text-xs text-gray-400 dark:text-gray-500">
+            * Spread percentages are estimates based on typical Visa/Mastercard network rates. Your card issuer&apos;s actual fee may differ — check your card terms.
+          </p>
+        </section>
+
+        {/* ── Example payment comparison ─────────────────────────────── */}
+        {(() => {
+          const amt = guide.exampleAmount;
+          const fmtAmt = amt.toLocaleString("en");
+          const extraCost = (pct: number) => Math.round(Math.abs(amt * pct / 100));
+          const fmtExtra = (n: number) => n.toLocaleString("en");
+
+          const scenarios = [
+            { icon: "💳", label: "Standard card",        totalPct: 3.5, saving: false },
+            { icon: "💳", label: "Basic card",            totalPct: 4.5, saving: false },
+            { icon: "✈️", label: "Travel card",           totalPct: 2.5, saving: false },
+            { icon: "🏧", label: "ATM (standard card)",   totalPct: 3.0, saving: false },
+            { icon: "⭐", label: "No-fee card",           totalPct: 1.0, saving: false },
+            { icon: "💵", label: "Cash (best booth)",     totalPct: -0.5, saving: true },
+          ] as const;
+
+          const cheapestPct = Math.min(...scenarios.map((s) => s.totalPct));
+
+          return (
+            <section id="fee-comparison" className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4 scroll-mt-6">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🧮</span>
+                <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+                  Example: Paying {fmtAmt} {guide.currency}
+                </h2>
+              </div>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Below is how much extra you pay (above the mid-market rate) depending on your
+                payment method. These are approximate values based on typical fee structures.
+              </p>
+              <div className="space-y-2">
+                {scenarios.map((s) => {
+                  const extra = extraCost(Math.abs(s.totalPct));
+                  const isCheapest = s.totalPct === cheapestPct;
+                  const sign = s.totalPct >= 0 ? "+" : "−";
+                  const pctLabel = `${sign}${Math.abs(s.totalPct).toFixed(1)}%`;
+                  const costLabel = s.saving
+                    ? `Save ${fmtExtra(extra)} ${guide.currency}`
+                    : extra === 0
+                    ? "No extra cost"
+                    : `+${fmtExtra(extra)} ${guide.currency} extra`;
+
+                  return (
+                    <div
+                      key={s.label}
+                      className={`flex items-center justify-between rounded-xl px-4 py-3 ${
+                        isCheapest
+                          ? "bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800"
+                          : "bg-gray-50 dark:bg-gray-800"
+                      }`}
+                    >
+                      <div className="flex items-center gap-2 min-w-0">
+                        <span>{s.icon}</span>
+                        <span className="text-sm font-medium text-gray-800 dark:text-gray-100 truncate">
+                          {s.label}
+                        </span>
+                        {isCheapest && (
+                          <span className="shrink-0 text-[10px] font-bold text-green-600 dark:text-green-300 bg-green-100 dark:bg-green-900 px-1.5 py-0.5 rounded-full">
+                            Cheapest
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-right shrink-0 ml-3">
+                        <p className={`text-sm font-bold tabular-nums ${
+                          s.saving ? "text-green-600 dark:text-green-400"
+                          : s.totalPct <= 1 ? "text-amber-600 dark:text-amber-400"
+                          : "text-red-500"
+                        }`}>
+                          {costLabel}
+                        </p>
+                        <p className="text-xs text-gray-400 dark:text-gray-500 tabular-nums">{pctLabel} vs mid-rate</p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="text-xs text-gray-400 dark:text-gray-500">
+                Actual costs depend on your card issuer and the current mid-market rate.{" "}
+                <Link href={`/?country=${guide.countryCode}`} className="text-blue-500 hover:underline">
+                  Use the live calculator →
+                </Link>
+              </p>
+            </section>
+          );
+        })()}
+
         {/* Best Payment Method */}
         <section id="best-card" className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3 scroll-mt-6">
           <div className="flex items-center gap-2">

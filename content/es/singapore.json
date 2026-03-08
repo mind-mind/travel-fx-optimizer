@@ -1,0 +1,24 @@
+{
+  "countryName": "Singapur",
+  "currency": "SGD",
+  "countryCode": "SG",
+  "countryFlag": "🇸🇬",
+  "heroTip": "Singapur acepta tarjetas de crédito prácticamente en todos lados — apenas necesitas llevar efectivo.",
+  "bestPaymentMethod": "Tarjeta de crédito con baja comisión FX",
+  "bestCard": "Elige una tarjeta con bajas comisiones internacionales como Wise o Revolut.",
+  "topTips": [
+    "Las tarjetas se aceptan en casi todos los hawker centres y tiendas.",
+    "PayNow / PayLah! requiere cuenta bancaria en Singapur — no apta para turistas.",
+    "Retira SGD en cajeros de DBS / OCBC — mejores tipos que en el aeropuerto.",
+    "Mustafa Centre o People's Park para las mejores tasas de efectivo.",
+    "Solicita el reembolso del 9% de GST en compras de SGD 100 o más."
+  ],
+  "avoidTip": "Evita cambiar dinero en el aeropuerto Changi — las tasas son peores que en la ciudad.",
+  "dccNote": "Singapur tiene muchos comercios internacionales — siempre elige SGD al pagar con tarjeta.",
+  "fxFeeItems": [
+    { "name": "Comisión FX (Comisión por Transacción Extranjera)", "detail": "Comisión que cobra tu banco por usar la tarjeta en el extranjero — normalmente el 1,5%–2,5% de la transacción." },
+    { "name": "Diferencial (Spread)", "detail": "La diferencia entre el tipo de cambio interbancario y el que te aplica tu banco — normalmente el 0,5%–2%." },
+    { "name": "Comisión de Cajero (ATM)", "detail": "Comisiones de tu banco y del cajero extranjero — combinadas pueden alcanzar 3–5 € por extracción." },
+    { "name": "DCC Markup", "detail": "Cargo adicional cuando pagas en tu moneda local — suele estar entre el 3%–10% por encima del tipo real." }
+  ]
+}

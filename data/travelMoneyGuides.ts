@@ -22,6 +22,11 @@ export interface TravelMoneyGuide {
   vatInfo: string | null; // null means no tourist VAT refund
   atmTip: string;
   cardTip: string;        // best card tier recommendation
+  /**
+   * Representative spend used on the fee-comparison table (in destination currency).
+   * Pick a round number that feels realistic for a single purchase or day's spend.
+   */
+  exampleAmount: number;
 
   // SEO
   seoTitle: string;
@@ -65,6 +70,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "7Bank ATMs (inside every 7-Eleven) charge ¥110 per withdrawal for foreign cards. Japan Post Bank ATMs are free but limited to business hours. Avoid airport exchange desks — their spread can be 5%+ above mid-market.",
     cardTip:
       "A no-foreign-fee card (Wise, Revolut, Charles Schwab) is ideal — you pay the mid-market rate with zero card fee. Standard bank cards cost an extra 2.5–3%.",
+    exampleAmount: 10000,
     seoTitle: "How to Pay in Japan Without Losing Money on Exchange Rates",
     seoDescription:
       "Complete guide to paying in Japan as a tourist: best ATMs, cash tips, Suica card, VAT refund, and how to avoid DCC and airport FX fees.",
@@ -104,6 +110,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "All Thai ATMs charge foreign cards ฿220 flat fee. Minimize withdrawals by taking out larger amounts each time. Use a card that reimburses ATM fees (e.g., Charles Schwab) to offset this.",
     cardTip:
       "If using a card at malls or hotels, a no-fee card (Wise, Revolut) saves the 2.5% standard FX fee. For cash, exchange booths beat ATMs once you account for the ฿220 fee.",
+    exampleAmount: 2000,
     seoTitle: "How to Pay in Thailand — Best FX Rates, ATMs & Exchange Tips",
     seoDescription:
       "How to get the best exchange rate in Thailand as a tourist. Compare SuperRich booths vs ATMs vs cards, avoid airport rip-offs, and understand DCC at Thai ATMs.",
@@ -143,6 +150,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "KEB Hana Bank and Shinhan ATMs (found in 7-Eleven) accept foreign cards with minimal fees. Woori and IBK ATMs also work but may have limited foreign card support.",
     cardTip:
       "Any Visa or Mastercard works well in Korea. A no-fee travel card saves the typical 2.5% bank FX markup on every purchase.",
+    exampleAmount: 50000,
     seoTitle: "How to Pay in South Korea — Cards, ATMs & T-Money Guide",
     seoDescription:
       "Full guide to paying in South Korea as a tourist: T-Money card for transit, best ATMs for foreign cards, credit card tips, and how to claim VAT refund.",
@@ -182,6 +190,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "DBS/POSB ATMs (most common) have a small fee for foreign cards but good mid-market rates. Check if your card issuer has a partnership — Citibank, HSBC global accounts sometimes waive fees.",
     cardTip:
       "Singapore is so cashless that a no-foreign-fee card (Wise, Revolut, Charles Schwab) is the optimal choice — free mid-market rates on every tap.",
+    exampleAmount: 200,
     seoTitle: "How to Pay in Singapore — Cashless Travel Money Guide",
     seoDescription:
       "How to pay in Singapore as a tourist: cards, contactless, PayNow, Mustafa Centre money exchange, and GST refund tips for international visitors.",
@@ -221,6 +230,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "7-Eleven ATMs (inside every store, 24/7) accept foreign cards. Cathay United Bank and E.SUN ATMs are also reliable. Typical foreign card fee: NT$100 per withdrawal.",
     cardTip:
       "Visa and Mastercard have wide acceptance in cities. A no-fee card saves the standard 2.5% bank surcharge on card transactions.",
+    exampleAmount: 3000,
     seoTitle: "How to Pay in Taiwan — EasyCard, ATMs & Night Market Tips",
     seoDescription:
       "Complete travel money guide for Taiwan: EasyCard setup, best ATMs for foreigners, night market cash tips, and how to claim Taiwan's VAT refund.",
@@ -260,6 +270,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "HSBC ATMs (green, everywhere) and Hang Seng ATMs accept foreign cards with minimal fees. Avoid small third-party ATMs in convenience stores that charge flat fees of HKD 30–50.",
     cardTip:
       "Visa and Mastercard with low FX fees are ideal for Hong Kong's cashless retail. Keep some HKD cash for markets and older restaurants.",
+    exampleAmount: 800,
     seoTitle: "How to Pay in Hong Kong — Octopus Card, ATMs & Money Tips",
     seoDescription:
       "Travel money guide for Hong Kong: Octopus Card setup, best ATMs for foreign cards, where to exchange cash, and how to avoid tourist traps at Chungking Mansions.",
@@ -299,6 +310,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "Bank of China and ICBC ATMs at airports and major shopping districts are most reliable for foreign Visa/Mastercard. Expect a withdrawal limit of CNY 2,000–3,000 per transaction. ATM fees: CNY 25–50 per withdrawal.",
     cardTip:
       "Your best card for China is one linked to Alipay or WeChat Pay. For ATM withdrawals, bring a no-foreign-fee card to minimize the 2.5% bank surcharge.",
+    exampleAmount: 500,
     seoTitle: "How to Pay in China as a Tourist — Alipay, WeChat Pay & ATM Guide",
     seoDescription:
       "Essential guide to paying in China: how to set up Alipay for foreigners, WeChat Pay international, best ATMs for foreign cards, and cash tips for travelers.",
@@ -338,6 +350,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "Vietcombank ATMs (blue, very common) accept foreign cards well. Techcombank and BIDV are also reliable. Maximum per withdrawal: VND 5,000,000–10,000,000. ATM fee: VND 30,000–80,000 per transaction.",
     cardTip:
       "A no-foreign-fee card is valuable for hotel check-ins and tour bookings. For daily spending, cash is king — budget your ATM withdrawals carefully to avoid frequent fees.",
+    exampleAmount: 500000,
     seoTitle: "How to Pay in Vietnam — Cash, ATMs & Tourist Money Tips",
     seoDescription:
       "Vietnam travel money guide: best ATMs for foreign cards, VND cash tips, avoiding DCC, tourist VAT refund, and whether to use USD in Vietnam.",
@@ -377,6 +390,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "BCA (blue ATMs) are the most reliable for foreign Visa/Mastercard in Bali and Jakarta. Mandiri and BNI also work. Daily limit: Rp 5,000,000–10,000,000. ATM fees: Rp 25,000–50,000 per withdrawal.",
     cardTip:
       "Visa and Mastercard work at hotels and tourist restaurants. A no-foreign-fee card saves the 2.5–3% bank surcharge that adds up quickly on an Indonesian holiday.",
+    exampleAmount: 500000,
     seoTitle: "How to Pay in Indonesia / Bali — Cash, ATMs & Tourist Money Tips",
     seoDescription:
       "Indonesia/Bali travel money guide: best ATMs for foreign cards, safe money changers, IDR cash tips, DCC warnings at Indonesian ATMs, and Rupiah denomination guide.",
@@ -416,6 +430,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "Maybank (yellow, everywhere) and CIMB ATMs are most reliable for foreign cards. HSBC and Alliance work too. Typical fee: MYR 10–15 per foreign card withdrawal. Daily limit: MYR 3,000–5,000.",
     cardTip:
       "Visa and Mastercard have excellent coverage in KL's malls, Grab, and chain restaurants. A no-foreign-fee card is ideal for eliminating the 2.5% surcharge on your spending.",
+    exampleAmount: 300,
     seoTitle: "How to Pay in Malaysia — Touch 'n Go, ATMs & Kuala Lumpur Money Tips",
     seoDescription:
       "Malaysia travel money guide for tourists: Touch 'n Go card setup, best ATMs for foreign cards, cash tips for markets, and whether to exchange money at KLIA airport.",
@@ -455,6 +470,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "BDO and BPI ATMs have the best foreign card acceptance. Metrobank and Chinabank also work. On islands, BancNet ATMs are common but not all support foreign Visa/Mastercard. Daily limit: PHP 10,000–20,000. Fees: PHP 250 per withdrawal.",
     cardTip:
       "A no-foreign-fee card is useful in Manila and major resort hotels. For daily island life, cash is essential — plan ATM stops carefully.",
+    exampleAmount: 3000,
     seoTitle: "How to Pay in the Philippines — Cash, ATMs & Island Travel Tips",
     seoDescription:
       "Philippines travel money guide: best ATMs for Palawan and Manila, how to avoid DCC, cash tips for islands, GCash for foreigners, and PHP currency tips.",
@@ -493,6 +509,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "HDFC, ICICI, and Axis Bank ATMs are most reliable for foreign cards. SBI (State Bank of India) ATMs are everywhere but sometimes have queues. Daily withdrawal limit: INR 10,000–25,000. Fee: typically INR 100–250.",
     cardTip:
       "Visa and Mastercard with low FX fees work well in urban India. A no-fee card (Wise, Revolut) is ideal — India's 2.5% bank surcharge adds up on longer trips.",
+    exampleAmount: 5000,
     seoTitle: "How to Pay in India — Cash, ATMs & UPI for Tourists",
     seoDescription:
       "India travel money guide: best ATMs for foreign cards, how to use UPI as a tourist, INR cash tips, counterfeit note awareness, and how to pay in Goa, Delhi, and Jaipur.",
@@ -535,6 +552,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "Use bank ATMs (BNP Paribas, Deutsche Bank, ING, La Caixa) to get near-mid-market rates. Avoid standalone ATMs in tourist zones — clearly branded Euronet machines are the worst offenders.",
     cardTip:
       "A Wise or Revolut card in EUR is optimal — you spend from a EUR balance with zero conversion. If using a regular card, no-foreign-fee cards (Starling, Charles Schwab, Chase Sapphire) eliminate the 2.5–3% bank markup.",
+    exampleAmount: 200,
     seoTitle: "How to Pay in Europe — Best Cards, ATM Tips & Avoid FX Fees",
     seoDescription:
       "Europe travel money guide: how to avoid Euronet ATM fees, best no-foreign-fee cards, European VAT refund guide, and cashless vs cash by country.",
@@ -574,8 +592,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     atmTip:
       "Free ATMs are marked 'Free Withdrawals' — most Barclays, NatWest, Lloyds, HSBC, and Post Office ATMs are free for withdrawals even for foreign cards (your own bank may still charge a foreign transaction fee). Avoid ATMs that charge a flat fee.",
     cardTip:
-      "A no-foreign-fee card is essential for the UK — the standard 2.5–3% bank surcharge adds up quickly in London's expensive environment. Starling, Monzo, Chase UK, and Wise are popular choices.",
-    seoTitle: "How to Pay in the UK — Contactless, London Underground & No FX Fees",
+      "A no-foreign-fee card is essential for the UK — the standard 2.5–3% bank surcharge adds up quickly in London's expensive environment. Starling, Monzo, Chase UK, and Wise are popular choices.",    exampleAmount: 150,    seoTitle: "How to Pay in the UK — Contactless, London Underground & No FX Fees",
     seoDescription:
       "UK travel money guide: using contactless payment on the London Tube, best no-FX-fee cards for the UK, cash vs card in Britain, and why tourist VAT refunds ended.",
     h1: "How to Pay in the United Kingdom — Travel Money Guide",
@@ -615,6 +632,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "Bank ATMs (Chase, Bank of America, Wells Fargo, Citibank) are everywhere in cities and charge $3–5 for non-customers. The Charles Schwab Investor Checking Account is famous for refunding all ATM fees worldwide — worth getting before a US trip.",
     cardTip:
       "A no-foreign-fee Visa or Mastercard is essential. Many standard non-US cards charge 2.5–3% on USD transactions. Chase Sapphire, Amex Platinum, and Wise debit are among the most popular options.",
+    exampleAmount: 150,
     seoTitle: "How to Pay in the USA as a Tourist — Cards, Cash & Tipping Guide",
     seoDescription:
       "USA travel money guide: best cards for the US, how much cash to carry, tipping etiquette, ATM fees, sales tax explanation, and avoiding airport currency exchange.",
@@ -654,6 +672,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "CBA (CommBank), ANZ, NAB, and Westpac ATMs are the 'Big Four' — widely available in cities. Foreign cards may be charged AUD 2–5 per visit. Some ATMs charge nothing — check the screen before proceeding.",
     cardTip:
       "A no-foreign-fee Visa or Mastercard is ideal. Australia's cashless environment means your card will be your primary payment — go for one with 0% FX fee to avoid the 2.5–3% bank surcharge on every transaction.",
+    exampleAmount: 250,
     seoTitle: "How to Pay in Australia — Contactless Cards, Transit & GST Refund",
     seoDescription:
       "Australia travel money guide: how to tap your card on Sydney trains, AUD cash vs card, best no-FX-fee cards, GST refund via TRS, and money tips for Melbourne, Brisbane, and Cairns.",
@@ -694,6 +713,7 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
       "Emirates NBD, Mashreq, and FAB ATMs are everywhere in Dubai. Fees for foreign cards: AED 10–20 per withdrawal. Rates are close to mid-market — reliable and safe.",
     cardTip:
       "A no-foreign-fee Visa or Mastercard is ideal for the UAE. The UAE's AED is pegged to USD (fixed rate), so there's no exchange rate volatility — just minimize the bank's 2.5% markup.",
+    exampleAmount: 400,
     seoTitle: "How to Pay in Dubai & UAE — Cards, Cash & Shopping Tips",
     seoDescription:
       "UAE / Dubai travel money guide: best payment methods for Dubai, souks cash tips, contactless in Dubai Mall, AED exchange rate tips, and Tourist Refund Scheme information.",

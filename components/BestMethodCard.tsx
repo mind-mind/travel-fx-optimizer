@@ -1,20 +1,18 @@
 "use client";
 
+import Link from "next/link";
 import { ComparisonResult } from "@/lib/types";
+import { fmtCurrency } from "@/lib/formatCurrency";
+import { CODE_TO_COUNTRY } from "@/lib/guideConfig";
 
 interface Props {
   results: ComparisonResult[];
   homeCurrency: string;
+  countryCode?: string;
+  lang?: string;
 }
 
-function fmt(n: number, currency: string) {
-  return new Intl.NumberFormat("en", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(n);
-}
+
 
 function getPayLabel(r: ComparisonResult): string {
   if (r.bank === "Cash") return "Pay with cash";
@@ -28,7 +26,11 @@ function getPayLabel(r: ComparisonResult): string {
 export default function BestMethodCard({
   results,
   homeCurrency,
+  countryCode,
+  lang,
 }: Props) {
+  const guideCountry = countryCode ? (CODE_TO_COUNTRY[countryCode] ?? null) : null;
+  const guideHref = guideCountry && lang ? `/${lang}/how-to-pay/${guideCountry}` : null;
   const cheapestAll = results.filter((r) => r.isCheapest);
   const cheapest = cheapestAll[0] ?? null;
   const mostExpensive = results.reduce((a, b) =>
@@ -59,7 +61,7 @@ export default function BestMethodCard({
             Total cost
           </p>
           <p className="text-lg font-bold text-green-800 dark:text-green-200">
-            {fmt(cheapest.totalHome, homeCurrency)}
+            {fmtCurrency(cheapest.totalHome, homeCurrency)}
           </p>
         </div>
         <div className="flex-1 bg-white dark:bg-green-900/30 rounded-xl px-4 py-3 text-center">
@@ -67,7 +69,7 @@ export default function BestMethodCard({
             You save
           </p>
           <p className="text-2xl font-extrabold text-green-700 dark:text-green-300">
-            {fmt(maxSavings, homeCurrency)}
+            {fmtCurrency(maxSavings, homeCurrency)}
           </p>
         </div>
       </div>
@@ -75,6 +77,15 @@ export default function BestMethodCard({
       <p className="text-xs text-green-700 dark:text-green-400 leading-relaxed">
         Compared to the most expensive option.
       </p>
+
+      {guideHref && (
+        <Link
+          href={guideHref}
+          className="block w-full text-center rounded-xl border border-green-300 dark:border-green-700 bg-white dark:bg-green-900/20 text-green-700 dark:text-green-300 text-sm font-semibold py-2.5 hover:bg-green-50 dark:hover:bg-green-900/40 transition-colors"
+        >
+          📖 Full travel money guide →
+        </Link>
+      )}
     </div>
   );
 }

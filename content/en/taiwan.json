@@ -1,0 +1,24 @@
+{
+  "countryName": "Taiwan",
+  "currency": "TWD",
+  "countryCode": "TW",
+  "countryFlag": "🇹🇼",
+  "heroTip": "EasyCard is a must-have for public transit throughout Taiwan.",
+  "bestPaymentMethod": "EasyCard + credit card",
+  "bestCard": "KBank or SCB Mastercard — widely accepted across Taiwan.",
+  "topTips": [
+    "Buy an EasyCard at a Taipei MRT station — works on MRT, buses, and 7-Eleven.",
+    "Night market stalls are almost always cash-only — carry TWD with you.",
+    "Withdraw TWD from Cathay United Bank or E.SUN ATMs inside convenience stores.",
+    "Credit cards are accepted at larger restaurants and department stores.",
+    "5% VAT refund available at the airport if you spend TWD 2,000+."
+  ],
+  "avoidTip": "Avoid exchanging money at airport bank counters — rates are lower than in-city options.",
+  "dccNote": "In Taiwan, always choose TWD when swiping your card — never your home currency.",
+  "fxFeeItems": [
+    { "name": "FX Fee (Foreign Transaction Fee)", "detail": "Fee your bank charges for foreign card use — typically 1.5%–2.5% of the transaction." },
+    { "name": "Spread", "detail": "The gap between mid-market rate and the rate your bank actually gives — usually 0.5%–2%." },
+    { "name": "ATM Fee", "detail": "Withdrawal fees from both your home bank and the local ATM — combined can reach $5–$10 per transaction." },
+    { "name": "DCC Markup", "detail": "Extra markup when you choose to pay in your home currency — often 3%–10% above the true market rate." }
+  ]
+}

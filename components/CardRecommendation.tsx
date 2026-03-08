@@ -3,6 +3,7 @@
 import { ComparisonResult } from "@/lib/types";
 import { PaymentMethod } from "@/lib/types";
 import { Translations } from "@/data/translations";
+import { fmtCurrency, fmtCurrencyRound } from "@/lib/formatCurrency";
 import {
   RECOMMENDED_CARDS,
   SAVINGS_BENCHMARK_FX_PERCENT,
@@ -20,21 +21,8 @@ interface Props {
   t: Translations;
 }
 
-const fmt = (n: number, currency: string) =>
-  new Intl.NumberFormat("en", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(n);
-
-const fmtRound = (n: number, currency: string) =>
-  new Intl.NumberFormat("en", {
-    style: "currency",
-    currency,
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(Math.round(n));
+const fmt = (n: number, currency: string) => fmtCurrency(n, currency);
+const fmtRound = (n: number, currency: string) => fmtCurrencyRound(n, currency);
 
 /** Determine badge colour tier based on FX fee */
 function getFxTier(fee: number): "low" | "mid" | "high" {

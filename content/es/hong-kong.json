@@ -1,0 +1,24 @@
+{
+  "countryName": "Hong Kong",
+  "currency": "HKD",
+  "countryCode": "HK",
+  "countryFlag": "🇭🇰",
+  "heroTip": "La tarjeta Octopus es esencial para el transporte y las compras cotidianas en Hong Kong.",
+  "bestPaymentMethod": "Tarjeta Octopus + tarjeta de crédito",
+  "bestCard": "Elige una tarjeta de crédito con bajas comisiones internacionales.",
+  "topTips": [
+    "Compra la Octopus Card en la estación Airport Express del MTR — válida en metro, autobuses, ferries y 7-Eleven.",
+    "Las tarjetas de crédito se aceptan en centros comerciales y restaurantes.",
+    "Retira HKD en cajeros de HSBC o Hang Seng Bank.",
+    "Los mercados nocturnos y tiendas pequeñas pueden ser solo efectivo — lleva algo de HKD.",
+    "Hong Kong no tiene sistema de reembolso de IVA para turistas."
+  ],
+  "avoidTip": "Evita los cambistas de la planta baja de las Chungking Mansions — los tipos pueden ser engañosos.",
+  "dccNote": "En Hong Kong, elige siempre HKD al pagar con tarjeta. Rechaza si te ofrecen tu moneda local.",
+  "fxFeeItems": [
+    { "name": "Comisión FX (Comisión por Transacción Extranjera)", "detail": "Comisión que cobra tu banco por usar la tarjeta en el extranjero — normalmente el 1,5%–2,5% de la transacción." },
+    { "name": "Diferencial (Spread)", "detail": "La diferencia entre el tipo de cambio interbancario y el que te aplica tu banco — normalmente el 0,5%–2%." },
+    { "name": "Comisión de Cajero (ATM)", "detail": "Comisiones de tu banco y del cajero extranjero — combinadas pueden alcanzar 3–5 € por extracción." },
+    { "name": "DCC Markup", "detail": "Cargo adicional cuando pagas en tu moneda local — suele estar entre el 3%–10% por encima del tipo real." }
+  ]
+}

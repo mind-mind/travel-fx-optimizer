@@ -3,6 +3,7 @@
 import { ComparisonResult } from "@/lib/types";
 import { BankName, PaymentMethod } from "@/lib/types";
 import { Translations } from "@/data/translations";
+import { fmtCurrency } from "@/lib/formatCurrency";
 
 interface Props {
   results: ComparisonResult[];
@@ -20,15 +21,7 @@ interface Props {
   showBestCallout?: boolean;
 }
 
-function makeFmt(homeCurrency: string) {
-  return (n: number) =>
-    new Intl.NumberFormat("en", {
-      style: "currency",
-      currency: homeCurrency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(n);
-}
+
 
 const methodIcon: Record<string, string> = {
   "Credit Card": "💳",
@@ -55,7 +48,7 @@ export default function ResultsSection({
   t,
   showBestCallout = true,
 }: Props) {
-  const fmt = makeFmt(homeCurrency);
+  const fmt = (n: number) => fmtCurrency(n, homeCurrency);
   const selected = results.find(
     (r) => r.bank === selectedBank && r.method === selectedMethod
   );

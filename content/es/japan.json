@@ -1,0 +1,24 @@
+{
+  "countryName": "Japón",
+  "currency": "JPY",
+  "countryCode": "JP",
+  "countryFlag": "🇯🇵",
+  "heroTip": "Japón sigue siendo una sociedad de efectivo — lleva yenes japoneses además de tu tarjeta de crédito.",
+  "bestPaymentMethod": "Efectivo en JPY + tarjeta de crédito con comisión baja",
+  "bestCard": "Elige una tarjeta de crédito con bajas comisiones por uso en el extranjero. Tarjetas sin comisiones como Wise o Revolut también son buenas opciones.",
+  "topTips": [
+    "Retira yenes en los cajeros de Japan Post Bank o 7-Eleven (7Bank) — aceptan tarjetas extranjeras.",
+    "Muchas tiendas pequeñas en Japón solo aceptan efectivo.",
+    "Las tiendas de conveniencia (Lawson, FamilyMart) suelen aceptar tarjetas IC — Suica funciona.",
+    "Usa tu tarjeta de crédito en grandes almacenes, restaurantes y hoteles.",
+    "Reclama el reembolso del 10% de IVA cuando gastas ¥5,000 o más en la misma tienda."
+  ],
+  "avoidTip": "Evita cambiar dinero en el aeropuerto — los tipos de cambio son significativamente peores que en la ciudad.",
+  "dccNote": "Cuando uses tu tarjeta en Japón, elige siempre JPY. Nunca selecciones otra moneda aunque te lo ofrezcan (DCC).",
+  "fxFeeItems": [
+    { "name": "Comisión FX (Comisión por Transacción Extranjera)", "detail": "Comisión que cobra tu banco por usar la tarjeta en el extranjero — normalmente el 1,5%–2,5% de la transacción." },
+    { "name": "Diferencial (Spread)", "detail": "La diferencia entre el tipo de cambio interbancario y el que te aplica tu banco — normalmente el 0,5%–2%." },
+    { "name": "Comisión de Cajero (ATM)", "detail": "Comisiones de tu banco y del cajero extranjero — combinadas pueden alcanzar 3–5 € por extracción." },
+    { "name": "DCC Markup", "detail": "Cargo adicional cuando pagas en tu moneda local — suele estar entre el 3%–10% por encima del tipo real." }
+  ]
+}

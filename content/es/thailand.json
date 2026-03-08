@@ -1,0 +1,26 @@
+{
+  "countryName": "Tailandia",
+  "currency": "THB",
+  "countryCode": "TH",
+  "countryFlag": "🇹🇭",
+  "heroTip": "Tailandia mezcla efectivo, tarjetas y pagos QR. Lleva baht tailandés para los puestos de calle y usa una tarjeta sin comisiones para hoteles y centros comerciales.",
+  "bestPaymentMethod": "Efectivo en THB + tarjeta sin comisión por transacción extranjera",
+  "bestCard": "Elige una tarjeta sin comisiones internacionales como Wise o Revolut. Paga siempre en baht tailandés (THB) para evitar el DCC.",
+  "topTips": [
+    "Los puestos de comida callejera, mercados y tuk-tuks solo aceptan efectivo — lleva THB.",
+    "Los centros comerciales, cadenas de restaurantes y hoteles aceptan Visa y Mastercard.",
+    "La mayoría de cajeros en Tailandia cobran ฿220 por retiro con tarjeta extranjera — retira cantidades mayores con menos frecuencia.",
+    "PromptPay solo funciona entre cuentas bancarias tailandesas y no está disponible para turistas extranjeros.",
+    "Evita las casas de cambio del aeropuerto a la llegada — usa un cajero en la ciudad.",
+    "Selecciona siempre Baht tailandés (THB) al pagar con tarjeta — rechaza el DCC.",
+    "Si gastas más de ฿2,000 en tiendas adheridas, puedes solicitar la devolución del IVA del 7%."
+  ],
+  "avoidTip": "Evita cambiar dinero en los aeropuertos de Suvarnabhumi o Don Mueang — los tipos suelen ser un 3–5% peores que en la ciudad.",
+  "dccNote": "En zonas turísticas de Tailandia, muchas terminales ofrecerán cobrar en tu moneda local. Elige siempre Baht tailandés — la tasa DCC del comercio suele ser un 3–10% peor que el tipo real.",
+  "fxFeeItems": [
+    { "name": "Comisión FX (Comisión por Transacción Extranjera)", "detail": "Comisión que cobra tu banco por usar la tarjeta en el extranjero — normalmente el 1,5%–2,5% de la transacción." },
+    { "name": "Diferencial (Spread)", "detail": "La diferencia entre el tipo de cambio interbancario y el que te aplica tu banco — normalmente el 0,5%–2%." },
+    { "name": "Comisión de Cajero ATM", "detail": "Los cajeros tailandeses cobran una comisión fija de ฿220 por retiro con tarjeta extranjera, además de la comisión de tu banco." },
+    { "name": "DCC Markup", "detail": "Cargo adicional cuando pagas en tu moneda local — suele estar entre el 3%–10% por encima del tipo real." }
+  ]
+}
