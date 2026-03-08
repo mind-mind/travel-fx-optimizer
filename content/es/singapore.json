@@ -16,9 +16,53 @@
   "avoidTip": "Evita cambiar dinero en el aeropuerto Changi — las tasas son peores que en la ciudad.",
   "dccNote": "Singapur tiene muchos comercios internacionales — siempre elige SGD al pagar con tarjeta.",
   "fxFeeItems": [
-    { "name": "Comisión FX (Comisión por Transacción Extranjera)", "detail": "Comisión que cobra tu banco por usar la tarjeta en el extranjero — normalmente el 1,5%–2,5% de la transacción." },
-    { "name": "Diferencial (Spread)", "detail": "La diferencia entre el tipo de cambio interbancario y el que te aplica tu banco — normalmente el 0,5%–2%." },
-    { "name": "Comisión de Cajero (ATM)", "detail": "Comisiones de tu banco y del cajero extranjero — combinadas pueden alcanzar 3–5 € por extracción." },
-    { "name": "DCC Markup", "detail": "Cargo adicional cuando pagas en tu moneda local — suele estar entre el 3%–10% por encima del tipo real." }
+    {
+      "name": "Comisión FX (Comisión por Transacción Extranjera)",
+      "detail": "Comisión que cobra tu banco por usar la tarjeta en el extranjero — normalmente el 1,5%–2,5% de la transacción."
+    },
+    {
+      "name": "Diferencial (Spread)",
+      "detail": "La diferencia entre el tipo de cambio interbancario y el que te aplica tu banco — normalmente el 0,5%–2%."
+    },
+    {
+      "name": "Comisión de Cajero (ATM)",
+      "detail": "Comisiones de tu banco y del cajero extranjero — combinadas pueden alcanzar 3–5 € por extracción."
+    },
+    {
+      "name": "DCC Markup",
+      "detail": "Cargo adicional cuando pagas en tu moneda local — suele estar entre el 3%–10% por encima del tipo real."
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Gardens by the Bay",
+      "detail": "Futuristic nature park with towering Supertrees, Cloud Forest waterfall dome, and nightly OCBC Garden Rhapsody light show.",
+      "price": "SGD$20–$28 (domes)",
+      "tip": "Cards and contactless payment widely accepted — Singapore is near-cashless. PayNow QR available too."
+    },
+    {
+      "name": "Marina Bay Sands SkyPark",
+      "detail": "Rooftop observation deck spanning three iconic hotel towers at 200m with 360° views of the city and harbour.",
+      "price": "SGD$26 (non-guests)",
+      "tip": "Cards accepted at the ticket counter. The infinity pool is hotel guests only."
+    },
+    {
+      "name": "Sentosa Island",
+      "detail": "Entertainment island with Universal Studios Singapore, SEA Aquarium, cable car, and beach clubs all in one place.",
+      "price": "Free entry (+activity fees)",
+      "tip": "Cards and mobile pay accepted everywhere — Singapore leads Southeast Asia in cashless adoption."
+    },
+    {
+      "name": "Clarke Quay",
+      "detail": "Vibrant riverside zone with outdoor bars, restaurants, and the G-Max Reverse Bungy adventure ride.",
+      "price": "Free–SGD$45 (activities)",
+      "tip": "Cards and PayNow QR codes accepted at all riverside restaurants and bars."
+    },
+    {
+      "name": "Singapore Botanic Gardens",
+      "detail": "UNESCO World Heritage site with 160+ years of history — free to explore, with a National Orchid Garden inside.",
+      "price": "Free (orchid garden SGD$5)",
+      "tip": "Orchid garden ticket booth accepts cards. Snack kiosks inside prefer cash."
+    }
   ]
 }

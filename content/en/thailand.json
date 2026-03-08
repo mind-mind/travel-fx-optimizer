@@ -22,5 +22,37 @@
     { "name": "Spread", "detail": "The gap between the mid-market rate and the rate your bank actually gives you — usually 0.5%–2%." },
     { "name": "ATM Fee", "detail": "Thai ATM operators charge a flat ฿220 fee per foreign-card withdrawal on top of any fee from your home bank." },
     { "name": "DCC Markup", "detail": "Extra markup when you pay in your home currency — often 3%–10% above the true exchange rate." }
+  ],
+  "attractions": [
+    {
+      "name": "Grand Palace & Wat Phra Kaew",
+      "detail": "Thailand's most sacred site — the revered Emerald Buddha temple and opulent Grand Palace complex in central Bangkok.",
+      "price": "฿500",
+      "tip": "Cash only at ticket booths. Dress code strictly enforced — cover shoulders and knees or rent a sarong on-site."
+    },
+    {
+      "name": "Wat Arun (Temple of Dawn)",
+      "detail": "Striking riverside temple covered in colourful porcelain tile mosaics — most magical at sunset viewed from across the Chao Phraya.",
+      "price": "฿100",
+      "tip": "Cash only at the entrance. Cross by Chao Phraya express ferry — ฿15 per person, paid in cash."
+    },
+    {
+      "name": "Chatuchak Weekend Market",
+      "detail": "Bangkok's iconic weekend market with 15,000+ stalls selling street food, vintage clothes, antiques, and handcrafts.",
+      "price": "Free entry",
+      "tip": "Cash THB dominates — most stalls are cash-only. Some shops accept PromptPay QR but carry baht."
+    },
+    {
+      "name": "Phi Phi Islands",
+      "detail": "Spectacular limestone cliffs, turquoise waters, and white sand beaches — accessible by speedboat from Phuket or Krabi.",
+      "price": "฿600–฿900 (boat tours)",
+      "tip": "Bring cash THB for island activities, food, and national park fees. ATMs on Phi Phi charge high fees."
+    },
+    {
+      "name": "Chiang Mai Old City",
+      "detail": "Ancient walled northern city with 300+ temples including Doi Suthep, Wat Chedi Luang, and vibrant Sunday Walking Street.",
+      "price": "฿0–฿300 (sites vary)",
+      "tip": "Walking Street vendors are cash-only. Cards accepted at tourist restaurants and hotels."
+    }
   ]
 }

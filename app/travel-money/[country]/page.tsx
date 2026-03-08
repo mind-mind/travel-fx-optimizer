@@ -282,29 +282,100 @@ export default function TravelMoneyPage({ params }: Props) {
         </section>
 
         {/* Local Payment Apps */}
-        {guide.localPaymentApps.length > 0 && (
-          <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3">
-            <div className="flex items-center gap-2">
-              <span className="text-2xl">📱</span>
-              <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
-                Local Payment Apps
-              </h2>
-            </div>
-            <ul className="space-y-3">
-              {guide.localPaymentApps.map((app) => (
-                <li
-                  key={app.name}
-                  className="flex items-start gap-3 text-sm"
-                >
-                  <span className="shrink-0 font-bold text-blue-600 dark:text-blue-400 mt-0.5">
-                    {app.name}
-                  </span>
-                  <span className="text-gray-600 dark:text-gray-400">— {app.note}</span>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
+        {guide.localPaymentApps.length > 0 && (() => {
+          // Auto-assign icon + colour palette based on app name keywords
+          function appMeta(name: string): { icon: string; palette: string } {
+            const n = name.toLowerCase();
+            if (/suica|pasmo|t-money|octopus|easycard|touch|opal|myki|ic card/.test(n))
+              return { icon: "🚇", palette: "bg-violet-50 dark:bg-violet-950 border-violet-200 dark:border-violet-800 text-violet-700 dark:text-violet-300" };
+            if (/apple pay|google pay|samsung pay|nfc|contactless/.test(n))
+              return { icon: "📡", palette: "bg-sky-50 dark:bg-sky-950 border-sky-200 dark:border-sky-800 text-sky-700 dark:text-sky-300" };
+            if (/grab(?!pay)|careem|gojek|uber/.test(n))
+              return { icon: "🛺", palette: "bg-green-50 dark:bg-green-950 border-green-200 dark:border-green-800 text-green-700 dark:text-green-300" };
+            if (/alipay|wechat|paytm|grabpay|gcash|maya|paymaya|truemoney|ovo|boost|noon|venmo/.test(n))
+              return { icon: "📲", palette: "bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300" };
+            if (/paynow|promptpay|duitnow|qris|upi|phonepe|zeropay|kakaopay|line pay/.test(n))
+              return { icon: "🔳", palette: "bg-teal-50 dark:bg-teal-950 border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-300" };
+            if (/revolut|wise|monzo|starling/.test(n))
+              return { icon: "💸", palette: "bg-indigo-50 dark:bg-indigo-950 border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300" };
+            if (/nets|unionpay|payme|cash app/.test(n))
+              return { icon: "🏦", palette: "bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800 text-amber-700 dark:text-amber-300" };
+            // Fallback cycle
+            const fallbacks = [
+              { icon: "📱", palette: "bg-blue-50 dark:bg-blue-950 border-blue-200 dark:border-blue-800 text-blue-700 dark:text-blue-300" },
+              { icon: "💳", palette: "bg-purple-50 dark:bg-purple-950 border-purple-200 dark:border-purple-800 text-purple-700 dark:text-purple-300" },
+              { icon: "🌐", palette: "bg-teal-50 dark:bg-teal-950 border-teal-200 dark:border-teal-800 text-teal-700 dark:text-teal-300" },
+            ];
+            return fallbacks[0];
+          }
+
+          // Detect a quick tip keyword from the note
+          function tipTag(note: string): { label: string; style: string } | null {
+            const n = note.toLowerCase();
+            if (/tourist|foreigner|foreign card|passport/.test(n) && /not|cannot|can't|require.*local|require.*korean|require.*japanese|require.*thai/.test(n))
+              return { label: "⚠️ Locals only", style: "bg-red-50 dark:bg-red-950 text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800" };
+            if (/foreigner can|tourist can|foreigners can|visitors can|link.*foreign|foreign.*card/.test(n))
+              return { label: "✓ Tourist-friendly", style: "bg-green-50 dark:bg-green-950 text-green-700 dark:text-green-300 border border-green-200 dark:border-green-800" };
+            if (/essential|must|recommended|everywhere/.test(n))
+              return { label: "★ Essential", style: "bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800" };
+            return null;
+          }
+
+          return (
+            <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">📱</span>
+                <div>
+                  <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100 leading-tight">
+                    Local Payment Apps
+                  </h2>
+                  <p className="text-xs text-gray-400 dark:text-gray-500 mt-0.5">
+                    What locals use — and whether tourists can too
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3">
+                {guide.localPaymentApps.map((app) => {
+                  const { icon, palette } = appMeta(app.name);
+                  const tag = tipTag(app.note);
+                  // Split at first em-dash or period for short blurb vs detail
+                  const [shortNote, ...rest] = app.note.split(/—|\.(?= )/);
+                  const detail = rest.join(". ").trim();
+                  return (
+                    <div
+                      key={app.name}
+                      className={`flex items-start gap-3 rounded-xl border p-4 ${palette.split(" ").slice(0, 2).join(" ")} ${palette.split(" ").slice(2, 4).join(" ")}`}
+                    >
+                      {/* Icon bubble */}
+                      <div className={`shrink-0 w-10 h-10 rounded-xl flex items-center justify-center text-xl border ${palette.split(" ").slice(4).join(" ")} bg-white/60 dark:bg-black/20`}>
+                        {icon}
+                      </div>
+
+                      {/* Content */}
+                      <div className="flex-1 min-w-0 space-y-1">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <p className="text-sm font-bold text-gray-800 dark:text-gray-100 leading-tight">
+                            {app.name}
+                          </p>
+                          {tag && (
+                            <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full ${tag.style}`}>
+                              {tag.label}
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-gray-600 dark:text-gray-300 leading-relaxed">
+                          {shortNote.trim()}
+                          {detail && <span className="text-gray-400 dark:text-gray-500"> — {detail}</span>}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })()}
 
         {/* DCC Warning */}
         <section id="dcc" className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3 scroll-mt-6">
@@ -411,6 +482,59 @@ export default function TravelMoneyPage({ params }: Props) {
               <p className="text-sm text-green-800 dark:text-green-300 leading-relaxed">
                 {guide.vatInfo}
               </p>
+            </div>
+          </section>
+        )}
+
+        {/* Popular Attractions */}
+        {guide.attractions && guide.attractions.length > 0 && (
+          <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">🏛️</span>
+              <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+                Popular Attractions in {guide.name}
+              </h2>
+            </div>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Ticket prices and tips on how FX fees affect each purchase.
+            </p>
+            <div className="space-y-3">
+              {guide.attractions.map((attraction) => (
+                <div
+                  key={attraction.name}
+                  className="rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-4 space-y-2"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-gray-800 dark:text-gray-100 leading-snug">
+                        {attraction.name}
+                      </p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">
+                        {attraction.description}
+                      </p>
+                    </div>
+                    <span className="shrink-0 text-xs font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950 border border-blue-100 dark:border-blue-900 px-2.5 py-1 rounded-lg whitespace-nowrap">
+                      {attraction.ticketPrice}
+                    </span>
+                  </div>
+                  {attraction.fxNote && (
+                    <div className="flex items-start gap-2 rounded-lg bg-amber-50 dark:bg-amber-950 border border-amber-100 dark:border-amber-900 px-3 py-2">
+                      <span className="shrink-0 text-amber-500 text-xs mt-0.5">💱</span>
+                      <p className="text-xs text-amber-800 dark:text-amber-300 leading-relaxed">
+                        {attraction.fxNote}
+                      </p>
+                    </div>
+                  )}
+                  {attraction.tip && (
+                    <div className="flex items-start gap-2">
+                      <span className="shrink-0 text-blue-500 text-xs mt-0.5">💡</span>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                        {attraction.tip}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              ))}
             </div>
           </section>
         )}

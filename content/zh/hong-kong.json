@@ -16,9 +16,53 @@
   "avoidTip": "避免在重庆大厦一楼的货币兑换商兑换 — 汇率不透明，部分存在安全隐患。",
   "dccNote": "在香港刷卡时，请始终选择以港元（HKD）结算，拒绝 DCC。",
   "fxFeeItems": [
-    { "name": "外汇手续费（境外交易费）", "detail": "您的银行对海外刷卡收取的费用 — 通常为交易金额的 1.5%–2.5%。" },
-    { "name": "汇率差价", "detail": "中间市场汇率与银行实际提供汇率之间的差距 — 通常为 0.5%–2%。" },
-    { "name": "ATM 手续费", "detail": "来自您的本国银行和当地 ATM 的取款费用 — 合计每次可达 30–50 元。" },
-    { "name": "DCC 加价", "detail": "以本国货币付款时的额外加价 — 通常比真实市场汇率高 3%–10%。" }
+    {
+      "name": "外汇手续费（境外交易费）",
+      "detail": "您的银行对海外刷卡收取的费用 — 通常为交易金额的 1.5%–2.5%。"
+    },
+    {
+      "name": "汇率差价",
+      "detail": "中间市场汇率与银行实际提供汇率之间的差距 — 通常为 0.5%–2%。"
+    },
+    {
+      "name": "ATM 手续费",
+      "detail": "来自您的本国银行和当地 ATM 的取款费用 — 合计每次可达 30–50 元。"
+    },
+    {
+      "name": "DCC 加价",
+      "detail": "以本国货币付款时的额外加价 — 通常比真实市场汇率高 3%–10%。"
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Victoria Peak",
+      "detail": "Most iconic viewpoint in Hong Kong — sweeping harbour views via the world's steepest funicular Peak Tram.",
+      "price": "HKD$228 (return tram)",
+      "tip": "Use Octopus card for the Peak Tram and adjacent shops. Cards accepted at Sky Terrace 428 entrance."
+    },
+    {
+      "name": "Tian Tan Buddha (Lantau Island)",
+      "detail": "Giant 34m bronze Buddha statue with a serene hilltop setting — arrive by the spectacular Ngong Ping 360 cable car.",
+      "price": "HKD$220 (cable car return)",
+      "tip": "Cable car accepts cards; small souvenir stalls in Ngong Ping Village are cash-only."
+    },
+    {
+      "name": "Hong Kong Disneyland",
+      "detail": "Compact Disney park with unique Mystic Manor ride and stunning views of Lantau Island and Discovery Bay.",
+      "price": "HKD$619–$820",
+      "tip": "Cards accepted throughout the park. Take the MTR Disneyland Resort Line — Octopus card accepted."
+    },
+    {
+      "name": "Temple Street Night Market",
+      "detail": "Authentic Kowloon night market with street food, fortune tellers, electronics, antiques, and jade jewellery.",
+      "price": "Free entry",
+      "tip": "Cash HKD is essential here — almost all stalls are cash-only. Stock up at a nearby Hang Seng ATM."
+    },
+    {
+      "name": "Mong Kok Markets",
+      "detail": "Sensory overload at its best — Ladies' Market, Flower Market, Bird Garden, and Goldfish Market within walking distance.",
+      "price": "Free entry",
+      "tip": "Haggling is expected and cash HKD is preferred. Cards accepted at some larger fixed-price stalls."
+    }
   ]
 }

@@ -16,9 +16,53 @@
   "avoidTip": "在中国的商家或酒店刷卡时，切勿同意 DCC（动态货币转换）。",
   "dccNote": "中国许多商家会提出以您本国货币结算 — 始终拒绝，选择以人民币（CNY）支付。",
   "fxFeeItems": [
-    { "name": "外汇手续费（境外交易费）", "detail": "您的银行对海外刷卡收取的费用 — 通常为交易金额的 1.5%–2.5%。" },
-    { "name": "汇率差价", "detail": "中间市场汇率与银行实际提供汇率之间的差距 — 通常为 0.5%–2%。" },
-    { "name": "ATM 手续费", "detail": "来自您的本国银行和当地 ATM 的取款费用 — 合计每次可达 30–50 元。" },
-    { "name": "DCC 加价", "detail": "以本国货币付款时的额外加价 — 通常比真实市场汇率高 3%–10%。" }
+    {
+      "name": "外汇手续费（境外交易费）",
+      "detail": "您的银行对海外刷卡收取的费用 — 通常为交易金额的 1.5%–2.5%。"
+    },
+    {
+      "name": "汇率差价",
+      "detail": "中间市场汇率与银行实际提供汇率之间的差距 — 通常为 0.5%–2%。"
+    },
+    {
+      "name": "ATM 手续费",
+      "detail": "来自您的本国银行和当地 ATM 的取款费用 — 合计每次可达 30–50 元。"
+    },
+    {
+      "name": "DCC 加价",
+      "detail": "以本国货币付款时的额外加价 — 通常比真实市场汇率高 3%–10%。"
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Great Wall of China (Mutianyu)",
+      "detail": "Most scenic and well-preserved section of the Great Wall with cable car access and far fewer crowds than Badaling.",
+      "price": "¥65 (+ ¥35 cable car)",
+      "tip": "Foreign cards rarely work on-site — bring cash CNY. WeChat Pay and Alipay accepted at some stalls."
+    },
+    {
+      "name": "Forbidden City",
+      "detail": "World's largest palace complex with 9,999 rooms and 600 years of imperial history at the heart of Beijing.",
+      "price": "¥40–¥60",
+      "tip": "Tickets must be booked online via WeChat Pay or Alipay — foreign cards are often declined."
+    },
+    {
+      "name": "Terracotta Army",
+      "detail": "Over 8,000 life-size clay soldiers guarding the tomb of China's first emperor — a UNESCO World Heritage site in Xi'an.",
+      "price": "¥110",
+      "tip": "Cash CNY or local payment apps accepted. Bring a VPN for Google Maps navigation en route."
+    },
+    {
+      "name": "The Bund, Shanghai",
+      "detail": "Iconic 1.5km waterfront promenade of heritage colonial buildings facing the futuristic Pudong skyline across the Huangpu River.",
+      "price": "¥0 (free)",
+      "tip": "Bund restaurants and cafes settle bills via Alipay/WeChat Pay or cash CNY — have both ready."
+    },
+    {
+      "name": "West Lake, Hangzhou",
+      "detail": "Serene lake immortalized in classical Chinese poetry with pagodas, willow-lined causeways, and Dragon Well tea gardens nearby.",
+      "price": "¥0 (free; boat tour ¥90)",
+      "tip": "Boat ticket booths accept cash; nearby tea houses often use QR code payment apps."
+    }
   ]
 }

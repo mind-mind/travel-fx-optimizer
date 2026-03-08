@@ -15,6 +15,7 @@ import InstantExample from "@/components/InstantExample";
 import MoneyLostPanel from "@/components/MoneyLostPanel";
 import BestMethodCard from "@/components/BestMethodCard";
 import SharePanel from "@/components/SharePanel";
+import TripEstimator from "@/components/TripEstimator";
 import Link from "next/link";
 import { BankName, PaymentMethod, ComparisonResult } from "@/lib/types";
 import { calculateComparisons, getVatRefund } from "@/lib/calculator";
@@ -434,6 +435,14 @@ export default function Home() {
                   midRate={midRate}
                 />
               )}
+
+              {/* 9. Trip FX Fee Estimator */}
+              <TripEstimator
+                countryCode={country}
+                countryName={selectedCountry?.name ?? ""}
+                countryFlag={selectedCountry?.flag ?? ""}
+                homeCurrency={homeCurrency}
+              />
             </>
           );
         })()}

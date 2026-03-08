@@ -18,9 +18,53 @@
   "avoidTip": "อย่าแลกเงินที่สนามบินสุวรรณภูมิหรือดอนเมือง — เรทแย่กว่าในเมืองประมาณ 3–5%",
   "dccNote": "ร้านค้าในย่านท่องเที่ยวมักเสนอให้รูดบัตรเป็นเงินสกุลบ้านเกิด — เลือก THB เสมอ ค่า DCC มักสูงกว่าเรทจริง 3–10%",
   "fxFeeItems": [
-    { "name": "FX Fee (ค่าธรรมเนียมต่างประเทศ)", "detail": "ค่าธรรมเนียมที่ธนาคารเก็บเมื่อรูดบัตรในต่างประเทศ — ปกติ 1.5%–2.5% ของยอดทำรายการ" },
-    { "name": "Spread (ส่วนต่างเรท)", "detail": "ส่วนต่างระหว่าง mid-rate กับเรทที่ธนาคารให้จริง — ปกติ 0.5%–2%" },
-    { "name": "ATM Fee (ค่าธรรมเนียม ATM)", "detail": "ตู้ ATM ไทยเก็บค่าธรรมเนียม ฿220 ต่อครั้งสำหรับบัตรต่างชาติ นอกจากค่าธรรมเนียมจากธนาคารของคุณ" },
-    { "name": "DCC Markup", "detail": "มาร์คอัพพิเศษเมื่อจ่ายเป็นเงินบ้านเกิด — มักสูงกว่าเรทจริง 3%–10%" }
+    {
+      "name": "FX Fee (ค่าธรรมเนียมต่างประเทศ)",
+      "detail": "ค่าธรรมเนียมที่ธนาคารเก็บเมื่อรูดบัตรในต่างประเทศ — ปกติ 1.5%–2.5% ของยอดทำรายการ"
+    },
+    {
+      "name": "Spread (ส่วนต่างเรท)",
+      "detail": "ส่วนต่างระหว่าง mid-rate กับเรทที่ธนาคารให้จริง — ปกติ 0.5%–2%"
+    },
+    {
+      "name": "ATM Fee (ค่าธรรมเนียม ATM)",
+      "detail": "ตู้ ATM ไทยเก็บค่าธรรมเนียม ฿220 ต่อครั้งสำหรับบัตรต่างชาติ นอกจากค่าธรรมเนียมจากธนาคารของคุณ"
+    },
+    {
+      "name": "DCC Markup",
+      "detail": "มาร์คอัพพิเศษเมื่อจ่ายเป็นเงินบ้านเกิด — มักสูงกว่าเรทจริง 3%–10%"
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Grand Palace & Wat Phra Kaew",
+      "detail": "Thailand's most sacred site — the revered Emerald Buddha temple and opulent Grand Palace complex in central Bangkok.",
+      "price": "฿500",
+      "tip": "Cash only at ticket booths. Dress code strictly enforced — cover shoulders and knees or rent a sarong on-site."
+    },
+    {
+      "name": "Wat Arun (Temple of Dawn)",
+      "detail": "Striking riverside temple covered in colourful porcelain tile mosaics — most magical at sunset viewed from across the Chao Phraya.",
+      "price": "฿100",
+      "tip": "Cash only at the entrance. Cross by Chao Phraya express ferry — ฿15 per person, paid in cash."
+    },
+    {
+      "name": "Chatuchak Weekend Market",
+      "detail": "Bangkok's iconic weekend market with 15,000+ stalls selling street food, vintage clothes, antiques, and handcrafts.",
+      "price": "Free entry",
+      "tip": "Cash THB dominates — most stalls are cash-only. Some shops accept PromptPay QR but carry baht."
+    },
+    {
+      "name": "Phi Phi Islands",
+      "detail": "Spectacular limestone cliffs, turquoise waters, and white sand beaches — accessible by speedboat from Phuket or Krabi.",
+      "price": "฿600–฿900 (boat tours)",
+      "tip": "Bring cash THB for island activities, food, and national park fees. ATMs on Phi Phi charge high fees."
+    },
+    {
+      "name": "Chiang Mai Old City",
+      "detail": "Ancient walled northern city with 300+ temples including Doi Suthep, Wat Chedi Luang, and vibrant Sunday Walking Street.",
+      "price": "฿0–฿300 (sites vary)",
+      "tip": "Walking Street vendors are cash-only. Cards accepted at tourist restaurants and hotels."
+    }
   ]
 }

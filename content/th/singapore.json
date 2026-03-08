@@ -16,9 +16,53 @@
   "avoidTip": "หลีกเลี่ยงการแลกเงินที่สนามบิน Changi — เรทต่ำกว่าแหล่งแลกในเมือง",
   "dccNote": "สิงคโปร์มีร้านค้าต่างชาติมาก — เมื่อรูดบัตรให้เลือก SGD เสมอ",
   "fxFeeItems": [
-    { "name": "FX Fee (Foreign Transaction Fee)", "detail": "ค่าธรรมเนียมที่ธนาคารไทยเก็บจากการรูดบัตรในต่างประเทศ — ปกติ 1.5%–2.5% ของยอดที่รูด" },
-    { "name": "Spread", "detail": "ส่วนต่างระหว่างเรทกลาง (mid-rate) กับเรทที่ธนาคารหรือบริการให้จริง — ปกติ 0.5%–2%" },
-    { "name": "ATM Fee", "detail": "ค่าธรรมเนียมถอนเงินต่างประเทศ — ทั้งจากธนาคารไทยและธนาคารปลายทาง รวมกันอาจสูงถึง 200–300 บาทต่อครั้ง" },
-    { "name": "DCC Markup", "detail": "มาร์คอัพพิเศษที่ร้านค้าเก็บเมื่อคุณเลือกจ่ายเป็นเงินบาท — มักสูงกว่าเรทธนาคาร 3%–10%" }
+    {
+      "name": "FX Fee (Foreign Transaction Fee)",
+      "detail": "ค่าธรรมเนียมที่ธนาคารไทยเก็บจากการรูดบัตรในต่างประเทศ — ปกติ 1.5%–2.5% ของยอดที่รูด"
+    },
+    {
+      "name": "Spread",
+      "detail": "ส่วนต่างระหว่างเรทกลาง (mid-rate) กับเรทที่ธนาคารหรือบริการให้จริง — ปกติ 0.5%–2%"
+    },
+    {
+      "name": "ATM Fee",
+      "detail": "ค่าธรรมเนียมถอนเงินต่างประเทศ — ทั้งจากธนาคารไทยและธนาคารปลายทาง รวมกันอาจสูงถึง 200–300 บาทต่อครั้ง"
+    },
+    {
+      "name": "DCC Markup",
+      "detail": "มาร์คอัพพิเศษที่ร้านค้าเก็บเมื่อคุณเลือกจ่ายเป็นเงินบาท — มักสูงกว่าเรทธนาคาร 3%–10%"
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Gardens by the Bay",
+      "detail": "Futuristic nature park with towering Supertrees, Cloud Forest waterfall dome, and nightly OCBC Garden Rhapsody light show.",
+      "price": "SGD$20–$28 (domes)",
+      "tip": "Cards and contactless payment widely accepted — Singapore is near-cashless. PayNow QR available too."
+    },
+    {
+      "name": "Marina Bay Sands SkyPark",
+      "detail": "Rooftop observation deck spanning three iconic hotel towers at 200m with 360° views of the city and harbour.",
+      "price": "SGD$26 (non-guests)",
+      "tip": "Cards accepted at the ticket counter. The infinity pool is hotel guests only."
+    },
+    {
+      "name": "Sentosa Island",
+      "detail": "Entertainment island with Universal Studios Singapore, SEA Aquarium, cable car, and beach clubs all in one place.",
+      "price": "Free entry (+activity fees)",
+      "tip": "Cards and mobile pay accepted everywhere — Singapore leads Southeast Asia in cashless adoption."
+    },
+    {
+      "name": "Clarke Quay",
+      "detail": "Vibrant riverside zone with outdoor bars, restaurants, and the G-Max Reverse Bungy adventure ride.",
+      "price": "Free–SGD$45 (activities)",
+      "tip": "Cards and PayNow QR codes accepted at all riverside restaurants and bars."
+    },
+    {
+      "name": "Singapore Botanic Gardens",
+      "detail": "UNESCO World Heritage site with 160+ years of history — free to explore, with a National Orchid Garden inside.",
+      "price": "Free (orchid garden SGD$5)",
+      "tip": "Orchid garden ticket booth accepts cards. Snack kiosks inside prefer cash."
+    }
   ]
 }

@@ -339,6 +339,42 @@ export function GuidePageContent({ content, t, lang, country }: Props) {
           </div>
         </section>
 
+        {/* Popular Attractions */}
+        {content.attractions && content.attractions.length > 0 && (
+          <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">🏛️</span>
+              <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+                Popular Attractions in {content.countryName}
+              </h2>
+            </div>
+            <div className="space-y-3">
+              {content.attractions.map((attraction) => (
+                <div
+                  key={attraction.name}
+                  className="rounded-xl border border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800 p-4 space-y-2"
+                >
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="text-sm font-bold text-gray-800 dark:text-gray-100">{attraction.name}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">{attraction.detail}</p>
+                    </div>
+                    <span className="shrink-0 text-xs font-bold text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-950 border border-blue-100 dark:border-blue-900 px-2.5 py-1 rounded-lg whitespace-nowrap">
+                      {attraction.price}
+                    </span>
+                  </div>
+                  {attraction.tip && (
+                    <div className="flex items-start gap-2">
+                      <span className="shrink-0 text-blue-500 text-xs mt-0.5">💡</span>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">{attraction.tip}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Other guides */}
         <section className="space-y-3">
           <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">

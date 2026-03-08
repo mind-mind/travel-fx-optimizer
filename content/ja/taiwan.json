@@ -16,9 +16,53 @@
   "avoidTip": "空港の銀行窓口での両替は避けてください — 市内より不利なレートです。",
   "dccNote": "台湾でカードを使う際は、常に TWD（台湾ドル）を選択してください。他の通貨を提示されたら断りましょう。",
   "fxFeeItems": [
-    { "name": "FX 手数料（海外利用手数料）", "detail": "海外でカードを使用した際に銀行が請求する手数料 — 通常、取引額の 1.5%〜2.5%。" },
-    { "name": "スプレッド", "detail": "仲値と銀行が実際に提供するレートのギャップ — 通常 0.5%〜2%。" },
-    { "name": "ATM 手数料", "detail": "自国銀行と現地 ATM 双方から請求される引き出し手数料 — 合計で 1 回あたり 500〜1,000 円相当になることも。" },
-    { "name": "DCC マークアップ", "detail": "自国通貨で支払う場合に課される追加マークアップ — 実際の市場レートより 3%〜10% 高いことが多い。" }
+    {
+      "name": "FX 手数料（海外利用手数料）",
+      "detail": "海外でカードを使用した際に銀行が請求する手数料 — 通常、取引額の 1.5%〜2.5%。"
+    },
+    {
+      "name": "スプレッド",
+      "detail": "仲値と銀行が実際に提供するレートのギャップ — 通常 0.5%〜2%。"
+    },
+    {
+      "name": "ATM 手数料",
+      "detail": "自国銀行と現地 ATM 双方から請求される引き出し手数料 — 合計で 1 回あたり 500〜1,000 円相当になることも。"
+    },
+    {
+      "name": "DCC マークアップ",
+      "detail": "自国通貨で支払う場合に課される追加マークアップ — 実際の市場レートより 3%〜10% 高いことが多い。"
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Taipei 101",
+      "detail": "Former world's tallest tower at 508m — iconic bamboo-stalk architecture with a premium shopping mall and observatory.",
+      "price": "TWD$600 (observatory)",
+      "tip": "Cards accepted at the ticket counter and all shops inside. Excellent food court on B1 accepts cards too."
+    },
+    {
+      "name": "Jiufen Old Street",
+      "detail": "Dramatic hilltop former gold-rush town with narrow lantern-lit alleyways — said to have inspired Studio Ghibli's Spirited Away.",
+      "price": "Free to visit",
+      "tip": "Most stalls prefer cash TWD — bring plenty before heading up. ATMs available at the base bus stop."
+    },
+    {
+      "name": "Sun Moon Lake",
+      "detail": "Serene alpine lake at 748m with cycling paths, Thao aboriginal culture villages, and a ropeway to the hilltop.",
+      "price": "TWD$160 (ropeway); boats vary",
+      "tip": "Cards accepted at ropeway and major facilities; carry TWD for lakeside food stalls and small ferries."
+    },
+    {
+      "name": "National Palace Museum",
+      "detail": "World's largest collection of Chinese imperial art — 700,000+ objects spanning 8,000 years of history.",
+      "price": "TWD$350",
+      "tip": "Cards accepted. Allow at least half a day — the famous jade cabbage alone draws hour-long queues."
+    },
+    {
+      "name": "Shilin Night Market",
+      "detail": "Taipei's largest and most famous night market — giant fried chicken, bubble tea, oyster vermicelli, and more.",
+      "price": "Free entry",
+      "tip": "Cash TWD is king here — bring plenty. Some larger food vendors accept LINE Pay QR codes."
+    }
   ]
 }

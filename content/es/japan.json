@@ -16,9 +16,53 @@
   "avoidTip": "Evita cambiar dinero en el aeropuerto — los tipos de cambio son significativamente peores que en la ciudad.",
   "dccNote": "Cuando uses tu tarjeta en Japón, elige siempre JPY. Nunca selecciones otra moneda aunque te lo ofrezcan (DCC).",
   "fxFeeItems": [
-    { "name": "Comisión FX (Comisión por Transacción Extranjera)", "detail": "Comisión que cobra tu banco por usar la tarjeta en el extranjero — normalmente el 1,5%–2,5% de la transacción." },
-    { "name": "Diferencial (Spread)", "detail": "La diferencia entre el tipo de cambio interbancario y el que te aplica tu banco — normalmente el 0,5%–2%." },
-    { "name": "Comisión de Cajero (ATM)", "detail": "Comisiones de tu banco y del cajero extranjero — combinadas pueden alcanzar 3–5 € por extracción." },
-    { "name": "DCC Markup", "detail": "Cargo adicional cuando pagas en tu moneda local — suele estar entre el 3%–10% por encima del tipo real." }
+    {
+      "name": "Comisión FX (Comisión por Transacción Extranjera)",
+      "detail": "Comisión que cobra tu banco por usar la tarjeta en el extranjero — normalmente el 1,5%–2,5% de la transacción."
+    },
+    {
+      "name": "Diferencial (Spread)",
+      "detail": "La diferencia entre el tipo de cambio interbancario y el que te aplica tu banco — normalmente el 0,5%–2%."
+    },
+    {
+      "name": "Comisión de Cajero (ATM)",
+      "detail": "Comisiones de tu banco y del cajero extranjero — combinadas pueden alcanzar 3–5 € por extracción."
+    },
+    {
+      "name": "DCC Markup",
+      "detail": "Cargo adicional cuando pagas en tu moneda local — suele estar entre el 3%–10% por encima del tipo real."
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Senso-ji Temple",
+      "detail": "Tokyo's oldest Buddhist temple with a stunning five-story pagoda and Nakamise shopping street lined with traditional crafts and snacks.",
+      "price": "¥0 (free; inner hall ¥500)",
+      "tip": "Carry cash JPY for souvenir stalls — most vendors along the temple approach are cash-only."
+    },
+    {
+      "name": "teamLab Planets",
+      "detail": "Immersive digital art museum in Toyosu with floor-to-ceiling interactive light installations and infinite mirror reflections.",
+      "price": "¥3,200–¥4,200",
+      "tip": "Book tickets online in advance — on-site ticket machines are JPY card payment only."
+    },
+    {
+      "name": "Fushimi Inari Shrine",
+      "detail": "Iconic path of thousands of vermillion torii gates winding up the mountain behind Kyoto's most famous fox shrine.",
+      "price": "¥0 (free)",
+      "tip": "Carry small JPY coins for street food and souvenir stalls at the mountain base."
+    },
+    {
+      "name": "Tokyo Skytree",
+      "detail": "World's second-tallest tower at 634m — panoramic views of the city and Mt. Fuji on clear days.",
+      "price": "¥2,100–¥3,100",
+      "tip": "Cards accepted at the ticket counter; carry JPY for cafes and gift shops inside."
+    },
+    {
+      "name": "Universal Studios Japan",
+      "detail": "World-class theme park with Super Nintendo World (Mario Kart), Harry Potter, and Minion Park.",
+      "price": "¥8,400–¥9,400",
+      "tip": "Buy tickets online before visiting — park entry and most on-site shops accept credit cards."
+    }
   ]
 }

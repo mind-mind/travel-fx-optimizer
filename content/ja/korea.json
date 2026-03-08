@@ -16,9 +16,53 @@
   "avoidTip": "自国で KRW に両替しないでください — レートが非常に不利です。韓国現地で引き出すか両替しましょう。",
   "dccNote": "韓国でカードを使う際は、常に KRW（韓国ウォン）を選択してください。自国通貨を提案されても断りましょう（DCC）。",
   "fxFeeItems": [
-    { "name": "FX 手数料（海外利用手数料）", "detail": "海外でカードを使用した際に銀行が請求する手数料 — 通常、取引額の 1.5%〜2.5%。" },
-    { "name": "スプレッド", "detail": "仲値と銀行が実際に提供するレートのギャップ — 通常 0.5%〜2%。" },
-    { "name": "ATM 手数料", "detail": "自国銀行と現地 ATM 双方から請求される引き出し手数料 — 合計で 1 回あたり 500〜1,000 円相当になることも。" },
-    { "name": "DCC マークアップ", "detail": "自国通貨で支払う場合に課される追加マークアップ — 実際の市場レートより 3%〜10% 高いことが多い。" }
+    {
+      "name": "FX 手数料（海外利用手数料）",
+      "detail": "海外でカードを使用した際に銀行が請求する手数料 — 通常、取引額の 1.5%〜2.5%。"
+    },
+    {
+      "name": "スプレッド",
+      "detail": "仲値と銀行が実際に提供するレートのギャップ — 通常 0.5%〜2%。"
+    },
+    {
+      "name": "ATM 手数料",
+      "detail": "自国銀行と現地 ATM 双方から請求される引き出し手数料 — 合計で 1 回あたり 500〜1,000 円相当になることも。"
+    },
+    {
+      "name": "DCC マークアップ",
+      "detail": "自国通貨で支払う場合に課される追加マークアップ — 実際の市場レートより 3%〜10% 高いことが多い。"
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Gyeongbokgung Palace",
+      "detail": "Seoul's grandest Joseon-dynasty palace — catch the royal changing-of-guard ceremony and rent a hanbok for free entry.",
+      "price": "₩3,000 (free in hanbok)",
+      "tip": "Cards accepted at the main ticket booth. Nearby hanbok rental shops also take cards."
+    },
+    {
+      "name": "Bukchon Hanok Village",
+      "detail": "Hillside neighbourhood of preserved traditional Korean houses with stunning views over Seoul — most scenic in the early morning.",
+      "price": "Free to explore",
+      "tip": "Teahouses and craft shops accept cards; street market stalls prefer cash KRW."
+    },
+    {
+      "name": "N Seoul Tower",
+      "detail": "Iconic landmark on Namsan Mountain — famous love locks, panoramic Seoul views, and a revolving restaurant at the top.",
+      "price": "₩16,000 (observatory)",
+      "tip": "Cards and T-money card accepted for cable car and observatory entrance."
+    },
+    {
+      "name": "Jeju Island",
+      "detail": "Volcanic island paradise with Hallasan National Park, Manjanggul lava tube caves, and black-sand beaches.",
+      "price": "₩0–₩3,000 (sites vary)",
+      "tip": "Cards accepted widely on Jeju. Download Kakao Pay for quick payment at local restaurants."
+    },
+    {
+      "name": "Insadong",
+      "detail": "Traditional arts district with craft galleries, tea houses, antiques, and the lively Ssamziegil courtyard marketplace.",
+      "price": "Free to explore",
+      "tip": "Carry cash KRW for market stalls and street food; restaurants and cafes accept cards."
+    }
   ]
 }

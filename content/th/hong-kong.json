@@ -16,9 +16,53 @@
   "avoidTip": "อย่าแลกเงินที่ Chungking Mansions ชั้นล่าง — เรทดูแปลก บางแห่งไม่ปลอดภัย",
   "dccNote": "ในฮ่องกง เลือกจ่ายเป็น HKD เสมอ อย่ายอมรับตัวเลือก THB หากร้านค้าเสนอ",
   "fxFeeItems": [
-    { "name": "FX Fee (Foreign Transaction Fee)", "detail": "ค่าธรรมเนียมที่ธนาคารไทยเก็บจากการรูดบัตรในต่างประเทศ — ปกติ 1.5%–2.5% ของยอดที่รูด" },
-    { "name": "Spread", "detail": "ส่วนต่างระหว่างเรทกลาง (mid-rate) กับเรทที่ธนาคารหรือบริการให้จริง — ปกติ 0.5%–2%" },
-    { "name": "ATM Fee", "detail": "ค่าธรรมเนียมถอนเงินต่างประเทศ — ทั้งจากธนาคารไทยและธนาคารปลายทาง รวมกันอาจสูงถึง 200–300 บาทต่อครั้ง" },
-    { "name": "DCC Markup", "detail": "มาร์คอัพพิเศษที่ร้านค้าเก็บเมื่อคุณเลือกจ่ายเป็นเงินบาท — มักสูงกว่าเรทธนาคาร 3%–10%" }
+    {
+      "name": "FX Fee (Foreign Transaction Fee)",
+      "detail": "ค่าธรรมเนียมที่ธนาคารไทยเก็บจากการรูดบัตรในต่างประเทศ — ปกติ 1.5%–2.5% ของยอดที่รูด"
+    },
+    {
+      "name": "Spread",
+      "detail": "ส่วนต่างระหว่างเรทกลาง (mid-rate) กับเรทที่ธนาคารหรือบริการให้จริง — ปกติ 0.5%–2%"
+    },
+    {
+      "name": "ATM Fee",
+      "detail": "ค่าธรรมเนียมถอนเงินต่างประเทศ — ทั้งจากธนาคารไทยและธนาคารปลายทาง รวมกันอาจสูงถึง 200–300 บาทต่อครั้ง"
+    },
+    {
+      "name": "DCC Markup",
+      "detail": "มาร์คอัพพิเศษที่ร้านค้าเก็บเมื่อคุณเลือกจ่ายเป็นเงินบาท — มักสูงกว่าเรทธนาคาร 3%–10%"
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Victoria Peak",
+      "detail": "Most iconic viewpoint in Hong Kong — sweeping harbour views via the world's steepest funicular Peak Tram.",
+      "price": "HKD$228 (return tram)",
+      "tip": "Use Octopus card for the Peak Tram and adjacent shops. Cards accepted at Sky Terrace 428 entrance."
+    },
+    {
+      "name": "Tian Tan Buddha (Lantau Island)",
+      "detail": "Giant 34m bronze Buddha statue with a serene hilltop setting — arrive by the spectacular Ngong Ping 360 cable car.",
+      "price": "HKD$220 (cable car return)",
+      "tip": "Cable car accepts cards; small souvenir stalls in Ngong Ping Village are cash-only."
+    },
+    {
+      "name": "Hong Kong Disneyland",
+      "detail": "Compact Disney park with unique Mystic Manor ride and stunning views of Lantau Island and Discovery Bay.",
+      "price": "HKD$619–$820",
+      "tip": "Cards accepted throughout the park. Take the MTR Disneyland Resort Line — Octopus card accepted."
+    },
+    {
+      "name": "Temple Street Night Market",
+      "detail": "Authentic Kowloon night market with street food, fortune tellers, electronics, antiques, and jade jewellery.",
+      "price": "Free entry",
+      "tip": "Cash HKD is essential here — almost all stalls are cash-only. Stock up at a nearby Hang Seng ATM."
+    },
+    {
+      "name": "Mong Kok Markets",
+      "detail": "Sensory overload at its best — Ladies' Market, Flower Market, Bird Garden, and Goldfish Market within walking distance.",
+      "price": "Free entry",
+      "tip": "Haggling is expected and cash HKD is preferred. Cards accepted at some larger fixed-price stalls."
+    }
   ]
 }

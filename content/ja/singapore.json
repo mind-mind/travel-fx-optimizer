@@ -16,9 +16,53 @@
   "avoidTip": "チャンギ空港での両替は避けてください — 市内のレートより不利です。",
   "dccNote": "シンガポールには多くの外資系店舗があります — カード払いの際は常に SGD を選択してください。",
   "fxFeeItems": [
-    { "name": "FX 手数料（海外利用手数料）", "detail": "海外でカードを使用した際に銀行が請求する手数料 — 通常、取引額の 1.5%〜2.5%。" },
-    { "name": "スプレッド", "detail": "仲値と銀行が実際に提供するレートのギャップ — 通常 0.5%〜2%。" },
-    { "name": "ATM 手数料", "detail": "自国銀行と現地 ATM 双方から請求される引き出し手数料 — 合計で 1 回あたり 500〜1,000 円相当になることも。" },
-    { "name": "DCC マークアップ", "detail": "自国通貨で支払う場合に課される追加マークアップ — 実際の市場レートより 3%〜10% 高いことが多い。" }
+    {
+      "name": "FX 手数料（海外利用手数料）",
+      "detail": "海外でカードを使用した際に銀行が請求する手数料 — 通常、取引額の 1.5%〜2.5%。"
+    },
+    {
+      "name": "スプレッド",
+      "detail": "仲値と銀行が実際に提供するレートのギャップ — 通常 0.5%〜2%。"
+    },
+    {
+      "name": "ATM 手数料",
+      "detail": "自国銀行と現地 ATM 双方から請求される引き出し手数料 — 合計で 1 回あたり 500〜1,000 円相当になることも。"
+    },
+    {
+      "name": "DCC マークアップ",
+      "detail": "自国通貨で支払う場合に課される追加マークアップ — 実際の市場レートより 3%〜10% 高いことが多い。"
+    }
+  ],
+  "attractions": [
+    {
+      "name": "Gardens by the Bay",
+      "detail": "Futuristic nature park with towering Supertrees, Cloud Forest waterfall dome, and nightly OCBC Garden Rhapsody light show.",
+      "price": "SGD$20–$28 (domes)",
+      "tip": "Cards and contactless payment widely accepted — Singapore is near-cashless. PayNow QR available too."
+    },
+    {
+      "name": "Marina Bay Sands SkyPark",
+      "detail": "Rooftop observation deck spanning three iconic hotel towers at 200m with 360° views of the city and harbour.",
+      "price": "SGD$26 (non-guests)",
+      "tip": "Cards accepted at the ticket counter. The infinity pool is hotel guests only."
+    },
+    {
+      "name": "Sentosa Island",
+      "detail": "Entertainment island with Universal Studios Singapore, SEA Aquarium, cable car, and beach clubs all in one place.",
+      "price": "Free entry (+activity fees)",
+      "tip": "Cards and mobile pay accepted everywhere — Singapore leads Southeast Asia in cashless adoption."
+    },
+    {
+      "name": "Clarke Quay",
+      "detail": "Vibrant riverside zone with outdoor bars, restaurants, and the G-Max Reverse Bungy adventure ride.",
+      "price": "Free–SGD$45 (activities)",
+      "tip": "Cards and PayNow QR codes accepted at all riverside restaurants and bars."
+    },
+    {
+      "name": "Singapore Botanic Gardens",
+      "detail": "UNESCO World Heritage site with 160+ years of history — free to explore, with a National Orchid Garden inside.",
+      "price": "Free (orchid garden SGD$5)",
+      "tip": "Orchid garden ticket booth accepts cards. Snack kiosks inside prefer cash."
+    }
   ]
 }

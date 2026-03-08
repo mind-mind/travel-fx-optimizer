@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ComparisonResult } from "@/lib/types";
 import { CODE_TO_COUNTRY } from "@/lib/guideConfig";
+import { getGuideByCountryCode } from "@/data/travelMoneyGuides";
 import { Translations, Lang } from "@/data/translations";
 import { fmtCurrency } from "@/lib/formatCurrency";
 
@@ -33,9 +34,16 @@ export default function InsightPanel({
   const midRateHome = amountForeign * midRate;
   const lossHome = selected.totalHome - midRateHome;
   const lossPercent = midRateHome > 0 ? (lossHome / midRateHome) * 100 : 0;
+  const travelMoneyGuide = getGuideByCountryCode(countryCode) ?? null;
   const guideCountry = CODE_TO_COUNTRY[countryCode] ?? null;
-  const guideHref = guideCountry ? `/${lang}/how-to-pay/${guideCountry}` : null;
-  const guideDisplayName = guideCountry
+  const howToPayHref = guideCountry ? `/${lang}/how-to-pay/${guideCountry}` : null;
+  // Prefer /travel-money/ as primary; fall back to /how-to-pay/ if no travel-money guide exists
+  const guideHref = travelMoneyGuide
+    ? `/travel-money/${travelMoneyGuide.slug}`
+    : howToPayHref;
+  const guideDisplayName = travelMoneyGuide
+    ? travelMoneyGuide.name
+    : guideCountry
     ? guideCountry.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
     : countryCode;
 

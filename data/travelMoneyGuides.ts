@@ -28,6 +28,15 @@ export interface TravelMoneyGuide {
    */
   exampleAmount: number;
 
+  // Popular attractions with ticket prices and optional FX note
+  attractions?: {
+    name: string;
+    description: string;
+    ticketPrice: string;   // e.g. "¥2,000" or "Free"
+    fxNote?: string;       // e.g. "Paying by card adds ~¥60 in FX fees"
+    tip?: string;          // e.g. "Book online to skip queues"
+  }[];
+
   // SEO
   seoTitle: string;
   seoDescription: string;
@@ -71,6 +80,42 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "A no-foreign-fee card (Wise, Revolut, Charles Schwab) is ideal — you pay the mid-market rate with zero card fee. Standard bank cards cost an extra 2.5–3%.",
     exampleAmount: 10000,
+    attractions: [
+      {
+        name: "Senso-ji Temple",
+        description: "Tokyo's oldest temple and most visited site — free to enter the grounds, with a small fee for the inner sanctum.",
+        ticketPrice: "Free / ¥200 inner hall",
+        fxNote: "Street vendors and the Nakamise shopping street are cash-only — a standard card adds ~¥30 in FX fees per ¥2,000 purchase.",
+        tip: "Arrive before 8 am to explore without crowds.",
+      },
+      {
+        name: "teamLab Planets Tokyo",
+        description: "Immersive digital art museum in Toyosu — advance booking recommended.",
+        ticketPrice: "¥3,200",
+        fxNote: "Book online with a no-FX card to avoid ~¥96 extra on a standard bank card.",
+        tip: "Book tickets online at least 2 weeks in advance — frequently sells out.",
+      },
+      {
+        name: "Mount Fuji (5th Station)",
+        description: "Japan's iconic peak — free to visit the 5th Station; the climbing season (July–Sept) has a ¥2,000 conservation fee.",
+        ticketPrice: "Free / ¥2,000 (climbing season)",
+        fxNote: "Pay the gate fee in cash — card terminals are not always available at the trailhead.",
+        tip: "Start the ascent before midnight to reach the summit at sunrise.",
+      },
+      {
+        name: "Shinjuku Gyoen National Garden",
+        description: "Stunning garden combining French, English, and Japanese styles — beautiful during cherry blossom season.",
+        ticketPrice: "¥500",
+        fxNote: "Card accepted at the gate — a standard card adds ~¥15 in FX fees.",
+        tip: "Visit in late March–early April for the best cherry blossom viewing.",
+      },
+      {
+        name: "Fushimi Inari Shrine (Kyoto)",
+        description: "Iconic thousands-of-torii-gates mountain hike outside Kyoto — one of Japan's most photographed landmarks.",
+        ticketPrice: "Free",
+        tip: "Hike to the top (2–3 hrs) for stunning views with far fewer tourists than the lower gates.",
+      },
+    ],
     seoTitle: "How to Pay in Japan Without Losing Money on Exchange Rates",
     seoDescription:
       "Complete guide to paying in Japan as a tourist: best ATMs, cash tips, Suica card, VAT refund, and how to avoid DCC and airport FX fees.",
@@ -111,6 +156,43 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "If using a card at malls or hotels, a no-fee card (Wise, Revolut) saves the 2.5% standard FX fee. For cash, exchange booths beat ATMs once you account for the ฿220 fee.",
     exampleAmount: 2000,
+    attractions: [
+      {
+        name: "Grand Palace & Wat Phra Kaew",
+        description: "Bangkok's most iconic landmark — the Grand Palace complex and the sacred Emerald Buddha temple.",
+        ticketPrice: "฿500",
+        fxNote: "Card accepted at the main entrance — a standard card adds ~฿15 in fees. Bring cash for smaller vendors inside.",
+        tip: "Dress code is strictly enforced — shoulders and knees must be covered. Free sarongs are available but queues are long.",
+      },
+      {
+        name: "Wat Pho",
+        description: "Temple of the Reclining Buddha — a massive 46-metre gold buddha and Thailand's oldest public university.",
+        ticketPrice: "฿200",
+        fxNote: "Cash only at the gate — a 7-Eleven ATM nearby charges ฿220 for foreign cards.",
+        tip: "Combine with the Grand Palace in one morning — they're a short walk apart.",
+      },
+      {
+        name: "Chiang Mai Night Bazaar",
+        description: "Massive nightly market with local handicrafts, street food, and cultural performances.",
+        ticketPrice: "Free entry",
+        fxNote: "Cash only for most vendors — budgeting ฿500–1,000 in small notes is recommended.",
+        tip: "Bargaining is expected — start at 50% of the asking price.",
+      },
+      {
+        name: "Phi Phi Islands Day Tour",
+        description: "Emerald lagoons and white-sand beaches made famous by 'The Beach' — accessible by speedboat from Phuket or Krabi.",
+        ticketPrice: "฿1,200–฿2,500",
+        fxNote: "Most tour operators accept cards — a standard bank card adds ~฿75 in FX fees on a ฿3,000 tour.",
+        tip: "Book directly at the pier the evening before to get the best rate.",
+      },
+      {
+        name: "Ayutthaya Historical Park",
+        description: "UNESCO World Heritage ancient capital — stunning ruined temples and buddha statues just 80 km from Bangkok.",
+        ticketPrice: "฿50 per temple (3–5 sites recommended)",
+        fxNote: "Temple fees are cash-only. A day of sightseeing costs ฿150–250 — carry small notes.",
+        tip: "Hire a bicycle from the pier (฿50/day) to reach all major sites at your own pace.",
+      },
+    ],
     seoTitle: "How to Pay in Thailand — Best FX Rates, ATMs & Exchange Tips",
     seoDescription:
       "How to get the best exchange rate in Thailand as a tourist. Compare SuperRich booths vs ATMs vs cards, avoid airport rip-offs, and understand DCC at Thai ATMs.",
@@ -151,6 +233,42 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "Any Visa or Mastercard works well in Korea. A no-fee travel card saves the typical 2.5% bank FX markup on every purchase.",
     exampleAmount: 50000,
+    attractions: [
+      {
+        name: "Gyeongbokgung Palace",
+        description: "Korea's grandest Joseon-era palace — includes the National Folk Museum and changing-of-the-guard ceremony.",
+        ticketPrice: "₩3,000",
+        fxNote: "Card accepted — a standard bank card adds ~₩90 in FX fees. Cash is fine at the gate.",
+        tip: "Wear a hanbok (traditional dress) rented nearby for free entry — photo spots are excellent.",
+      },
+      {
+        name: "N Seoul Tower",
+        description: "Iconic observation tower on Namsan Mountain — 360° panoramic views over Seoul. Accessible by cable car or walking trail.",
+        ticketPrice: "₩21,000 (observation deck)",
+        fxNote: "Card accepted. A standard bank card adds ~₩630 in FX fees — use a no-FX card to save.",
+        tip: "The cable car (₩15,500 return) is worth it. Visit at sunset for the city lights.",
+      },
+      {
+        name: "Demilitarized Zone (DMZ) Tour",
+        description: "Half-day or full-day guided tour to the North Korean border — a unique and sobering historical experience.",
+        ticketPrice: "₩55,000–₩110,000",
+        fxNote: "Most tour operators accept Visa/Mastercard — a standard card adds ~₩2,750 on a ₩110,000 tour.",
+        tip: "Book at least 3 days in advance — ID/passport required and some areas restrict entry.",
+      },
+      {
+        name: "Lotte World",
+        description: "The world's largest indoor theme park, combined with an outdoor Magic Island — rides, performances, and a skating rink.",
+        ticketPrice: "₩62,000 (1-day pass)",
+        fxNote: "Card accepted in-park — a standard bank card adds ~₩1,860 on entry; food/drinks inside also add up.",
+        tip: "Buy tickets online (official app) for a ₩5,000–10,000 discount vs gate price.",
+      },
+      {
+        name: "Bukchon Hanok Village",
+        description: "Living museum of traditional Korean hanok houses — photo-perfect alleys with mountain and palace views.",
+        ticketPrice: "Free",
+        tip: "Visit early morning (before 9 am) — residents ask for quiet. Avoid weekends.",
+      },
+    ],
     seoTitle: "How to Pay in South Korea — Cards, ATMs & T-Money Guide",
     seoDescription:
       "Full guide to paying in South Korea as a tourist: T-Money card for transit, best ATMs for foreign cards, credit card tips, and how to claim VAT refund.",
@@ -191,6 +309,43 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "Singapore is so cashless that a no-foreign-fee card (Wise, Revolut, Charles Schwab) is the optimal choice — free mid-market rates on every tap.",
     exampleAmount: 200,
+    attractions: [
+      {
+        name: "Gardens by the Bay",
+        description: "Futuristic garden with the iconic Supertree Grove, Cloud Forest, and Flower Dome conservatories.",
+        ticketPrice: "S$28 (conservatories combo)",
+        fxNote: "Card accepted — a standard bank card adds ~S$0.70 in FX fees on admission.",
+        tip: "The outdoor Supertree Grove is free. The free Supertree light show runs nightly at 7:45 pm & 8:45 pm.",
+      },
+      {
+        name: "Universal Studios Singapore",
+        description: "Southeast Asia's only Universal Studios — with themed zones from Jurassic Park to Transformers and Minions.",
+        ticketPrice: "S$83",
+        fxNote: "Buy online with a no-FX card — a standard bank card adds ~S$2.50 on the ticket price.",
+        tip: "Arrive at rope-drop (10 am) and head straight to Battlestar Galactica and Revenge of the Mummy first.",
+      },
+      {
+        name: "Singapore Zoo & Night Safari",
+        description: "World-renowned open-concept zoo by the Seletar Reservoir, with the only world-class night zoo next door.",
+        ticketPrice: "S$49 (zoo) / S$55 (Night Safari)",
+        fxNote: "Cards accepted — consider a combo ticket (S$85) bought online for best value.",
+        tip: "The Night Safari's tram ride at 9 pm offers the best animal viewing after a long feeding day.",
+      },
+      {
+        name: "ArtScience Museum",
+        description: "Iconic lotus-shaped museum at Marina Bay Sands — combining art, science, and technology exhibitions.",
+        ticketPrice: "S$20",
+        fxNote: "Card accepted. Save S$5 by buying online ahead of time.",
+        tip: "The permanent Future World exhibition is worth the standalone visit.",
+      },
+      {
+        name: "Chinatown Food Street & Maxwell Hawker Centre",
+        description: "Singapore's best known hawker centres for authentic local dishes — Hainanese chicken rice, laksa, char kway teow.",
+        ticketPrice: "From S$4–6 per dish",
+        fxNote: "Many stalls now accept PayNow QR — but cash (S$5–10 notes) is still preferred at older stalls.",
+        tip: "Tian Tian Chicken Rice at Maxwell is famous worldwide. Arrive before noon or queue for 30+ minutes.",
+      },
+    ],
     seoTitle: "How to Pay in Singapore — Cashless Travel Money Guide",
     seoDescription:
       "How to pay in Singapore as a tourist: cards, contactless, PayNow, Mustafa Centre money exchange, and GST refund tips for international visitors.",
@@ -231,6 +386,42 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "Visa and Mastercard have wide acceptance in cities. A no-fee card saves the standard 2.5% bank surcharge on card transactions.",
     exampleAmount: 3000,
+    attractions: [
+      {
+        name: "Taipei 101 Observatory",
+        description: "Iconic skyscraper with an indoor observation deck on the 89th floor and outdoor deck on the 91st — stunning views over Taipei.",
+        ticketPrice: "NT$600",
+        fxNote: "Card accepted at the ticket counter — a standard bank card adds ~NT$18 in FX fees.",
+        tip: "Book online to skip the queue. Evening visits offer the best cityscape views.",
+      },
+      {
+        name: "Shilin Night Market",
+        description: "Taiwan's most famous night market — hundreds of food stalls, games, and shopping spread across two floors.",
+        ticketPrice: "Free entry",
+        fxNote: "Almost entirely cash-only. Bring NT$500–1,000 in small notes for snacks and shopping.",
+        tip: "Don't miss oyster vermicelli (oō-á-mī), scallion pancakes, and XXL chicken steaks.",
+      },
+      {
+        name: "National Palace Museum",
+        description: "One of the world's greatest collections of Chinese imperial artefacts — over 700,000 pieces covering 8,000 years of history.",
+        ticketPrice: "NT$350",
+        fxNote: "Card accepted. Consider a no-FX card to save the ~NT$10 standard bank surcharge.",
+        tip: "The Jadeite Cabbage and Meat-Shaped Stone are the star exhibits — find them on the 3rd floor.",
+      },
+      {
+        name: "Jiufen Old Street",
+        description: "The atmospheric hillside teahouse town believed to have inspired Studio Ghibli's Spirited Away — stunning sea views.",
+        ticketPrice: "Free entry",
+        fxNote: "Teahouses and shops are mostly cash-only. Bring NT$300–500 for tea and snacks.",
+        tip: "Visit on a weekday to avoid weekend crowds. Golden hour lighting is magical.",
+      },
+      {
+        name: "Taroko Gorge National Park",
+        description: "Dramatic marble gorge and mountain scenery in eastern Taiwan — one of Asia's most spectacular natural parks.",
+        ticketPrice: "Free (some trails require permits)",
+        tip: "The Shakadang Trail and Swallow Grotto are the most accessible. Helmets are required in the gorge tunnels.",
+      },
+    ],
     seoTitle: "How to Pay in Taiwan — EasyCard, ATMs & Night Market Tips",
     seoDescription:
       "Complete travel money guide for Taiwan: EasyCard setup, best ATMs for foreigners, night market cash tips, and how to claim Taiwan's VAT refund.",
@@ -271,6 +462,42 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "Visa and Mastercard with low FX fees are ideal for Hong Kong's cashless retail. Keep some HKD cash for markets and older restaurants.",
     exampleAmount: 800,
+    attractions: [
+      {
+        name: "The Peak Tram & Sky Terrace",
+        description: "Hong Kong's historic funicular railway to Victoria Peak — offering the most iconic skyline view in Asia.",
+        ticketPrice: "HK$188 (return + Sky Terrace 428)",
+        fxNote: "Card accepted at the tram station — a standard bank card adds ~HK$6 in FX fees.",
+        tip: "Buy combo tickets online. Visit at dusk when the city lights up for the best effect.",
+      },
+      {
+        name: "Star Ferry Harbour Crossing",
+        description: "Iconic century-old ferry crossing between Tsim Sha Tsui and Central — one of the world's great cheap thrills.",
+        ticketPrice: "HK$3.40 (lower deck) / HK$4.20 (upper deck)",
+        fxNote: "Cash or Octopus card only — no credit cards accepted. Cheapest and most scenic way to cross the harbour.",
+        tip: "Take the upper deck. The evening crossing between 7–8 pm has the city lights in full effect.",
+      },
+      {
+        name: "Ocean Park Hong Kong",
+        description: "Theme park and marine life aquarium built into sea cliffs — with panda habitats, roller coasters, and shows.",
+        ticketPrice: "HK$498",
+        fxNote: "Card accepted. A standard bank card adds ~HK$15 in FX fees — buy online with a no-FX card.",
+        tip: "Weekday visits avoid long queues. The cable car and Hong Kong Fisherman's Wharf are highlights.",
+      },
+      {
+        name: "Chi Lin Nunnery & Nan Lian Garden",
+        description: "Serene Tang-dynasty wooden nunnery and classic Chinese garden — a peaceful contrast to Hong Kong's urban density.",
+        ticketPrice: "Free",
+        tip: "Combine with nearby Diamond Hill MTR stop. The lotus pond is especially beautiful in summer.",
+      },
+      {
+        name: "Mong Kok Street Markets",
+        description: "Street market district with the Ladies' Market, Flower Market, Bird Garden, and Goldfish Market.",
+        ticketPrice: "Free entry",
+        fxNote: "Cash only for almost all vendors. Bring HK$200–500 in small notes for shopping and street snacks.",
+        tip: "Bargain on everything — start at 60% of the first asking price.",
+      },
+    ],
     seoTitle: "How to Pay in Hong Kong — Octopus Card, ATMs & Money Tips",
     seoDescription:
       "Travel money guide for Hong Kong: Octopus Card setup, best ATMs for foreign cards, where to exchange cash, and how to avoid tourist traps at Chungking Mansions.",
@@ -311,6 +538,43 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "Your best card for China is one linked to Alipay or WeChat Pay. For ATM withdrawals, bring a no-foreign-fee card to minimize the 2.5% bank surcharge.",
     exampleAmount: 500,
+    attractions: [
+      {
+        name: "Great Wall of China (Mutianyu section)",
+        description: "The best-preserved and tourist-friendly section of the Great Wall — with a cable car and toboggan descent.",
+        ticketPrice: "¥65 + cable car ¥120",
+        fxNote: "Pay via Alipay or cash — linking a foreign card to Alipay is easiest for tourists.",
+        tip: "Take a bus from Dongzhimen (Beijing) to avoid overpriced tour packages. Go Tuesday–Thursday for fewer crowds.",
+      },
+      {
+        name: "Forbidden City (Palace Museum)",
+        description: "The world's largest preserved palace complex — 24 emperors' home and China's most visited attraction.",
+        ticketPrice: "¤60",
+        fxNote: "Tickets must be booked online in advance (foreigners need a passport). Pay via Alipay linked to a foreign card.",
+        tip: "Tickets sell out weeks ahead — book on the official Palace Museum website. Google is blocked in China.",
+      },
+      {
+        name: "Terracotta Warriors (Xi'an)",
+        description: "Emperor Qin Shi Huang's army of over 8,000 life-size clay soldiers — one of archaeology's greatest discoveries.",
+        ticketPrice: "¥120",
+        fxNote: "Accept card payment at the site — or use Alipay International.",
+        tip: "Pit 1 has the most warriors. Hire an official guide on-site for context — it completely transforms the experience.",
+      },
+      {
+        name: "Zhangjiajie National Forest Park",
+        description: "Other-worldly floating sandstone pillars that inspired the Avatar film — reached via the world's longest glass bridge.",
+        ticketPrice: "¥258 (3-day park pass)",
+        fxNote: "Pay via Alipay or WeChat Pay inside the park. ATM access in the park is limited.",
+        tip: "Stay 2 nights inside the park to beat the day-tripper crowds on the Hallelujah Mountain trail.",
+      },
+      {
+        name: "The Bund, Shanghai",
+        description: "Shanghai's famous waterfront promenade with Art Deco colonial buildings facing the futuristic Pudong skyline.",
+        ticketPrice: "Free",
+        fxNote: "Walking is free, but Pudong skyline views require a ferry (¥2) or tunnel (¥30) across the river.",
+        tip: "The view from the rooftop bar of the Waldorf Astoria (no minimum spend before 6 pm) is stunning.",
+      },
+    ],
     seoTitle: "How to Pay in China as a Tourist — Alipay, WeChat Pay & ATM Guide",
     seoDescription:
       "Essential guide to paying in China: how to set up Alipay for foreigners, WeChat Pay international, best ATMs for foreign cards, and cash tips for travelers.",
@@ -351,6 +615,43 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "A no-foreign-fee card is valuable for hotel check-ins and tour bookings. For daily spending, cash is king — budget your ATM withdrawals carefully to avoid frequent fees.",
     exampleAmount: 500000,
+    attractions: [
+      {
+        name: "Ha Long Bay Cruise",
+        description: "UNESCO World Heritage limestone karsts rising from emerald waters — best experienced on a 2-day overnight junk cruise.",
+        ticketPrice: "VND 2,200,000–5,000,000 (per person, 2-day)",
+        fxNote: "Most tour operators in Hanoi accept Visa/Mastercard. A standard bank card adds ~VND 110,000 on a VND 4,400,000 cruise.",
+        tip: "Book directly with your Hanoi guesthouse to save 20–30% vs walking agents on the street.",
+      },
+      {
+        name: "Hoi An Ancient Town",
+        description: "Lantern-lit UNESCO trading port with Japanese merchant houses, tailor shops, and outstanding street food.",
+        ticketPrice: "VND 120,000 (5-site combo ticket)",
+        fxNote: "Entrance fees are cash-only. Most tailors and restaurants accept cards — a standard card adds ~VND 3,600 per VND 120,000.",
+        tip: "The Full Moon Lantern Festival (15th of every lunar month) is magical — special lantern tickets required.",
+      },
+      {
+        name: "Cu Chi Tunnels",
+        description: "The legendary underground tunnel network used by Viet Cong soldiers during the Vietnam War — near Ho Chi Minh City.",
+        ticketPrice: "VND 130,000",
+        fxNote: "Cash only at the ticket gate. Nearby restaurants accept cards but charge in VND.",
+        tip: "Crawl the 'extra-widened' tourist tunnel (still very tight) for an authentic claustrophobic experience.",
+      },
+      {
+        name: "Hue Imperial Citadel",
+        description: "Vast fortified palace complex — former seat of the Nguyen emperors. Includes the Forbidden Purple City ruins.",
+        ticketPrice: "VND 200,000",
+        fxNote: "Cards accepted at main ticket booth. A standard bank card adds ~VND 6,000 in FX fees.",
+        tip: "Hire a bicycle outside the citadel entrance (VND 60,000/day) to explore the surrounding royal tombs.",
+      },
+      {
+        name: "Sa Pa Trekking",
+        description: "Dramatic rice-terrace landscapes and Hmong hill tribe villages in northern Vietnam's Hoang Lien mountain range.",
+        ticketPrice: "Free (guided treks VND 350,000–800,000)",
+        fxNote: "Guides require cash payment in VND. ATM access is limited in Sa Pa town — withdraw in Hanoi before travel.",
+        tip: "Trek to Lao Chai and Ta Van villages rather than Fansipan cable car for a more authentic experience.",
+      },
+    ],
     seoTitle: "How to Pay in Vietnam — Cash, ATMs & Tourist Money Tips",
     seoDescription:
       "Vietnam travel money guide: best ATMs for foreign cards, VND cash tips, avoiding DCC, tourist VAT refund, and whether to use USD in Vietnam.",
@@ -391,6 +692,43 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "Visa and Mastercard work at hotels and tourist restaurants. A no-foreign-fee card saves the 2.5–3% bank surcharge that adds up quickly on an Indonesian holiday.",
     exampleAmount: 500000,
+    attractions: [
+      {
+        name: "Borobudur Temple",
+        description: "The world's largest Buddhist temple — a 9th-century UNESCO masterpiece of Buddhist cosmology in Central Java.",
+        ticketPrice: "Rp 375,000 (foreign tourist)",
+        fxNote: "Card accepted at the ticket office. A standard bank card adds ~Rp 11,250 in FX fees.",
+        tip: "Book the sunrise package (from Rp 500,000) for the most spectacular experience before crowds arrive.",
+      },
+      {
+        name: "Tanah Lot Temple, Bali",
+        description: "Iconic sea temple perched on a rock formation — most photographed at sunset when waves crash around its base.",
+        ticketPrice: "Rp 60,000",
+        fxNote: "Cash or card accepted. Carry IDR cash for offerings and nearby warung food stalls.",
+        tip: "Arrive 90 minutes before sunset to secure a spot on the lower viewing platform.",
+      },
+      {
+        name: "Ubud Sacred Monkey Forest Sanctuary",
+        description: "Ancient Hindu temple complex inhabited by over 700 free-roaming macaques — set in dense tropical forest.",
+        ticketPrice: "Rp 50,000",
+        fxNote: "Card accepted at gate. A standard bank card adds ~Rp 1,500 in fees.",
+        tip: "Secure all bags, sunglasses, and any food. Don't make direct eye contact with monkeys.",
+      },
+      {
+        name: "Komodo National Park",
+        description: "Home to the Komodo dragon, the world's largest lizard — plus pristine coral reefs and pink sand beaches.",
+        ticketPrice: "IDR 150,000 entry + IDR 100,000 conservation fee",
+        fxNote: "Cash only at park reception. Exchange IDR in Labuan Bajo before arriving — limited ATMs.",
+        tip: "Book a 2-day liveaboard to reach the remote pink beach and best diving sites.",
+      },
+      {
+        name: "Mount Bromo Sunrise Trek",
+        description: "Volcanic crater lake surrounded by a sea of sand — the most iconic sunrise view in Java.",
+        ticketPrice: "IDR 220,000 (foreigners)",
+        fxNote: "Jeep hire (Rp 400,000–600,000) and guide fees require cash in IDR.",
+        tip: "Wake at 3 am and reach the viewpoint by 4:30 am for the best unobstructed sunrise.",
+      },
+    ],
     seoTitle: "How to Pay in Indonesia / Bali — Cash, ATMs & Tourist Money Tips",
     seoDescription:
       "Indonesia/Bali travel money guide: best ATMs for foreign cards, safe money changers, IDR cash tips, DCC warnings at Indonesian ATMs, and Rupiah denomination guide.",
@@ -431,6 +769,43 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "Visa and Mastercard have excellent coverage in KL's malls, Grab, and chain restaurants. A no-foreign-fee card is ideal for eliminating the 2.5% surcharge on your spending.",
     exampleAmount: 300,
+    attractions: [
+      {
+        name: "Petronas Twin Towers",
+        description: "The world's tallest twin skyscrapers — the Skybridge on floor 41 and the observation deck on floor 86 offer stunning KL views.",
+        ticketPrice: "RM 89.90",
+        fxNote: "Card accepted at the ticket office. A standard bank card adds ~RM 2.70 in FX fees.",
+        tip: "Tickets sell out fast — book online weeks ahead. The Skybridge (floor 41) offers the most dramatic views.",
+      },
+      {
+        name: "Batu Caves",
+        description: "Sacred Hindu temple caves accessed via 272 colourful steps — home to a 42.7m golden Lord Murugan statue.",
+        ticketPrice: "Free (RM 5 steep trail caves)",
+        fxNote: "Entirely free to visit. Small cash donation expected at the temple entrance.",
+        tip: "Dress respectfully (cover knees and shoulders) and watch out for macaque monkeys at the top.",
+      },
+      {
+        name: "Langkawi Cable Car (SkyCab)",
+        description: "Steep gondola ride to the summit of Gunung Mat Cincang — with one of the world's steepest cable car sections.",
+        ticketPrice: "RM 55 (return)",
+        fxNote: "Card accepted. A standard bank card adds ~RM 1.65 in FX fees on the ticket.",
+        tip: "Go on a clear morning — cloud cover arrives by noon. Combine with the Langkawi Sky Bridge (RM 15 extra).",
+      },
+      {
+        name: "Melaka UNESCO Historic District",
+        description: "Malaysia's most preserved colonial town with Portuguese, Dutch, and British layers — stunning Baba-Nyonya culture.",
+        ticketPrice: "Free to walk; Baba-Nyonya Museum RM 16",
+        fxNote: "Museums accept cash or card. River cruise (RM 30) is cash-only.",
+        tip: "Jonker Street Night Market (Friday-Sunday) is unmissable — the best street food concentration in Malaysia.",
+      },
+      {
+        name: "KL Bird Park",
+        description: "The world's largest free-flight bird aviary — over 3,000 birds from 200 species roaming through a rainforest enclosure.",
+        ticketPrice: "RM 67",
+        fxNote: "Card accepted at the entrance. A standard bank card adds ~RM 2 in fees.",
+        tip: "Visit in the morning when birds are most active. The hornbill feeding session (10 am/3 pm) is a highlight.",
+      },
+    ],
     seoTitle: "How to Pay in Malaysia — Touch 'n Go, ATMs & Kuala Lumpur Money Tips",
     seoDescription:
       "Malaysia travel money guide for tourists: Touch 'n Go card setup, best ATMs for foreign cards, cash tips for markets, and whether to exchange money at KLIA airport.",
@@ -471,6 +846,43 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "A no-foreign-fee card is useful in Manila and major resort hotels. For daily island life, cash is essential — plan ATM stops carefully.",
     exampleAmount: 3000,
+    attractions: [
+      {
+        name: "Puerto Princesa Underground River",
+        description: "UNESCO World Heritage subterranean river through cathedral-like cave chambers — one of the New 7 Wonders of Nature.",
+        ticketPrice: "PHP 450 (environmental fee) + PHP 300 (boat)",
+        fxNote: "Cash only at the park entrance. ATMs in Puerto Princesa city are reliable; bring enough PHP.",
+        tip: "Book the paddle boat tour months ahead — daily visitor numbers are strictly limited.",
+      },
+      {
+        name: "Chocolate Hills, Bohol",
+        description: "Over 1,200 perfectly cone-shaped limestone hills that turn chocolate-brown in dry season — one of the Philippines' most surreal landscapes.",
+        ticketPrice: "PHP 50 (viewpoint)",
+        fxNote: "Cash only. The full Bohol day trip (including Tarsier Sanctuary) runs PHP 1,500-2,000 per person.",
+        tip: "Combine with the Tarsier Sanctuary (PHP 100) to see the world's smallest primate in its natural habitat.",
+      },
+      {
+        name: "Intramuros, Manila",
+        description: "The 16th-century walled Spanish colonial city at the heart of Manila — Fort Santiago, San Agustin Church, and cobblestone streets.",
+        ticketPrice: "PHP 75 (Fort Santiago)",
+        fxNote: "Most sites accept cash. Card acceptance inside Intramuros restaurants is patchy.",
+        tip: "Explore by bamboo bike rental (PHP 100/hr) and visit the Manila Cathedral for free.",
+      },
+      {
+        name: "Siargao Island Surfing",
+        description: "The 'surfing capital of the Philippines' — Cloud 9 is one of Asia's most famous reef breaks. Also great for island hopping.",
+        ticketPrice: "PHP 200-400 (surf lesson/day)",
+        fxNote: "Mostly cash-only on the island. Bring PHP from General Santos or Cebu — ATMs on Siargao have limited cash.",
+        tip: "The best surf is July-November. Island hopping to Naked Island and Daku Island costs PHP 1,000-1,500 per boat.",
+      },
+      {
+        name: "Whale Shark Watching, Oslob",
+        description: "Swim alongside whale sharks in their morning feeding ground off the coast of Cebu — a bucket-list experience.",
+        ticketPrice: "PHP 1,000 (snorkelling with sharks)",
+        fxNote: "Cash only at the registration centre. Bring enough PHP from Cebu City.",
+        tip: "Arrive by 6 am for the fewest sharks and clearest water. Guide accompaniment is mandatory.",
+      },
+    ],
     seoTitle: "How to Pay in the Philippines — Cash, ATMs & Island Travel Tips",
     seoDescription:
       "Philippines travel money guide: best ATMs for Palawan and Manila, how to avoid DCC, cash tips for islands, GCash for foreigners, and PHP currency tips.",
@@ -510,6 +922,43 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "Visa and Mastercard with low FX fees work well in urban India. A no-fee card (Wise, Revolut) is ideal — India's 2.5% bank surcharge adds up on longer trips.",
     exampleAmount: 5000,
+    attractions: [
+      {
+        name: "Taj Mahal, Agra",
+        description: "The world's most iconic monument to love — a UNESCO World Heritage marble mausoleum commissioned by Mughal emperor Shah Jahan.",
+        ticketPrice: "INR 1,100 (foreigners)",
+        fxNote: "Card accepted at the main ticket office. A standard bank card adds ~INR 33 in FX fees. Watch for unofficial 'helper' touts outside the gates.",
+        tip: "Enter via the East or West gate to avoid the longer South gate queue. Dawn entry is magical with few crowds.",
+      },
+      {
+        name: "Amber Fort, Jaipur",
+        description: "Magnificent hilltop Rajput fort and palace complex above Maota Lake — one of Rajasthan's finest architectural gems.",
+        ticketPrice: "INR 550 (foreigners)",
+        fxNote: "Card accepted with occasional connectivity issues — carry INR cash as backup. A standard bank card adds ~INR 17 in fees.",
+        tip: "Take the paved path to the summit rather than an elephant or jeep for better views and ethical travel.",
+      },
+      {
+        name: "Kerala Backwaters Houseboat",
+        description: "Overnight stay on a traditional kettuvallam rice-barge through the palm-lined waterways of Alleppey — one of India's most unique experiences.",
+        ticketPrice: "INR 8,000-15,000 (per night, houseboat)",
+        fxNote: "Most operators accept card for bookings; cash tipping for crew (INR 500-1,000 pp) is customary.",
+        tip: "Book a private boat rather than a shared tour. Sunset on the backwaters is unforgettable — negotiate a mooring spot near rice paddies.",
+      },
+      {
+        name: "Varanasi Ghats & Ganga Aarti",
+        description: "The world's oldest living city — sacred bathing ghats along the Ganges River, and the spectacular nightly fire ceremony at Dashashwamedh Ghat.",
+        ticketPrice: "Free (boat ride INR 200-500)",
+        fxNote: "Boat rides and puja offerings are cash-only in INR. Bring INR 200-500 in small notes.",
+        tip: "Watch the Ganga Aarti from a row boat on the river for the best unobstructed view (6:30-7:15 pm).",
+      },
+      {
+        name: "Jaipur City Palace & Jantar Mantar",
+        description: "The royal palace still occupied by Jaipur's royal family, combined with UNESCO-listed Jantar Mantar — an 18th-century stone astronomical observatory.",
+        ticketPrice: "INR 700 (foreigners, City Palace)",
+        fxNote: "Card accepted. A standard bank card adds ~INR 21 in fees. The combo ticket with Amber Fort saves money.",
+        tip: "Hire an official guide inside the City Palace (INR 500) — the artefacts and rooms come alive with context.",
+      },
+    ],
     seoTitle: "How to Pay in India — Cash, ATMs & UPI for Tourists",
     seoDescription:
       "India travel money guide: best ATMs for foreign cards, how to use UPI as a tourist, INR cash tips, counterfeit note awareness, and how to pay in Goa, Delhi, and Jaipur.",
@@ -553,6 +1002,43 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "A Wise or Revolut card in EUR is optimal — you spend from a EUR balance with zero conversion. If using a regular card, no-foreign-fee cards (Starling, Charles Schwab, Chase Sapphire) eliminate the 2.5–3% bank markup.",
     exampleAmount: 200,
+    attractions: [
+      {
+        name: "Eiffel Tower, Paris",
+        description: "The world's most visited paid monument — 300-metre iron tower with three observation levels over the Seine river.",
+        ticketPrice: "EUR 29.40 (summit, online)",
+        fxNote: "Book and pay online with a no-FX card. A standard bank card adds ~EUR 0.90 per ticket.",
+        tip: "Book summit tickets 2-3 months ahead — they sell out entirely. Stairs to level 2 are a fraction of the price.",
+      },
+      {
+        name: "Colosseum & Roman Forum, Rome",
+        description: "The ancient world's greatest amphitheatre — once hosting gladiatorial combat for 50,000 spectators.",
+        ticketPrice: "EUR 16 (standard) / EUR 22 (with MAXXI access)",
+        fxNote: "Buy online to skip queues. A standard bank card adds ~EUR 0.50 in FX fees per ticket.",
+        tip: "Book a guided underground or arena floor tour — these areas are extraordinary and require advance tickets.",
+      },
+      {
+        name: "Sagrada Familia, Barcelona",
+        description: "Gaudi's unfinished but awe-inspiring basilica — a UNESCO masterpiece of organic architecture still under construction since 1882.",
+        ticketPrice: "EUR 26 (standard) / EUR 36 (with towers)",
+        fxNote: "Online purchase only. A standard bank card adds ~EUR 0.90 in FX fees per ticket.",
+        tip: "Book the tower access with the Nativity Tower — the views over Barcelona's Eixample grid are spectacular.",
+      },
+      {
+        name: "Rijksmuseum, Amsterdam",
+        description: "The Netherlands' national art museum — home to Rembrandt, Vermeer, and the finest Dutch Golden Age collection in the world.",
+        ticketPrice: "EUR 22.50",
+        fxNote: "Card accepted. A standard bank card adds ~EUR 0.70 in FX fees per ticket.",
+        tip: "Book online to skip the queue. The Night Watch hall (Room 2) is best visited at 9 am or near closing.",
+      },
+      {
+        name: "Acropolis & Parthenon, Athens",
+        description: "2,500-year-old temple complex crowning Athens — one of Western civilization's most significant archaeological sites.",
+        ticketPrice: "EUR 20 (includes 6 nearby sites)",
+        fxNote: "Card accepted at ticket booths. The combo ticket gives better value than individual site entries.",
+        tip: "Arrive at opening (8 am) to beat the midday heat and coach tour crowds. The Lighting ceremony at dusk is free to watch from Filopappou Hill.",
+      },
+    ],
     seoTitle: "How to Pay in Europe — Best Cards, ATM Tips & Avoid FX Fees",
     seoDescription:
       "Europe travel money guide: how to avoid Euronet ATM fees, best no-foreign-fee cards, European VAT refund guide, and cashless vs cash by country.",
@@ -592,7 +1078,44 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     atmTip:
       "Free ATMs are marked 'Free Withdrawals' — most Barclays, NatWest, Lloyds, HSBC, and Post Office ATMs are free for withdrawals even for foreign cards (your own bank may still charge a foreign transaction fee). Avoid ATMs that charge a flat fee.",
     cardTip:
-      "A no-foreign-fee card is essential for the UK — the standard 2.5–3% bank surcharge adds up quickly in London's expensive environment. Starling, Monzo, Chase UK, and Wise are popular choices.",    exampleAmount: 150,    seoTitle: "How to Pay in the UK — Contactless, London Underground & No FX Fees",
+      "A no-foreign-fee card is essential for the UK — the standard 2.5–3% bank surcharge adds up quickly in London's expensive environment. Starling, Monzo, Chase UK, and Wise are popular choices.",    exampleAmount: 150,
+    attractions: [
+      {
+        name: "Tower of London",
+        description: "900-year-old royal fortress on the Thames — home to the Crown Jewels, Beefeaters, and ravens that guard the kingdom.",
+        ticketPrice: "GBP 33.60 (adult, online)",
+        fxNote: "Book online with a no-FX card. A standard bank card adds ~GBP 1 in FX fees per admission.",
+        tip: "A Yeoman Warder tour is included in entry and leaves from the main gate hourly — not to be missed.",
+      },
+      {
+        name: "British Museum",
+        description: "The world's first public national museum — 8 million artefacts spanning 2 million years of human history, from the Rosetta Stone to the Elgin Marbles.",
+        ticketPrice: "Free",
+        tip: "Arrive at 10 am and head directly to Room 4 (Rosetta Stone) before the crowds. Free audio guides available on the app.",
+      },
+      {
+        name: "Stonehenge",
+        description: "Britain's most iconic prehistoric monument — 5,000-year-old standing stones on Salisbury Plain, shrouded in archaeological mystery.",
+        ticketPrice: "GBP 23.10 (adult, timed entry)",
+        fxNote: "Must be booked online. A standard bank card adds ~GBP 0.70 in FX fees per ticket.",
+        tip: "Book the earliest available morning slot — the stones emerge from mist dramatically. The shuttle bus from the visitor centre is included.",
+      },
+      {
+        name: "Windsor Castle",
+        description: "The world's oldest and largest occupied castle — official weekend residence of King Charles III, with State Apartments open to visitors.",
+        ticketPrice: "GBP 30 (adult)",
+        fxNote: "Card accepted at the gate. A standard bank card adds ~GBP 0.90 in FX fees.",
+        tip: "Check the website before visiting — if the Royal Standard is flying, the King is in residence and some rooms may be closed.",
+      },
+      {
+        name: "Edinburgh Castle",
+        description: "Dramatic volcanic rock fortress dominating the Scottish capital skyline — home to the Scottish Crown Jewels and the Stone of Destiny.",
+        ticketPrice: "GBP 19.50 (adult)",
+        fxNote: "Card accepted. Online booking saves GBP 2 versus gate price.",
+        tip: "The One O'Clock Gun fires from the castle battery every weekday at 1 pm — a traditional Edinburgh ritual since 1861.",
+      },
+    ],
+    seoTitle: "How to Pay in the UK — Contactless, London Underground & No FX Fees",
     seoDescription:
       "UK travel money guide: using contactless payment on the London Tube, best no-FX-fee cards for the UK, cash vs card in Britain, and why tourist VAT refunds ended.",
     h1: "How to Pay in the United Kingdom — Travel Money Guide",
@@ -633,6 +1156,42 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "A no-foreign-fee Visa or Mastercard is essential. Many standard non-US cards charge 2.5–3% on USD transactions. Chase Sapphire, Amex Platinum, and Wise debit are among the most popular options.",
     exampleAmount: 150,
+    attractions: [
+      {
+        name: "Grand Canyon National Park",
+        description: "One of the world's great natural wonders — a mile-deep canyon carved by the Colorado River over 5 million years.",
+        ticketPrice: "USD 35 (vehicle pass, 7 days)",
+        fxNote: "The America the Beautiful annual pass (USD 80) covers all US national parks for 12 months — worth it for 3+ parks.",
+        tip: "South Rim is best for first-timers. Bright Angel Trail gives dramatic rim views without the dangerous inner-canyon descent.",
+      },
+      {
+        name: "Statue of Liberty & Ellis Island",
+        description: "America's most iconic symbol of freedom — the copper statue gifted by France, with Ellis Island immigration museum next door.",
+        ticketPrice: "USD 24.30 (ferry + crown reserved)",
+        fxNote: "Book ferry tickets online. A no-FX card avoids the ~USD 0.75 standard bank surcharge per ticket.",
+        tip: "Crown tickets sell out 6+ months ahead. Reserve access (general statue interior) is still impressive and available 3-4 months out.",
+      },
+      {
+        name: "Smithsonian Museums, Washington D.C.",
+        description: "The world's largest museum complex — 19 museums and galleries including the National Air and Space Museum, Natural History, and American History.",
+        ticketPrice: "Free",
+        tip: "The Air and Space Museum (Mall location) and Natural History Museum are the most popular. Go on a Tuesday or Wednesday morning to avoid school groups.",
+      },
+      {
+        name: "Yosemite National Park",
+        description: "California's crown jewel — towering granite cliffs (El Capitan, Half Dome), giant sequoias, and dramatic waterfalls in the Sierra Nevada.",
+        ticketPrice: "USD 35 (vehicle, 7 days)",
+        fxNote: "Timed-entry reservation (free but required May-Sept) must be booked 2-3 weeks ahead.",
+        tip: "Valley View and Valley Floor Loop offer the best Half Dome and El Capitan views at no extra cost. Sunrise beats midday dramatically.",
+      },
+      {
+        name: "Walt Disney World, Orlando",
+        description: "The world's most visited theme park resort — four theme parks including Magic Kingdom, EPCOT, Hollywood Studios, and Animal Kingdom.",
+        ticketPrice: "From USD 109/day (Magic Kingdom)",
+        fxNote: "Book park tickets and dining 60 days ahead. A no-FX card saves ~USD 3-5 on ticket purchases for a family.",
+        tip: "Buy the Lightning Lane Multi Pass for popular rides to avoid 90+ minute queue times at peak seasons.",
+      },
+    ],
     seoTitle: "How to Pay in the USA as a Tourist — Cards, Cash & Tipping Guide",
     seoDescription:
       "USA travel money guide: best cards for the US, how much cash to carry, tipping etiquette, ATM fees, sales tax explanation, and avoiding airport currency exchange.",
@@ -673,6 +1232,41 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "A no-foreign-fee Visa or Mastercard is ideal. Australia's cashless environment means your card will be your primary payment — go for one with 0% FX fee to avoid the 2.5–3% bank surcharge on every transaction.",
     exampleAmount: 250,
+    attractions: [
+      {
+        name: "Sydney Opera House",
+        description: "Jorn Utzon's UNESCO-listed masterpiece on Sydney Harbour — guided tours reveal the concert halls, backstage areas, and the building's wild construction story.",
+        ticketPrice: "AUD 43 (guided tour)",
+        fxNote: "Card accepted. A standard bank card adds ~AUD 1.30 per ticket. Book online via the official site.",
+        tip: "An Opera Bar sunset drink (same promontory, no ticket needed) is one of Sydney's quintessential experiences.",
+      },
+      {
+        name: "Great Barrier Reef Day Tour",
+        description: "The world's largest coral reef system — over 2,900 individual reefs stretching 2,300 km along Queensland's coast.",
+        ticketPrice: "AUD 159-250 (day boat tour from Cairns)",
+        fxNote: "Most operators accept card. A standard bank card adds ~AUD 5-8 in FX fees on a day tour.",
+        tip: "Outer reef pontoons (Agincourt, Norman) have better coral than inner reef — worth paying extra for the faster vessel.",
+      },
+      {
+        name: "Uluru (Ayers Rock)",
+        description: "Sacred Anangu sandstone monolith in the Red Centre — 348 metres high, glowing red at sunrise and sunset.",
+        ticketPrice: "AUD 38 (Uluru-Kata Tjuta 3-day pass)",
+        fxNote: "Climbing Uluru is permanently closed since 2019 out of respect for Aboriginal custodians. Card accepted at the park gate.",
+        tip: "The sunrise viewing area (Talinguru Nyakunytjaku) fills up — arrive 45 minutes early. The circumnavigation walk (10 km) reveals cave art.",
+      },
+      {
+        name: "Melbourne Royal Botanic Gardens",
+        description: "36 hectares of curated gardens beside the Yarra River — one of the world's finest botanical gardens, free to visit year-round.",
+        ticketPrice: "Free",
+        tip: "The Ian Potter Foundation Children's Garden and Ornamental Lake are highlights. Evening summer concerts (Garden Symphony) are a local institution.",
+      },
+      {
+        name: "Bondi to Coogee Coastal Walk",
+        description: "Australia's most iconic urban coastal walk — 6 km of clifftop paths, rock pools, and ocean baths between Sydney's famous beaches.",
+        ticketPrice: "Free",
+        tip: "Walk south from Bondi to Coogee for the best clifftop views. The Bondi Icebergs ocean pool (AUD 8) entry is a highlight.",
+      },
+    ],
     seoTitle: "How to Pay in Australia — Contactless Cards, Transit & GST Refund",
     seoDescription:
       "Australia travel money guide: how to tap your card on Sydney trains, AUD cash vs card, best no-FX-fee cards, GST refund via TRS, and money tips for Melbourne, Brisbane, and Cairns.",
@@ -714,6 +1308,43 @@ export const TRAVEL_MONEY_GUIDES: TravelMoneyGuide[] = [
     cardTip:
       "A no-foreign-fee Visa or Mastercard is ideal for the UAE. The UAE's AED is pegged to USD (fixed rate), so there's no exchange rate volatility — just minimize the bank's 2.5% markup.",
     exampleAmount: 400,
+    attractions: [
+      {
+        name: "Burj Khalifa Observation Deck",
+        description: "The world's tallest building at 828 metres — observation decks on levels 124 and 148 with views stretching to the Arabian Gulf.",
+        ticketPrice: "AED 149 (Level 124) / AED 379 (At the Top SKY, level 148)",
+        fxNote: "Book online with a no-FX card to save ~AED 5-11 vs using a standard bank card.",
+        tip: "Sunset tickets (3-4 pm slot) are the most popular and most expensive. Book 2+ weeks ahead. The free Dubai Fountain show below is spectacular at 6 pm.",
+      },
+      {
+        name: "Dubai Frame",
+        description: "150-metre picture frame structure straddling old and new Dubai — with a glass-floored sky bridge and panoramic views of both sides of the city.",
+        ticketPrice: "AED 50",
+        fxNote: "Card accepted. A standard bank card adds ~AED 1.50 in FX fees.",
+        tip: "Best visited at sunset for the contrast between Old Dubai (Deira) and modern New Dubai (Sheikh Zayed Road).",
+      },
+      {
+        name: "Dubai Museum & Al Fahidi Historic District",
+        description: "The original Dubai Fort converted into a museum of pre-oil Emirati life — with the atmospheric Al Fahidi neighbourhood of wind-tower courtyard houses nearby.",
+        ticketPrice: "AED 3 (museum)",
+        fxNote: "Near-free entry — cash is easiest for the AED 3 ticket.",
+        tip: "Walk the Al Seef waterfront and catch the abra water taxi across the Creek to Deira Gold Souk (AED 1 per person).",
+      },
+      {
+        name: "Desert Safari with Dune Bashing",
+        description: "Classic Dubai desert experience — 4x4 dune driving, camel riding, sandboarding, and a Bedouin camp dinner under the stars.",
+        ticketPrice: "AED 200-350 (private transfers included)",
+        fxNote: "Most operators accept Visa/Mastercard. A standard bank card adds ~AED 8-11 in FX fees on a AED 350 package.",
+        tip: "Book with a well-reviewed private operator rather than hotel concierge — same quality at 30-40% lower price.",
+      },
+      {
+        name: "Ferrari World Abu Dhabi",
+        description: "The world's largest indoor theme park — home to Formula Rossa, the fastest roller coaster on earth (240 km/h), plus Italian theming and Ferrari exhibits.",
+        ticketPrice: "AED 395 (all-inclusive)",
+        fxNote: "Card accepted. A standard bank card adds ~AED 12 in FX fees on the ticket price.",
+        tip: "The 90-minute drive from Dubai is well worth it. Hit Formula Rossa first — queues build throughout the day.",
+      },
+    ],
     seoTitle: "How to Pay in Dubai & UAE — Cards, Cash & Shopping Tips",
     seoDescription:
       "UAE / Dubai travel money guide: best payment methods for Dubai, souks cash tips, contactless in Dubai Mall, AED exchange rate tips, and Tourist Refund Scheme information.",

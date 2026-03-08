@@ -20,5 +20,37 @@
     { "name": "Spread", "detail": "The gap between mid-market rate and the rate your bank actually gives — usually 0.5%–2%." },
     { "name": "ATM Fee", "detail": "Withdrawal fees from both your home bank and the local ATM — combined can reach $5–$10 per transaction." },
     { "name": "DCC Markup", "detail": "Extra markup when you choose to pay in your home currency — often 3%–10% above the true market rate." }
+  ],
+  "attractions": [
+    {
+      "name": "Victoria Peak",
+      "detail": "Most iconic viewpoint in Hong Kong — sweeping harbour views via the world's steepest funicular Peak Tram.",
+      "price": "HKD$228 (return tram)",
+      "tip": "Use Octopus card for the Peak Tram and adjacent shops. Cards accepted at Sky Terrace 428 entrance."
+    },
+    {
+      "name": "Tian Tan Buddha (Lantau Island)",
+      "detail": "Giant 34m bronze Buddha statue with a serene hilltop setting — arrive by the spectacular Ngong Ping 360 cable car.",
+      "price": "HKD$220 (cable car return)",
+      "tip": "Cable car accepts cards; small souvenir stalls in Ngong Ping Village are cash-only."
+    },
+    {
+      "name": "Hong Kong Disneyland",
+      "detail": "Compact Disney park with unique Mystic Manor ride and stunning views of Lantau Island and Discovery Bay.",
+      "price": "HKD$619–$820",
+      "tip": "Cards accepted throughout the park. Take the MTR Disneyland Resort Line — Octopus card accepted."
+    },
+    {
+      "name": "Temple Street Night Market",
+      "detail": "Authentic Kowloon night market with street food, fortune tellers, electronics, antiques, and jade jewellery.",
+      "price": "Free entry",
+      "tip": "Cash HKD is essential here — almost all stalls are cash-only. Stock up at a nearby Hang Seng ATM."
+    },
+    {
+      "name": "Mong Kok Markets",
+      "detail": "Sensory overload at its best — Ladies' Market, Flower Market, Bird Garden, and Goldfish Market within walking distance.",
+      "price": "Free entry",
+      "tip": "Haggling is expected and cash HKD is preferred. Cards accepted at some larger fixed-price stalls."
+    }
   ]
 }
