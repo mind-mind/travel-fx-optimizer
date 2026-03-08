@@ -9,6 +9,7 @@ interface Props {
   totalHome: number;
   bestMethod: string;
   savings: number;
+  lossVsMid?: number;
 }
 
 function fmt(n: number, currency: string) {
@@ -26,14 +27,17 @@ export default function SharePanel({
   totalHome,
   bestMethod,
   savings,
+  lossVsMid = 0,
 }: Props) {
   const [copied, setCopied] = useState(false);
 
   const amtStr = amountForeign.toLocaleString("en");
   const text =
-    `I calculated my travel money cost: ${amtStr} ${currency} = ${fmt(totalHome, homeCurrency)} via ${bestMethod}` +
-    (savings > 0 ? `, saving ${fmt(savings, homeCurrency)} vs a standard bank card` : "") +
-    `. Compare yours free ↓`;
+    lossVsMid > 0.01
+      ? `I could lose ${fmt(lossVsMid, homeCurrency)} paying ${amtStr} ${currency} abroad with a standard card. Check how much YOU lose →`
+      : `I calculated my travel money cost: ${amtStr} ${currency} = ${fmt(totalHome, homeCurrency)} via ${bestMethod}` +
+        (savings > 0 ? `, saving ${fmt(savings, homeCurrency)} vs a standard bank card` : "") +
+        `. Compare yours free ↓`;
   const siteUrl = "https://travelwiserate.com";
   const encodedText = encodeURIComponent(text);
   const encodedUrl = encodeURIComponent(siteUrl);
