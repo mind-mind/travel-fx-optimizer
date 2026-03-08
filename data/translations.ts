@@ -1,8 +1,8 @@
 export const th = {
   // Header
-  forTravelers: "สำหรับนักเดินทางทุกสัญชาติ",
-  title: "TravelWiseRate — เปรียบเทียบอัตราแลกเปลี่ยน",
-  subtitle: "เช็คก่อนจ่าย ป้องกันเสียเงินโดยไม่จำเป็น",
+  forTravelers: "หยุดเสียเงินกับค่าธรรมเนียมแลกเปลี่ยนเงินตราต่างประเทศ",
+  title: "TravelWiseRate — ตรวจค่าธรรมเนียมซ่อนเร้น",
+  subtitle: "ดูว่าค่าธรรมเนียม FX ซ่อนเร้นกินเงินคุณเท่าไหร่ก่อนจ่าย",
 
   // Form labels
   countryLabel: "ประเทศปลายทาง",
@@ -159,9 +159,9 @@ export const th = {
 
 export const en: typeof th = {
   // Header
-  forTravelers: "For International Travelers",
-  title: "TravelWiseRate — Compare FX Rates",
-  subtitle: "Check before you pay — stop losing money on bad exchange rates",
+  forTravelers: "Stop losing money on travel FX fees",
+  title: "TravelWiseRate — Avoid Hidden FX Fees",
+  subtitle: "See exactly what hidden fees cost you before you pay",
 
   // Form labels
   countryLabel: "Destination Country",
