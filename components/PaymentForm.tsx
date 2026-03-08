@@ -46,6 +46,8 @@ interface Props {
   onBankChange: (v: BankName) => void;
   onMethodChange: (v: PaymentMethod) => void;
   onHomeCurrencyChange: (v: string) => void;
+  onSwap?: () => void;
+  canSwap?: boolean;
 }
 
 export default function PaymentForm({
@@ -60,6 +62,8 @@ export default function PaymentForm({
   onBankChange,
   onMethodChange,
   onHomeCurrencyChange,
+  onSwap,
+  canSwap,
 }: Props) {
   const selectedCountry = COUNTRIES.find((c) => c.code === country);
   const availableMethods = getAvailableMethods(country);
@@ -82,6 +86,24 @@ export default function PaymentForm({
             </option>
           ))}
         </select>
+      </div>
+
+      {/* Swap button */}
+      <div className="flex items-center justify-center -my-1">
+        <button
+          type="button"
+          onClick={onSwap}
+          disabled={!canSwap}
+          title="Swap currencies"
+          className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+            canSwap
+              ? "border-blue-300 dark:border-blue-600 bg-blue-50 dark:bg-blue-950 text-blue-600 dark:text-blue-400 hover:bg-blue-100 dark:hover:bg-blue-900"
+              : "border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 text-gray-400 dark:text-gray-600 cursor-not-allowed"
+          }`}
+        >
+          <span className="text-sm">⇅</span>
+          <span>Swap</span>
+        </button>
       </div>
 
       {/* Destination Country */}
