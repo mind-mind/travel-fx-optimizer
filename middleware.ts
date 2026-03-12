@@ -34,5 +34,5 @@ export const config = {
   // Run on all paths except Next.js internals and known static paths.
   // NOTE: exclude "travel-money/" (with slash) not "travel-money" so that
   // /travel-money-japan still passes through and gets redirected.
-  matcher: ["/((?!_next|api|convert|travel-money/|robots.txt|sitemap.xml|ads.txt|google).*))"],
+  matcher: ["/((?!_next|api|convert|travel-money/|robots.txt|sitemap.xml|ads.txt|google).*)"],
 };
