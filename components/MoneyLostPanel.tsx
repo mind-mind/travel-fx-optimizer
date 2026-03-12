@@ -5,6 +5,7 @@ import { ComparisonResult } from "@/lib/types";
 import { fmtCurrency } from "@/lib/formatCurrency";
 import { CODE_TO_COUNTRY } from "@/lib/guideConfig";
 import { getGuideByCountryCode } from "@/data/travelMoneyGuides";
+import type { Translations } from "@/data/translations";
 
 interface Props {
   selected: ComparisonResult;
@@ -15,6 +16,7 @@ interface Props {
   results: ComparisonResult[];
   countryCode?: string;
   lang?: string;
+  t: Translations;
 }
 
 
@@ -28,6 +30,7 @@ export default function MoneyLostPanel({
   results,
   countryCode,
   lang,
+  t,
 }: Props) {
   const midHome = amountForeign * midRate;
   const travelMoneyGuide = countryCode ? (getGuideByCountryCode(countryCode) ?? null) : null;
@@ -49,10 +52,10 @@ export default function MoneyLostPanel({
           <span className="text-3xl">🎉</span>
           <div>
             <p className="text-sm font-bold text-green-800 dark:text-green-300">
-              Best option — near-zero extra cost!
+              {t.mlpBestOption}
             </p>
             <p className="text-xs text-green-700 dark:text-green-400 mt-0.5">
-              This is the most cost-effective way to pay{" "}
+              {t.mlpBestOptionDesc}{" "}
               {amountForeign.toLocaleString("en")} {currency}.
             </p>
           </div>
@@ -67,14 +70,14 @@ export default function MoneyLostPanel({
   const breakdown: { label: string; percent: number; cost: number }[] = [];
   if (selected.fxFeePercent > 0) {
     breakdown.push({
-      label: "Card FX fee",
+      label: t.mlpCardFxFee,
       percent: selected.fxFeePercent,
       cost: selected.fxFeeHome,
     });
   }
   if (selected.spreadPercent > 0) {
     breakdown.push({
-      label: "Exchange rate spread",
+      label: t.mlpSpreadFee,
       percent: selected.spreadPercent,
       cost: selected.spreadCostHome,
     });
@@ -87,10 +90,10 @@ export default function MoneyLostPanel({
         <span className="text-3xl leading-none mt-0.5">💸</span>
         <div>
           <p className="text-[11px] font-semibold uppercase tracking-wide text-red-500 dark:text-red-400 mb-1">
-            ⚠️ Hidden FX Charge Detected
+            {t.mlpHiddenCharge}
           </p>
           <p className="text-lg font-bold text-red-800 dark:text-red-200 leading-snug">
-            You're overpaying{" "}
+            {t.mlpOverpaying}{" "}
             <span className="text-2xl font-extrabold">
               {fmtCurrency(lossDisplay, homeCurrency)}
             </span>{" "}
@@ -99,7 +102,7 @@ export default function MoneyLostPanel({
             </span>
           </p>
           <p className="text-xs text-red-600 dark:text-red-400 mt-1">
-            vs the real mid-market rate — money that goes to your bank, not your trip
+            {t.mlpVsMidNote}
           </p>
         </div>
       </div>
@@ -108,7 +111,7 @@ export default function MoneyLostPanel({
       {breakdown.length > 0 && (
         <div className="bg-white/70 dark:bg-red-900/20 rounded-xl p-3 space-y-2">
           <p className="text-[10px] font-semibold uppercase tracking-wide text-gray-400 dark:text-gray-500">
-            Fee breakdown
+            {t.mlpFeeBreakdown}
           </p>
           {breakdown.map((item) => (
             <div
@@ -126,7 +129,7 @@ export default function MoneyLostPanel({
           ))}
           <div className="border-t border-red-100 dark:border-red-800 pt-2 flex items-center justify-between text-sm">
             <span className="font-semibold text-gray-700 dark:text-gray-200">
-              Total extra cost
+              {t.mlpTotalExtraCost}
             </span>
             <span className="font-bold text-red-600 dark:text-red-400">
               {fmtCurrency(lossDisplay, homeCurrency)}
@@ -145,7 +148,7 @@ export default function MoneyLostPanel({
           href={guideHref}
           className="block w-full text-center rounded-xl bg-red-700 hover:bg-red-800 text-white text-sm font-semibold py-3 transition-colors"
         >
-          🗺️ How to avoid this fee — travel money guide →
+          {t.mlpGuideCta}
         </Link>
       )}
     </div>
