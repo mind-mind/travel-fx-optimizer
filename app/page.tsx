@@ -265,11 +265,11 @@ export default function Home() {
                 {/* Source row */}
                 <div className="mt-1 space-y-0.5 opacity-70">
                   <p className="text-xs text-blue-200">
-                    Source: exchangerate.host (mid-market rate)
+                    {t.fxSourceLabel} exchangerate.host (mid-market rate)
                   </p>
                   {rateTimestamp && (
                     <p className="text-xs text-blue-200">
-                      Updated:{" "}
+                      {t.fxUpdatedLabel}{" "}
                       {new Date(rateTimestamp).toLocaleString("en", {
                         day: "numeric",
                         month: "short",
@@ -326,11 +326,12 @@ export default function Home() {
                   results={results}
                   countryCode={country}
                   lang={lang}
+                  t={t}
                 />
               )}
 
               {/* 2. Best Method Card */}
-              <BestMethodCard results={results} homeCurrency={homeCurrency} countryCode={country} lang={lang} />
+              <BestMethodCard results={results} homeCurrency={homeCurrency} countryCode={country} lang={lang} t={t} />
 
               {/* 3. VAT refund banner */}
               {vat?.vatEligible && (
@@ -454,6 +455,7 @@ export default function Home() {
             homeCurrency={homeCurrency}
             midRate={midRate}
             rateLoading={rateLoading}
+            t={t}
           />
         )}
 
@@ -492,11 +494,11 @@ export default function Home() {
                 <span className="text-xl shrink-0" aria-hidden>💸</span>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-bold leading-tight">
-                    Overpaying {fmtCurrency(loss, homeCurrency)} right now
+                    {t.stickyOverpaying} {fmtCurrency(loss, homeCurrency)} {t.stickyRightNow}
                   </p>
                   {saving > 0.5 && (
                     <p className="text-xs text-red-200 leading-tight mt-0.5">
-                      Switch method — save {fmtCurrency(saving, homeCurrency)}
+                      {t.stickySwitchSave} {fmtCurrency(saving, homeCurrency)}
                     </p>
                   )}
                 </div>
@@ -506,7 +508,7 @@ export default function Home() {
                       href={gp}
                       className="rounded-lg bg-white text-red-700 font-bold text-xs px-3 py-2 hover:bg-red-50 transition-colors whitespace-nowrap"
                     >
-                      How to save →
+                      {t.stickyHowToSave}
                     </Link>
                   )}
                   <button

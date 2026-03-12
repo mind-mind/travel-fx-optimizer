@@ -345,7 +345,7 @@ export function GuidePageContent({ content, t, lang, country }: Props) {
             <div className="flex items-center gap-2">
               <span className="text-2xl">🏛️</span>
               <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
-                Popular Attractions in {content.countryName}
+                {t.tmAttractionsTitle} {content.countryName}
               </h2>
             </div>
             <div className="space-y-3">

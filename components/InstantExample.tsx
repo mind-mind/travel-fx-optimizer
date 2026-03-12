@@ -1,13 +1,15 @@
 "use client";
 
+import { fmtCurrency } from "@/lib/formatCurrency";
+import type { Translations } from "@/data/translations";
+
 interface Props {
   currency: string;
   homeCurrency: string;
   midRate: number;
   rateLoading: boolean;
+  t: Translations;
 }
-
-import { fmtCurrency } from "@/lib/formatCurrency";
 
 const EXAMPLE_AMOUNT: Record<string, number> = {
   JPY: 10000,
@@ -41,6 +43,7 @@ export default function InstantExample({
   homeCurrency,
   midRate,
   rateLoading,
+  t,
 }: Props) {
   if (rateLoading || midRate <= 0) return null;
 
@@ -57,20 +60,20 @@ export default function InstantExample({
 
   const rows = [
     {
-      label: "No-FX-fee card",
+      label: t.ieNoFeeCard,
       total: nofeeTotal,
-      tag: "Best",
+      tag: t.ieBestBadge,
       tagClass:
         "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300",
     },
     {
-      label: "Standard credit card",
+      label: t.ieStandardCard,
       total: standardTotal,
       tag: `+${fmtCurrency(lossStandard, homeCurrency)}`,
       tagClass: "bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400",
     },
     {
-      label: "Airport exchange",
+      label: t.ieAirportExchange,
       total: airportTotal,
       tag: `+${fmtCurrency(lossAirport, homeCurrency)}`,
       tagClass: "bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-400",
@@ -81,10 +84,10 @@ export default function InstantExample({
     <div className="rounded-2xl bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 p-5 space-y-4">
       <div>
         <p className="text-[11px] font-semibold uppercase tracking-wide text-amber-600 dark:text-amber-400 mb-1">
-          Quick Example
+          {t.ieQuickExample}
         </p>
         <p className="text-sm font-bold text-gray-800 dark:text-gray-100">
-          Paying {amount.toLocaleString("en")} {currency} abroad
+          {t.iePayingAbroad} {amount.toLocaleString("en")} {currency} {t.ieAbroadSuffix}
         </p>
       </div>
 
@@ -112,11 +115,10 @@ export default function InstantExample({
       </div>
 
       <p className="text-xs text-amber-700 dark:text-amber-400 leading-relaxed">
-        A standard card costs you an extra{" "}
+        {t.ieNotePre}{" "}
         <span className="font-bold">{fmtCurrency(lossStandard, homeCurrency)}</span>{" "}
-        vs a no-fee card.{" "}
-        <span className="font-semibold">Enter your amount above</span> to see
-        your exact cost.
+        {t.ieNoteMid}{" "}
+        <span className="font-semibold">{t.ieNoteSuf}</span>
       </p>
     </div>
   );
