@@ -3,8 +3,8 @@ import Script from "next/script";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "TravelWiseRate — Compare Currency Exchange Rates",
-  description: "Compare currency exchange rates and payment method costs for international travelers. Find the cheapest way to pay abroad — credit card, cash, or mobile pay.",
+  title: "TravelWiseRate — Avoid Hidden FX Fees",
+  description: "See exactly what hidden fees cost you before you pay. Compare credit card, cash, and mobile payment costs abroad, get destination travel guides, discover festivals, and find out where to travel this month.",
   verification: {
     google: "AVOj9qFgtPCQrtA-OfOtnc1aCsMEDjga5elLe6JNVnk",
   },

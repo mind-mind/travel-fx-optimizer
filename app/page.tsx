@@ -23,6 +23,7 @@ import { COUNTRIES, HOME_CURRENCIES } from "@/lib/fxData";
 import { translations, Lang } from "@/data/translations";
 import { fmtCurrency } from "@/lib/formatCurrency";
 import { CODE_TO_COUNTRY } from "@/lib/guideConfig";
+import { getFestivalsForMonth, COUNTRY_CODE_TO_GUIDE, getBudgetMonths } from "@/data/festivals";
 
 const RATE_REFRESH_MS = 600_000; // 10 minutes
 
@@ -202,7 +203,10 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 dark:bg-gray-950">
+    <main
+      className="min-h-screen dark:bg-gray-950"
+      style={dark ? undefined : { background: "linear-gradient(180deg, #EEF3FF 0%, #F4F7FF 100%)" }}
+    >
       {/* Header */}
       <div className="pt-12 pb-8 px-4" style={{ background: "linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)" }}>
         <div className="max-w-md mx-auto">
@@ -283,11 +287,157 @@ export default function Home() {
               </>
             )}
           </div>
+
+          {/* ── Feature discovery chips + Festival calendar ── */}
+          {(() => {
+            const guideCountry = CODE_TO_COUNTRY[country]; // only set for the 7 guide countries
+            const festivalKey = COUNTRY_CODE_TO_GUIDE[country]; // set for all 20+ countries
+            const currentMonth = new Date().getMonth();
+            const monthsWithFestivals = festivalKey
+              ? Array.from({ length: 12 }, (_, i) =>
+                  getFestivalsForMonth(i, festivalKey)
+                )
+              : [];
+            const shortMonths = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+            return (
+              <div className="mt-4 space-y-3">
+                {/* Chips row */}
+                <div className="flex flex-wrap gap-2">
+                  {guideCountry && (
+                    <Link
+                      href={`/${lang}/how-to-pay/${guideCountry}`}
+                      className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-full px-3 py-1.5 transition-colors"
+                    >
+                      🗺️ {selectedCountry?.name ?? guideCountry} Guide
+                    </Link>
+                  )}
+                  <Link
+                    href="/where-to-travel"
+                    className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-full px-3 py-1.5 transition-colors"
+                  >
+                    🌍 Where to travel?
+                  </Link>
+                </div>
+
+                {/* Peak season / budget warning */}
+                {(() => {
+                  if (!festivalKey) return null;
+                  const currentMonth = new Date().getMonth();
+                  const thisMonthFestivals = getFestivalsForMonth(currentMonth, festivalKey);
+                  const highCrowdNow = thisMonthFestivals.filter(
+                    (f) => f.crowdLevel === "high" && f.priceImpact
+                  );
+                  if (highCrowdNow.length === 0) return null;
+                  const shortMonths = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+                  const budgetMonths = getBudgetMonths(festivalKey)
+                    .filter((m) => m !== currentMonth)
+                    .slice(0, 3)
+                    .map((m) => shortMonths[m]);
+                  return (
+                    <div className="mt-3 rounded-xl bg-amber-500/20 border border-amber-400/30 px-4 py-3 space-y-1.5">
+                      <div className="flex items-center gap-2">
+                        <span className="text-base">⚠️</span>
+                        <p className="text-xs font-bold text-amber-200">
+                          Peak season — {highCrowdNow[0].name}
+                        </p>
+                      </div>
+                      <p className="text-xs text-amber-100 leading-relaxed">
+                        💰 {highCrowdNow[0].priceImpact}. Your FX fees aren't the only extra cost this trip.
+                      </p>
+                      {budgetMonths.length > 0 && (
+                        <p className="text-xs text-amber-200">
+                          ✨ Better value months: <span className="font-semibold">{budgetMonths.join(" · ")}</span>
+                        </p>
+                      )}
+                    </div>
+                  );
+                })()}
+
+                {/* Festival calendar strip */}
+                {festivalKey && (
+                  <div>
+                    <p className="text-[10px] font-semibold text-blue-300 uppercase tracking-widest mb-2">
+                      🎉 Festival calendar — {selectedCountry?.name}
+                    </p>
+                    <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                      {shortMonths.map((m, i) => {
+                        const festivals = monthsWithFestivals[i];
+                        const hasFestival = festivals.length > 0;
+                        const isNow = i === currentMonth;
+                        return (
+                          <div key={i} className="relative shrink-0">
+                            {hasFestival ? (
+                              guideCountry ? (
+                                <Link
+                                  href={`/${lang}/how-to-pay/${guideCountry}#festivals`}
+                                  title={festivals.map(f => f.name).join(", ")}
+                                  className={`flex flex-col items-center rounded-xl px-2.5 py-2 text-center transition-all ${
+                                    isNow
+                                      ? "bg-purple-500 text-white shadow-lg shadow-purple-500/40 ring-2 ring-purple-300/50"
+                                      : "bg-purple-500/35 hover:bg-purple-500/55 text-white border border-purple-400/40"
+                                  }`}
+                                >
+                                  <span className="text-[10px] font-bold leading-none">{m}</span>
+                                  <span className="text-[13px] leading-none mt-1">
+                                    {festivals[0].emoji}
+                                  </span>
+                                </Link>
+                              ) : (
+                                <div
+                                  title={festivals.map(f => f.name).join(", ")}
+                                  className={`flex flex-col items-center rounded-xl px-2.5 py-2 text-center ${
+                                    isNow
+                                      ? "bg-purple-500 text-white shadow-lg shadow-purple-500/40 ring-2 ring-purple-300/50"
+                                      : "bg-purple-500/35 text-white border border-purple-400/40"
+                                  }`}
+                                >
+                                  <span className="text-[10px] font-bold leading-none">{m}</span>
+                                  <span className="text-[13px] leading-none mt-1">
+                                    {festivals[0].emoji}
+                                  </span>
+                                </div>
+                              )
+                            ) : (
+                              <div
+                                className={`flex flex-col items-center rounded-xl px-2.5 py-2 text-center border ${
+                                  isNow
+                                    ? "bg-white/25 text-white border-white/40"
+                                    : "bg-white/10 text-blue-200 border-white/10"
+                                }`}
+                              >
+                                <span className="text-[10px] font-bold leading-none">{m}</span>
+                                <span className="text-[13px] leading-none mt-1 opacity-0">·</span>
+                              </div>
+                            )}
+                            {isNow && (
+                              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white shadow-sm shadow-white/50" />
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
         </div>
       </div>
 
+      {/* Gradient transition bridge — smoothly fades the hero blue into the page background */}
+      {!dark && (
+        <div
+          aria-hidden="true"
+          style={{
+            background: "linear-gradient(180deg, #1E3A8A 0%, #EEF3FF 100%)",
+            height: "72px",
+            marginTop: "-1px",
+          }}
+        />
+      )}
+
       {/* Content */}
-      <div className="max-w-md mx-auto px-4 -mt-4 pb-28 space-y-5">
+      <div className="max-w-md mx-auto px-4 -mt-14 pb-28 space-y-5">
         <PaymentForm
           country={country}
           amount={amount}
@@ -464,6 +614,29 @@ export default function Home() {
         {/* Travel mistakes */}
         <TravelMistakes />
 
+        {/* Where to Travel promo */}
+        <Link
+          href="/where-to-travel"
+          className="block rounded-2xl overflow-hidden border border-blue-100 dark:border-blue-900 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all shadow-sm"
+        >
+          <div className="px-5 py-4 flex items-center justify-between gap-4">
+            <div className="space-y-0.5">
+              <p className="text-[11px] font-semibold text-blue-200 uppercase tracking-widest">
+                {t.wttBadge}
+              </p>
+              <p className="text-base font-bold text-white leading-snug">
+                {t.wttTitle}
+              </p>
+              <p className="text-xs text-blue-200 leading-relaxed hidden sm:block">
+                {t.wttSubtitle}
+              </p>
+            </div>
+            <span className="shrink-0 text-sm font-semibold text-white bg-white/20 hover:bg-white/30 rounded-xl px-4 py-2 whitespace-nowrap transition-colors">
+              {t.wttExploreCta}
+            </span>
+          </div>
+        </Link>
+
         {/* Learn Before You Go */}
         <LearnSection countryCode={country} t={t} lang={lang} />
 
@@ -471,7 +644,7 @@ export default function Home() {
         <PopularPairs />
 
         {/* Travel money tips */}
-        <TravelMoneyTips />
+        <TravelMoneyTips t={t} />
       </div>
 
       {/* Sticky action bar ── shown when user is overpaying and hasn't dismissed */}

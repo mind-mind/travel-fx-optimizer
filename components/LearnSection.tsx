@@ -84,10 +84,10 @@ export default function LearnSection({ countryCode, t, lang }: Props) {
           <span className="text-2xl shrink-0">🗺️</span>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold leading-snug">
-              {countryName} Travel Money Guide
+              {countryName} {t.learnTravelGuideTitle}
             </p>
             <p className="text-xs text-blue-200 mt-0.5">
-              ATM fees · best cards · typical costs · attractions
+              {t.learnTravelGuideDesc}
             </p>
           </div>
           <span className="text-blue-200 group-hover:text-white transition-colors shrink-0">→</span>
