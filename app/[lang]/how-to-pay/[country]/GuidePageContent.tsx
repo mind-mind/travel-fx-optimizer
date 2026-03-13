@@ -7,6 +7,7 @@ import type { CountryContent, GuideCountry, GuideLang } from "@/lib/guideConfig"
 import { VALID_COUNTRIES, COUNTRY_META } from "@/lib/guideConfig";
 import type { Translations } from "@/data/translations";
 import { fmtCurrency } from "@/lib/formatCurrency";
+import { getFestivalsForCountry } from "@/data/festivals";
 
 interface Props {
   content: CountryContent;
@@ -374,6 +375,94 @@ export function GuidePageContent({ content, t, lang, country }: Props) {
             </div>
           </section>
         )}
+
+        {/* Festivals & Events */}
+        {(() => {
+          const countryFestivals = getFestivalsForCountry(country);
+          if (countryFestivals.length === 0) return null;
+          const currentMonth = new Date().getMonth();
+          const nextMonth = (currentMonth + 1) % 12;
+          return (
+            <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-4">
+              <div className="flex items-center gap-2">
+                <span className="text-2xl">🎉</span>
+                <h2 className="text-lg font-bold text-gray-800 dark:text-gray-100">
+                  {t.festivalsTitle}
+                </h2>
+              </div>
+              <div className="space-y-3">
+                {countryFestivals.map((festival) => {
+                  const isThisMonth = festival.months.includes(currentMonth);
+                  const isUpcoming = !isThisMonth && festival.months.includes(nextMonth);
+                  const crowdClass =
+                    festival.crowdLevel === "high"
+                      ? "bg-red-100 text-red-700 dark:bg-red-900 dark:text-red-300"
+                      : festival.crowdLevel === "medium"
+                      ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-300"
+                      : "bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300";
+                  const crowdLabel =
+                    festival.crowdLevel === "high"
+                      ? t.festivalsCrowdHigh
+                      : festival.crowdLevel === "medium"
+                      ? t.festivalsCrowdMedium
+                      : t.festivalsCrowdLow;
+                  return (
+                    <div
+                      key={festival.id}
+                      className={`rounded-xl border p-4 space-y-2 ${
+                        isThisMonth
+                          ? "border-purple-200 dark:border-purple-800 bg-purple-50 dark:bg-purple-950"
+                          : "border-gray-100 dark:border-gray-800 bg-gray-50 dark:bg-gray-800"
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2 flex-wrap">
+                        <div className="flex items-center gap-2">
+                          <span className="text-xl">{festival.emoji}</span>
+                          <div>
+                            <p className="text-sm font-bold text-gray-800 dark:text-gray-100">
+                              {festival.name}
+                            </p>
+                            <p className="text-xs text-gray-400 dark:text-gray-500">{festival.duration}</p>
+                          </div>
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 shrink-0">
+                          {isThisMonth && (
+                            <span className="text-[10px] font-bold bg-purple-600 text-white px-2 py-0.5 rounded-full">
+                              {t.festivalsThisMonth}
+                            </span>
+                          )}
+                          {isUpcoming && (
+                            <span className="text-[10px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded-full">
+                              {t.festivalsUpcoming}
+                            </span>
+                          )}
+                          <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${crowdClass}`}>
+                            {crowdLabel}
+                          </span>
+                        </div>
+                      </div>
+                      <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                        {festival.description}
+                      </p>
+                      {festival.priceImpact && (
+                        <p className="text-xs font-semibold text-orange-700 dark:text-orange-400">
+                          💰 {t.festivalsPriceImpact}: {festival.priceImpact}
+                        </p>
+                      )}
+                      <div className="flex items-start gap-2">
+                        <span className="text-blue-500 text-xs shrink-0 mt-0.5">💡</span>
+                        <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
+                          <span className="font-semibold">{t.festivalsTipLabel}:</span>{" "}
+                          {festival.travelTip}
+                        </p>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </section>
+          );
+        })()}
 
         {/* Other guides */}
         <section className="space-y-3">

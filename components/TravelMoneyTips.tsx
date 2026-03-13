@@ -1,45 +1,27 @@
-const TIPS = [
-  {
-    icon: "✈️",
-    title: "Avoid airport FX booths",
-    body: "Airport exchange counters often charge 10–15% above mid-market rate. Exchange only enough for transport; use ATMs or your card for the rest.",
-  },
-  {
-    icon: "💳",
-    title: "Use a no-foreign-fee card",
-    body: "Cards like Wise, Revolut, or Charles Schwab waive the typical 2.5–3% FX fee entirely, saving you real money on every purchase abroad.",
-  },
-  {
-    icon: "🚫",
-    title: "Always pay in local currency",
-    body: "When a terminal asks \"Pay in USD or local?\" — choose local. Dynamic Currency Conversion (DCC) is marked up 3–8% and benefits the merchant, not you.",
-  },
-  {
-    icon: "🏧",
-    title: "Pick your ATM wisely",
-    body: "Network ATMs (Citibank, HSBC) often offer better rates and lower fees than independent FX ATMs. Decline any \"fixed fee\" conversion offer.",
-  },
-  {
-    icon: "📱",
-    title: "Mobile wallets can beat cards",
-    body: "In markets like Japan (PayPay), China (Alipay), or Thailand (PromptPay), local mobile payments sometimes give you mid-market rate with no markup.",
-  },
-  {
-    icon: "🕐",
-    title: "Check rates before you go",
-    body: "Mid-market rates fluctuate daily. Knowing the fair rate before you travel helps you spot a bad deal — and walk away from it.",
-  },
-];
+import type { Translations } from "@/data/translations";
 
-export default function TravelMoneyTips() {
+interface Props {
+  t: Translations;
+}
+
+export default function TravelMoneyTips({ t }: Props) {
+  const TIPS = [
+    { icon: "✈️", title: t.tmTip1Title, body: t.tmTip1Body },
+    { icon: "💳", title: t.tmTip2Title, body: t.tmTip2Body },
+    { icon: "🚫", title: t.tmTip3Title, body: t.tmTip3Body },
+    { icon: "🏧", title: t.tmTip4Title, body: t.tmTip4Body },
+    { icon: "📱", title: t.tmTip5Title, body: t.tmTip5Body },
+    { icon: "🕐", title: t.tmTip6Title, body: t.tmTip6Body },
+  ];
+
   return (
     <div className="rounded-2xl bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 shadow-sm p-5 space-y-4">
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-blue-500 dark:text-blue-400 mb-1">
-          💡 Travel Money Tips
+          {t.tmTipsBadge}
         </p>
         <h2 className="text-base font-bold text-gray-800 dark:text-gray-100">
-          How to pay less abroad
+          {t.tmTipsHeading}
         </h2>
       </div>
       <div className="flex flex-col gap-4">
