@@ -48,6 +48,7 @@ interface Props {
   onHomeCurrencyChange: (v: string) => void;
   onSwap?: () => void;
   canSwap?: boolean;
+  showCountryField?: boolean;
 }
 
 export default function PaymentForm({
@@ -64,12 +65,32 @@ export default function PaymentForm({
   onHomeCurrencyChange,
   onSwap,
   canSwap,
+  showCountryField = true,
 }: Props) {
   const selectedCountry = COUNTRIES.find((c) => c.code === country);
   const availableMethods = getAvailableMethods(country);
 
   return (
     <div className="calculator-card relative z-10 bg-white dark:bg-[#0f172a] rounded-t-3xl rounded-b-2xl border border-blue-100 dark:border-white/10 p-6 space-y-5 shadow-[0_8px_48px_-8px_rgba(30,58,138,0.18),0_2px_8px_-2px_rgba(30,58,138,0.08)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
+      {showCountryField && (
+        <div>
+          <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
+            {t.countryLabel}
+          </label>
+          <select
+            value={country}
+            onChange={(e) => { onCountryChange(e.target.value); }}
+            className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            {COUNTRIES.map((c) => (
+              <option key={c.code} value={c.code}>
+                {c.flag} {c.name} ({c.currency})
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
       {/* Home Currency */}
       <div>
         <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
@@ -104,24 +125,6 @@ export default function PaymentForm({
           <span className="text-sm">⇅</span>
           <span>Swap</span>
         </button>
-      </div>
-
-      {/* Destination Country */}
-      <div>
-        <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">
-          {t.countryLabel}
-        </label>
-        <select
-          value={country}
-          onChange={(e) => { onCountryChange(e.target.value); }}
-          className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          {COUNTRIES.map((c) => (
-            <option key={c.code} value={c.code}>
-              {c.flag} {c.name} ({c.currency})
-            </option>
-          ))}
-        </select>
       </div>
 
       {/* Amount */}
