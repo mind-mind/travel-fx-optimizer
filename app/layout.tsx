@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { Suspense } from "react";
+import GlobalLanguageSelector from "@/components/GlobalLanguageSelector";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -41,6 +43,9 @@ export default function RootLayout({
         />
       </head>
       <body>
+        <Suspense fallback={null}>
+          <GlobalLanguageSelector />
+        </Suspense>
         {children}
         {/* Google Analytics 4 */}
         <Script

@@ -69,7 +69,7 @@ export default function PaymentForm({
   const availableMethods = getAvailableMethods(country);
 
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-t-3xl rounded-b-2xl border border-blue-100 dark:border-gray-800 p-6 space-y-5" style={{ boxShadow: "0 8px 48px -8px rgba(30, 58, 138, 0.18), 0 2px 8px -2px rgba(30, 58, 138, 0.08)" }}>
+    <div className="calculator-card relative z-10 bg-white dark:bg-[#0f172a] rounded-t-3xl rounded-b-2xl border border-blue-100 dark:border-white/10 p-6 space-y-5 shadow-[0_8px_48px_-8px_rgba(30,58,138,0.18),0_2px_8px_-2px_rgba(30,58,138,0.08)] dark:shadow-[0_10px_30px_rgba(0,0,0,0.35)]">
       {/* Home Currency */}
       <div>
         <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">

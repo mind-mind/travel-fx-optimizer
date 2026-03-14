@@ -52,6 +52,12 @@ export function GET() {
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
+  <url>
+    <loc>${baseUrl}/where-to-travel</loc>
+    <lastmod>${lastModified}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
 ${pairUrls}
 ${guideUrls}
 </urlset>`;
