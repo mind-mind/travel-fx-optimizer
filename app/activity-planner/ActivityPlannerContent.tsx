@@ -43,7 +43,7 @@ export function ActivityPlannerContent({ initialCountry }: Props) {
     [activities, selectedIds]
   );
 
-  const hotelCost = hotelPerNight * travelDays;
+  const hotelCost = hotelPerNight * Math.max(1, travelDays);
   const activityCost = selectedActivities.reduce((sum, a) => sum + a.estimatedCost, 0);
   const totalTripCost = hotelCost + activityCost;
 
@@ -118,8 +118,12 @@ export function ActivityPlannerContent({ initialCountry }: Props) {
                 <input
                   type="number"
                   min={1}
-                  value={travelDays}
-                  onChange={(e) => setTravelDays(Math.max(1, Number(e.target.value || 1)))}
+                  value={travelDays || ""}
+                  onChange={(e) => {
+                    const raw = e.target.value;
+                    setTravelDays(raw === "" ? 0 : Math.max(0, Number(raw)));
+                  }}
+                  onBlur={() => setTravelDays((prev) => (prev < 1 ? 1 : prev))}
                   className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-gray-800 dark:text-gray-100"
                 />
               </div>
@@ -150,7 +154,7 @@ export function ActivityPlannerContent({ initialCountry }: Props) {
             <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100">Cost Summary</h2>
             <div className="rounded-xl bg-gray-50 dark:bg-gray-800 p-4 space-y-2 text-sm">
               <p className="text-gray-600 dark:text-gray-400">
-                Hotel: <span className="font-semibold text-gray-900 dark:text-gray-100">${hotelPerNight}</span> × {travelDays} nights
+                Hotel: <span className="font-semibold text-gray-900 dark:text-gray-100">${hotelPerNight}</span> × {Math.max(1, travelDays)} nights
               </p>
               <p className="font-bold text-gray-900 dark:text-gray-100">= ${hotelCost.toLocaleString()}</p>
             </div>
