@@ -6,7 +6,7 @@ export const dynamic = "force-static";
 
 export function GET() {
   const baseUrl = "https://travelwiserate.com";
-  const lastModified = new Date().toISOString();
+  const lastModified = new Date().toISOString().split("T")[0];
 
   const pairUrls = POPULAR_PAIR_SLUGS.map(
     (slug) => `  <url>
