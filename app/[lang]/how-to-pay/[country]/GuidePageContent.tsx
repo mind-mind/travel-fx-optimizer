@@ -150,7 +150,7 @@ export function GuidePageContent({ content, t, lang, country }: Props) {
         className="pt-12 pb-10 px-4"
         style={{ background: "linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)" }}
       >
-        <div className="max-w-2xl mx-auto">
+        <div className="mx-auto max-w-4xl px-6">
           <div className="flex items-center justify-between mb-5">
             <Link
               href="/"
@@ -176,7 +176,7 @@ export function GuidePageContent({ content, t, lang, country }: Props) {
       </div>
 
       {/* Content */}
-      <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+      <div className="mx-auto max-w-4xl px-6 py-12 space-y-8">
         {/* Best Card */}
         <section
           id="best-card"
@@ -429,7 +429,7 @@ export function GuidePageContent({ content, t, lang, country }: Props) {
         })()}
 
         {/* Other guides */}
-        <section className="space-y-3">
+        <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3">
           <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide">
             {t.guideOtherGuides}
           </h2>
@@ -454,7 +454,7 @@ export function GuidePageContent({ content, t, lang, country }: Props) {
         {/* Back */}
         <Link
           href="/"
-          className="block w-full text-center rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 text-sm font-medium py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          className="block w-full text-center rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-sm text-gray-700 dark:text-gray-200 text-sm font-medium py-3 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
         >
           {t.guideBackBtn}
         </Link>

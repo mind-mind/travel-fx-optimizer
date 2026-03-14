@@ -74,7 +74,7 @@ export function TravelMoneyContent({ guide, otherGuides }: Props) {
         className="pt-12 pb-10 px-4"
         style={{ background: "linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)" }}
       >
-        <div className="max-w-2xl mx-auto">
+        <div className="mx-auto max-w-4xl px-6">
           <div className="flex items-center justify-between mb-5">
             <Link
               href="/"
@@ -99,7 +99,7 @@ export function TravelMoneyContent({ guide, otherGuides }: Props) {
       </div>
 
       {/* Content */}
-      <div className="max-w-2xl mx-auto px-4 py-8 space-y-6">
+      <div className="mx-auto max-w-4xl px-6 py-12 space-y-8">
 
         {/* ── Overview: why FX fees hurt ─────────────────────────────── */}
         <section className="bg-white dark:bg-gray-900 rounded-2xl border border-gray-100 dark:border-gray-800 shadow-sm p-6 space-y-3">

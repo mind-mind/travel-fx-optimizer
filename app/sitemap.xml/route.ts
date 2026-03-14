@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { POPULAR_PAIR_SLUGS } from "@/data/currencyPairs";
 import { TRAVEL_MONEY_SLUGS } from "@/data/travelMoneyGuides";
+import { ACTIVITY_COUNTRIES } from "@/lib/data/activities";
+import { VALID_LANGS, VALID_COUNTRIES } from "@/lib/guideConfig";
 
 export const dynamic = "force-static";
 
@@ -24,6 +26,35 @@ export function GET() {
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>`
+  ).join("\n");
+
+  const activityUrls = ACTIVITY_COUNTRIES.map(
+    (country) => `  <url>
+    <loc>${baseUrl}/activities/${country}</loc>
+    <lastmod>${lastModified}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
+  </url>`
+  ).join("\n");
+
+  const localizedHomeUrls = VALID_LANGS.map(
+    (lang) => `  <url>
+    <loc>${baseUrl}/${lang}</loc>
+    <lastmod>${lastModified}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>`
+  ).join("\n");
+
+  const localizedGuideUrls = VALID_LANGS.flatMap((lang) =>
+    VALID_COUNTRIES.map(
+      (country) => `  <url>
+    <loc>${baseUrl}/${lang}/how-to-pay/${country}</loc>
+    <lastmod>${lastModified}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>`
+    )
   ).join("\n");
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
@@ -58,8 +89,17 @@ export function GET() {
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>${baseUrl}/activity-planner</loc>
+    <lastmod>${lastModified}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
 ${pairUrls}
 ${guideUrls}
+${activityUrls}
+${localizedHomeUrls}
+${localizedGuideUrls}
 </urlset>`;
 
   return new NextResponse(xml, {
