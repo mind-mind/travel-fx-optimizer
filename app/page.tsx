@@ -23,7 +23,7 @@ import { BankName, PaymentMethod, ComparisonResult } from "@/lib/types";
 import { calculateComparisons, getVatRefund } from "@/lib/calculator";
 import { COUNTRIES, HOME_CURRENCIES } from "@/lib/fxData";
 import { translations, Lang } from "@/data/translations";
-import { fmtCurrency } from "@/lib/formatCurrency";
+import { fmtCurrency, fmtCurrencyRound } from "@/lib/formatCurrency";
 import { CODE_TO_COUNTRY } from "@/lib/guideConfig";
 import { getFestivalsForMonth, COUNTRY_CODE_TO_GUIDE, getBudgetMonths } from "@/data/festivals";
 import { DESTINATIONS } from "@/data/whereToTravel";
@@ -58,6 +58,16 @@ interface CustomActivity {
   name: string;
   estimatedCostUsd: number;
 }
+
+type ExploreFilter =
+  | "all"
+  | "festival"
+  | "weather"
+  | "risks"
+  | "cost"
+  | "calculator"
+  | "apps"
+  | "planner";
 
 const ACTIVITY_CATEGORY_ICON: Record<ActivityCategory, string> = {
   chill: "🧘",
@@ -99,33 +109,24 @@ const WEATHER_LOCATIONS: Record<string, { city: string; lat: number; lon: number
   SA: { city: "Riyadh", lat: 24.7136, lon: 46.6753 },
 };
 
-function getWeatherLabel(code: number): string {
-  if (code === 0) return "Clear";
-  if ([1, 2].includes(code)) return "Partly cloudy";
-  if (code === 3) return "Cloudy";
-  if ([45, 48].includes(code)) return "Fog";
-  if ([51, 53, 55, 56, 57].includes(code)) return "Drizzle";
-  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return "Rain";
-  if ([71, 73, 75, 77, 85, 86].includes(code)) return "Snow";
-  if ([95, 96, 99].includes(code)) return "Thunderstorm";
-  return "Variable";
+function getWeatherLabel(code: number, lx: Record<string, string>): string {
+  if (code === 0) return lx.weatherClear ?? "Clear";
+  if ([1, 2].includes(code)) return lx.weatherPartlyCloudy ?? "Partly cloudy";
+  if (code === 3) return lx.weatherCloudy ?? "Cloudy";
+  if ([45, 48].includes(code)) return lx.weatherFog ?? "Fog";
+  if ([51, 53, 55, 56, 57].includes(code)) return lx.weatherDrizzle ?? "Drizzle";
+  if ([61, 63, 65, 66, 67, 80, 81, 82].includes(code)) return lx.weatherRain ?? "Rain";
+  if ([71, 73, 75, 77, 85, 86].includes(code)) return lx.weatherSnow ?? "Snow";
+  if ([95, 96, 99].includes(code)) return lx.weatherStorm ?? "Thunderstorm";
+  return lx.weatherVariable ?? "Variable";
 }
 
-function getWeatherPlanHint(weather: WeatherData): string {
+function getWeatherPlanHint(weather: WeatherData, lx: Record<string, string>): string {
   const rainy = weather.tomorrowRain >= 60 || [61, 63, 65, 80, 81, 82].includes(weather.currentCode);
-  if (rainy) {
-    return "Where to go: indoor plans today (museums, markets, cafes). Keep outdoor spots for lower-rain windows.";
-  }
-
-  if (weather.currentTemp >= 32) {
-    return "Where to go: early-morning outdoor spots, then shaded areas or indoor activities in the afternoon heat.";
-  }
-
-  if ([0, 1, 2].includes(weather.currentCode)) {
-    return "Where to go: best day for outdoor attractions, parks, and city walking routes.";
-  }
-
-  return "Where to go: mix indoor and outdoor plans, and keep a flexible backup route.";
+  if (rainy) return lx.weatherHintRainy ?? "Where to go: indoor plans today (museums, markets, cafes). Keep outdoor spots for lower-rain windows.";
+  if (weather.currentTemp >= 32) return lx.weatherHintHot ?? "Where to go: early-morning outdoor spots, then shaded areas or indoor activities in the afternoon heat.";
+  if ([0, 1, 2].includes(weather.currentCode)) return lx.weatherHintClear ?? "Where to go: best day for outdoor attractions, parks, and city walking routes.";
+  return lx.weatherHintDefault ?? "Where to go: mix indoor and outdoor plans, and keep a flexible backup route.";
 }
 
 function getSeasonalHighlights(countryCode: string, month: number): string[] {
@@ -154,6 +155,944 @@ function getSeasonalHighlights(countryCode: string, month: number): string[] {
   if (winter) return ["Holiday markets and light shows", "Seasonal comfort food events", "Indoor cultural programs"];
   if (summer) return ["Outdoor weekend festivals", "City nightlife peaks", "Open-air food events"];
   return ["Local cultural events", "Seasonal regional food fairs", "Weekend community festivals"];
+}
+
+const LANDING_COPY: Record<Lang, Record<string, string>> = {
+  en: {
+    heroTitle: "Know the Best Time to Travel - Before You Book",
+    heroSubtitle: "See festivals, weather risks, crowds, and real travel cost impact in under 20 seconds.",
+    startCalculator: "Start Travel Calculator",
+    helper: "Answer 3 quick questions to see the best time to travel.",
+    seeExample: "See Example",
+    howWorks: "How TravelWiseRate Works",
+    step1: "Choose destination and travel dates",
+    step2: "We analyze festivals, weather, crowd levels, and travel risks",
+    step3: "You get a travel timing score and insights",
+    travelStart: "Travel start",
+    travelEnd: "Travel end",
+    exploreInsights: "Explore Insights",
+    allInsights: "All insights",
+    festival: "Festival",
+    weather: "Weather",
+    risks: "Risks",
+    cost: "Cost",
+    apps: "Apps",
+    planner: "Planner",
+    weatherInsights: "Weather Insights",
+    weatherConditions: "Weather Conditions in",
+    loadingWeather: "Loading weather...",
+    weatherUnavailable: "Weather unavailable",
+    travelComfort: "Travel comfort tip",
+    estimatedFlightCost: "Estimated flight cost",
+    flightBased: "Based on route averages and shown in",
+    festivalCalendar: "Festival Calendar",
+    festivalDesc: "Discover major festivals and seasonal events before planning your trip.",
+    scoreTitle: "Travel Timing Score",
+    smartAlt: "Smart alternative date suggestion",
+    yourSelectedDates: "Your selected dates",
+    betterOption: "Better option",
+    alreadyGood: "Your current window is already one of the better options.",
+    altReason: "Reason: lower hotel prices, less crowded routes, still good festival timing.",
+    shareMyTiming: "Share My Travel Timing",
+    costImpactTitle: "Cost / Money Impact",
+    seasonHighlights: "Season highlights",
+    priceDirection: "Price direction",
+    highDemand: "High-demand window: expect higher prices.",
+    balancedDemand: "More balanced demand window.",
+    exampleTitle: "Example Travel Insight",
+    bestTimeToVisit: "Best Time to Visit",
+    bestMonths: "Best months",
+    avoid: "Avoid",
+    avoidText: "Peak holiday weeks and high crowd festival windows.",
+    scoreExcellent: "Excellent travel timing",
+    scoreMixed: "Mixed conditions",
+    scoreCrowded: "Crowded or expensive",
+    scoreNotRec: "Not recommended",
+    finalStep: "Final step",
+    finalTitle: "Plan Your Trip Smarter",
+  },
+  th: {
+    heroTitle: "รู้ช่วงเวลาที่ดีที่สุดก่อนจองทริป",
+    heroSubtitle: "ดูเทศกาล ความเสี่ยงอากาศ ความหนาแน่นคน และผลกระทบค่าใช้จ่ายจริงใน 20 วินาที",
+    startCalculator: "เริ่มคำนวณทริป",
+    helper: "ตอบ 3 คำถามสั้นๆ เพื่อดูช่วงเวลาที่เหมาะที่สุด",
+    seeExample: "ดูตัวอย่าง",
+    howWorks: "TravelWiseRate ทำงานอย่างไร",
+    step1: "เลือกจุดหมายและวันที่เดินทาง",
+    step2: "เราวิเคราะห์เทศกาล อากาศ ความหนาแน่นคน และความเสี่ยง",
+    step3: "คุณจะได้คะแนนช่วงเวลาเดินทางและอินไซต์",
+    travelStart: "เริ่มเดินทาง",
+    travelEnd: "สิ้นสุดเดินทาง",
+    exploreInsights: "สำรวจอินไซต์",
+    allInsights: "อินไซต์ทั้งหมด",
+    festival: "เทศกาล",
+    weather: "อากาศ",
+    risks: "ความเสี่ยง",
+    cost: "ค่าใช้จ่าย",
+    apps: "แอป",
+    planner: "วางแผน",
+    weatherInsights: "อินไซต์สภาพอากาศ",
+    weatherConditions: "สภาพอากาศใน",
+    loadingWeather: "กำลังโหลดอากาศ...",
+    weatherUnavailable: "ไม่สามารถโหลดสภาพอากาศได้",
+    travelComfort: "คำแนะนำความสบายในการเดินทาง",
+    estimatedFlightCost: "ค่าเครื่องบินโดยประมาณ",
+    flightBased: "คำนวณจากข้อมูลเส้นทางเฉลี่ย และแสดงเป็น",
+    festivalCalendar: "ปฏิทินเทศกาล",
+    festivalDesc: "ดูเทศกาลสำคัญของแต่ละเดือนก่อนวางแผนทริป",
+    scoreTitle: "คะแนนช่วงเวลาเดินทาง",
+    smartAlt: "คำแนะนำช่วงวันที่ดีกว่า",
+    yourSelectedDates: "วันที่ที่คุณเลือก",
+    betterOption: "ตัวเลือกที่ดีกว่า",
+    alreadyGood: "ช่วงที่คุณเลือกอยู่ในกลุ่มที่ดีอยู่แล้ว",
+    altReason: "เหตุผล: ที่พักถูกลง คนแน่นน้อยลง และยังได้บรรยากาศเทศกาล",
+    shareMyTiming: "แชร์คะแนนการเดินทางของฉัน",
+    costImpactTitle: "ผลกระทบด้านค่าใช้จ่าย",
+    seasonHighlights: "ไฮไลต์ตามฤดูกาล",
+    priceDirection: "แนวโน้มราคา",
+    highDemand: "ช่วงความต้องการสูง: ราคามักสูงขึ้น",
+    balancedDemand: "ช่วงความต้องการสมดุลกว่า",
+    exampleTitle: "ตัวอย่างอินไซต์การเดินทาง",
+    bestTimeToVisit: "ช่วงที่เหมาะที่สุดในการเที่ยว",
+    bestMonths: "เดือนที่เหมาะ",
+    avoid: "ควรหลีกเลี่ยง",
+    avoidText: "สัปดาห์วันหยุดยาวและช่วงเทศกาลที่คนแน่น",
+    scoreExcellent: "ช่วงเวลาเดินทางยอดเยี่ยม",
+    scoreMixed: "สภาพผสม",
+    scoreCrowded: "แออัดหรือค่าใช้จ่ายสูง",
+    scoreNotRec: "ไม่แนะนำ",
+    finalStep: "ขั้นตอนสุดท้าย",
+    finalTitle: "วางแผนทริปให้ฉลาดขึ้น",
+  },
+  es: {
+    heroTitle: "Conoce el mejor momento para viajar antes de reservar",
+    heroSubtitle: "Ve festivales, riesgos climáticos, multitudes e impacto real de costos en menos de 20 segundos.",
+    startCalculator: "Iniciar calculadora de viaje",
+    helper: "Responde 3 preguntas rápidas para ver el mejor momento para viajar.",
+    seeExample: "Ver ejemplo",
+    howWorks: "Cómo funciona TravelWiseRate",
+    step1: "Elige destino y fechas de viaje",
+    step2: "Analizamos festivales, clima, multitudes y riesgos",
+    step3: "Recibes una puntuación e insights",
+    travelStart: "Inicio del viaje",
+    travelEnd: "Fin del viaje",
+    exploreInsights: "Explorar insights",
+    allInsights: "Todos",
+    festival: "Festival",
+    weather: "Clima",
+    risks: "Riesgos",
+    cost: "Costo",
+    apps: "Apps",
+    planner: "Planificador",
+    weatherInsights: "Insights del clima",
+    weatherConditions: "Clima en",
+    loadingWeather: "Cargando clima...",
+    weatherUnavailable: "Clima no disponible",
+    travelComfort: "Consejo de comodidad",
+    estimatedFlightCost: "Costo estimado de vuelo",
+    flightBased: "Basado en rutas promedio y mostrado en",
+    festivalCalendar: "Calendario de festivales",
+    festivalDesc: "Descubre festivales importantes antes de planear tu viaje.",
+    scoreTitle: "Puntuación de momento de viaje",
+    smartAlt: "Sugerencia inteligente de fechas",
+    yourSelectedDates: "Tus fechas",
+    betterOption: "Mejor opción",
+    alreadyGood: "Tu ventana actual ya es una de las mejores.",
+    altReason: "Razón: menor costo de hoteles, menos multitudes y buen timing de festivales.",
+    shareMyTiming: "Compartir mi puntuación",
+    costImpactTitle: "Impacto de costos",
+    seasonHighlights: "Destacados estacionales",
+    priceDirection: "Tendencia de precios",
+    highDemand: "Ventana de alta demanda: precios más altos.",
+    balancedDemand: "Ventana más equilibrada.",
+    exampleTitle: "Ejemplo de insight de viaje",
+    bestTimeToVisit: "Mejor época para visitar",
+    bestMonths: "Mejores meses",
+    avoid: "Evitar",
+    avoidText: "Semanas festivas y periodos de mucha gente.",
+    scoreExcellent: "Momento de viaje excelente",
+    scoreMixed: "Condiciones mixtas",
+    scoreCrowded: "Concurrido o caro",
+    scoreNotRec: "No recomendado",
+    finalStep: "Paso final",
+    finalTitle: "Planea tu viaje de forma inteligente",
+  },
+  zh: {
+    heroTitle: "预订前先知道最佳旅行时机",
+    heroSubtitle: "20秒内查看节日、天气风险、人流和真实成本影响。",
+    startCalculator: "开始旅行计算器",
+    helper: "回答3个简短问题，快速看到最佳出行时间。",
+    seeExample: "查看示例",
+    howWorks: "TravelWiseRate 如何运作",
+    step1: "选择目的地和出行日期",
+    step2: "我们分析节日、天气、人流和风险",
+    step3: "你将获得旅行时机评分和洞察",
+    travelStart: "出发日期",
+    travelEnd: "结束日期",
+    exploreInsights: "探索洞察",
+    allInsights: "全部",
+    festival: "节日",
+    weather: "天气",
+    risks: "风险",
+    cost: "成本",
+    apps: "应用",
+    planner: "规划",
+    weatherInsights: "天气洞察",
+    weatherConditions: "天气情况：",
+    loadingWeather: "正在加载天气...",
+    weatherUnavailable: "天气不可用",
+    travelComfort: "出行建议",
+    estimatedFlightCost: "机票费用预估",
+    flightBased: "基于航线均值，显示币种",
+    festivalCalendar: "节日日历",
+    festivalDesc: "在规划行程前查看每月重要节日与活动。",
+    scoreTitle: "旅行时机评分",
+    smartAlt: "智能日期建议",
+    yourSelectedDates: "你选择的日期",
+    betterOption: "更优方案",
+    alreadyGood: "你当前时间窗已是较优选择。",
+    altReason: "原因：酒店更便宜、人更少、节日体验仍然不错。",
+    shareMyTiming: "分享我的旅行评分",
+    costImpactTitle: "成本影响",
+    seasonHighlights: "季节亮点",
+    priceDirection: "价格趋势",
+    highDemand: "高需求窗口：价格预计上涨。",
+    balancedDemand: "需求更平衡的窗口。",
+    exampleTitle: "旅行洞察示例",
+    bestTimeToVisit: "最佳旅行时间",
+    bestMonths: "最佳月份",
+    avoid: "避免",
+    avoidText: "长假周和高峰节日窗口。",
+    scoreExcellent: "旅行时机绝佳",
+    scoreMixed: "条件参差",
+    scoreCrowded: "拥挤或昂贵",
+    scoreNotRec: "不建议",
+    finalStep: "最后一步",
+    finalTitle: "更聪明地规划你的旅行",
+  },
+  ja: {
+    heroTitle: "予約前にベストな旅行タイミングを把握",
+    heroSubtitle: "20秒で祭り・天候リスク・混雑・実コスト影響を確認できます。",
+    startCalculator: "トラベル計算を開始",
+    helper: "3つの質問に答えて最適な時期を確認しましょう。",
+    seeExample: "例を見る",
+    howWorks: "TravelWiseRateの使い方",
+    step1: "行き先と日程を選ぶ",
+    step2: "祭り・天候・混雑・リスクを分析",
+    step3: "旅行タイミングスコアと洞察を取得",
+    travelStart: "出発日",
+    travelEnd: "帰着日",
+    exploreInsights: "インサイトを探索",
+    allInsights: "すべて",
+    festival: "祭り",
+    weather: "天気",
+    risks: "リスク",
+    cost: "費用",
+    apps: "アプリ",
+    planner: "プラン",
+    weatherInsights: "天候インサイト",
+    weatherConditions: "天候：",
+    loadingWeather: "天気を読み込み中...",
+    weatherUnavailable: "天気情報を取得できません",
+    travelComfort: "移動快適ヒント",
+    estimatedFlightCost: "航空券の目安",
+    flightBased: "平均ルートデータに基づき表示通貨は",
+    festivalCalendar: "フェスティバルカレンダー",
+    festivalDesc: "旅行計画の前に主要イベントを確認しましょう。",
+    scoreTitle: "旅行タイミングスコア",
+    smartAlt: "日程のスマート提案",
+    yourSelectedDates: "選択した日程",
+    betterOption: "より良い案",
+    alreadyGood: "現在の期間はすでに良い選択です。",
+    altReason: "理由：ホテル価格が低く、混雑が少なく、祭り時期も良好。",
+    shareMyTiming: "スコアを共有",
+    costImpactTitle: "コスト影響",
+    seasonHighlights: "季節ハイライト",
+    priceDirection: "価格傾向",
+    highDemand: "需要高：価格上昇が見込まれます。",
+    balancedDemand: "よりバランスの取れた需要。",
+    exampleTitle: "旅行インサイト例",
+    bestTimeToVisit: "ベストシーズン",
+    bestMonths: "おすすめ月",
+    avoid: "避ける時期",
+    avoidText: "大型連休週と高混雑フェス期間。",
+    finalStep: "最後のステップ",
+    finalTitle: "もっと賢く旅を計画",
+  },
+  ko: {
+    heroTitle: "예약 전에 최고의 여행 시기를 확인하세요",
+    heroSubtitle: "20초 안에 축제, 날씨 리스크, 혼잡도, 실제 비용 영향을 확인합니다.",
+    startCalculator: "여행 계산 시작",
+    helper: "3가지 질문에 답하고 최적 시기를 확인하세요.",
+    seeExample: "예시 보기",
+    howWorks: "TravelWiseRate 작동 방식",
+    step1: "목적지와 여행 날짜 선택",
+    step2: "축제, 날씨, 혼잡도, 리스크 분석",
+    step3: "여행 타이밍 점수와 인사이트 제공",
+    travelStart: "출발일",
+    travelEnd: "종료일",
+    exploreInsights: "인사이트 탐색",
+    allInsights: "전체",
+    festival: "축제",
+    weather: "날씨",
+    risks: "리스크",
+    cost: "비용",
+    apps: "앱",
+    planner: "플래너",
+    weatherInsights: "날씨 인사이트",
+    weatherConditions: "날씨 정보",
+    loadingWeather: "날씨 불러오는 중...",
+    weatherUnavailable: "날씨 정보를 불러올 수 없습니다",
+    travelComfort: "여행 편의 팁",
+    estimatedFlightCost: "항공권 예상 비용",
+    flightBased: "평균 노선 데이터를 기준으로 표시 통화",
+    festivalCalendar: "축제 캘린더",
+    festivalDesc: "여행 계획 전에 월별 주요 축제를 확인하세요.",
+    scoreTitle: "여행 타이밍 점수",
+    smartAlt: "더 나은 날짜 추천",
+    yourSelectedDates: "선택한 날짜",
+    betterOption: "더 좋은 옵션",
+    alreadyGood: "현재 기간은 이미 좋은 선택입니다.",
+    altReason: "이유: 호텔비 절감, 혼잡 완화, 축제 타이밍 유지.",
+    shareMyTiming: "내 점수 공유",
+    costImpactTitle: "비용 영향",
+    seasonHighlights: "시즌 하이라이트",
+    priceDirection: "가격 추세",
+    highDemand: "수요 높은 구간: 가격 상승 예상",
+    balancedDemand: "더 균형 잡힌 수요 구간",
+    exampleTitle: "여행 인사이트 예시",
+    bestTimeToVisit: "방문하기 좋은 시기",
+    bestMonths: "추천 월",
+    avoid: "피해야 할 시기",
+    avoidText: "대형 연휴 주간과 혼잡한 축제 기간",
+    scoreExcellent: "최고의 여행 타이밍",
+    scoreMixed: "복합적인 상황",
+    scoreCrowded: "혼잡하거나 비용 높음",
+    scoreNotRec: "권장하지 않음",
+    finalStep: "마지막 단계",
+    finalTitle: "더 똑똑하게 여행 계획하기",
+  },
+};
+
+const LANDING_EXTRA_EN = {
+  destination: "Destination",
+  destinationWithDates: "Destination: {country} · Dates: {dates}",
+  dateRange: "Date range",
+  scoreOutOf: "/100",
+  festivalLabel: "Festival",
+  weatherLabel: "Weather",
+  crowdsLabel: "Crowds",
+  costImpactLabel: "Cost impact",
+  festivalTiming: "Festival timing",
+  travelRisks: "Travel risks",
+  recommendation: "Recommendation",
+  tryAnotherDestination: "Try another destination",
+  noMajorEvent: "No major event",
+  noMajorEventWindow: "No major event in this window",
+  veryBusyWeekends: "Very busy weekends",
+  manageable: "Manageable",
+  stablePricing: "Stable pricing",
+  hotelSurge: "Hotels +30% to +40%",
+  travelMidweek: "Travel midweek to avoid peak crowds.",
+  balancedTiming: "Current timing looks balanced for value and comfort.",
+  thisDestination: "this destination",
+  defaultBestMonths: "Apr-May, Oct-Nov",
+  exampleCityMonth: "Tokyo - March",
+  cherryBlossomSeason: "Cherry Blossom season",
+  weatherLoadingShort: "Weather loading",
+  rainExpected: "Rain expected tomorrow ({pct}% chance)",
+  rainChance: "Tomorrow rain chance: {pct}%",
+  fxCalculator: "FX calculator",
+  quickCostExample: "Quick cost example",
+  activitiesPlanner: "Activities planner",
+  all: "All",
+  shareTwitter: "Twitter / X",
+  shareReddit: "Reddit",
+  shareInstagram: "Instagram Stories",
+  thingsToAvoidIn: "Things to avoid in {country}",
+  noWarnings: "No destination-specific warnings right now. Still avoid unofficial transport and keep valuables secure.",
+  usefulAppsIn: "Useful apps for traveling in {country}",
+  noAppsYet: "No country-specific app list yet. Core essentials: Google Maps, translation app, and a trusted ride app.",
+  appTransport: "Transport",
+  appMaps: "Maps",
+  appTranslation: "Translation",
+  appFood: "Food",
+  appPayment: "Payment",
+  warningWeather: "Weather",
+  warningCrowds: "Crowds",
+  warningScam: "Scam",
+  warningSeason: "Season",
+  warningSafety: "Safety",
+  planTravelTiming: "Plan Your Travel Timing",
+  seeFestivalWeatherCrowdCost: "See festivals, weather risks, crowds, and real travel cost impact in under 20 seconds.",
+  nightsLabel: "nights",
+  stepLabel: "Step",
+  whereAreYouTraveling: "Where are you traveling?",
+  crowdedSeasonDue: "Crowded season due to {name}.",
+  rainRiskElevated: "Rain risk is elevated ({pct}% chance).",
+  noDisruptions: "No major travel disruptions are flagged right now.",
+  majorSeasonalEvents: "Major seasonal events",
+  tempAndComfort: "Temperature and travel comfort",
+  peakTrafficCongestion: "Peak traffic and congestion",
+  seasonalPricePressure: "Seasonal price pressure",
+  customActivity: "Custom activity",
+  activityName: "Activity name",
+  estimatedCost: "Estimated cost ({currency})",
+  add: "Add",
+  selectedActivities: "Selected activities",
+  tripEstimate: "Trip estimate",
+  hotelPerNight: "Hotel / night ({currency})",
+  hotelCost: "Hotel cost",
+  activityCost: "Activity cost",
+  totalTripCost: "Total trip cost",
+  updatingRate: "Updating rate...",
+  plannerRate: "Planner rate: 1 USD = {rate} {currency}",
+  plannerAvailability: "Activity planner is available for Japan, Thailand, Korea, China, and Singapore.",
+  finalStep: "Final step",
+  planTripSmarter: "Plan Your Trip Smarter",
+  startTravelCalculator: "Start Travel Calculator",
+  remove: "Remove",
+  weatherClear: "Clear",
+  weatherPartlyCloudy: "Partly cloudy",
+  weatherCloudy: "Cloudy",
+  weatherFog: "Fog",
+  weatherDrizzle: "Drizzle",
+  weatherRain: "Rain",
+  weatherSnow: "Snow",
+  weatherStorm: "Thunderstorm",
+  weatherVariable: "Variable",
+  weatherHintRainy: "Where to go: indoor plans today (museums, markets, cafes). Keep outdoor spots for lower-rain windows.",
+  weatherHintHot: "Where to go: early-morning outdoor spots, then shaded areas or indoor activities in the afternoon heat.",
+  weatherHintClear: "Where to go: best day for outdoor attractions, parks, and city walking routes.",
+  weatherHintDefault: "Where to go: mix indoor and outdoor plans, and keep a flexible backup route.",
+  dismiss: "Dismiss",
+};
+
+const LANDING_EXTRA: Record<Lang, Partial<typeof LANDING_EXTRA_EN>> = {
+  en: {},
+  th: {
+    destination: "ปลายทาง",
+    destinationWithDates: "ปลายทาง: {country} · วันที่: {dates}",
+    dateRange: "ช่วงวันที่",
+    festivalLabel: "เทศกาล",
+    weatherLabel: "อากาศ",
+    crowdsLabel: "ความหนาแน่น",
+    costImpactLabel: "ผลกระทบค่าใช้จ่าย",
+    festivalTiming: "ช่วงเทศกาล",
+    travelRisks: "ความเสี่ยงการเดินทาง",
+    recommendation: "คำแนะนำ",
+    tryAnotherDestination: "ลองจุดหมายอื่น",
+    noMajorEvent: "ไม่มีอีเวนต์ใหญ่",
+    noMajorEventWindow: "ไม่มีอีเวนต์ใหญ่ในช่วงนี้",
+    veryBusyWeekends: "สุดสัปดาห์คนแน่นมาก",
+    manageable: "จัดการได้",
+    stablePricing: "ราคาเสถียร",
+    hotelSurge: "โรงแรมเพิ่มขึ้น +30% ถึง +40%",
+    travelMidweek: "แนะนำเดินทางกลางสัปดาห์เพื่อลดความแออัด",
+    balancedTiming: "ช่วงเวลานี้สมดุลทั้งความคุ้มค่าและความสะดวก",
+    thisDestination: "จุดหมายนี้",
+    defaultBestMonths: "เม.ย.-พ.ค., ต.ค.-พ.ย.",
+    exampleCityMonth: "โตเกียว - มีนาคม",
+    cherryBlossomSeason: "ฤดูซากุระ",
+    weatherLoadingShort: "กำลังโหลดอากาศ",
+    rainExpected: "พรุ่งนี้มีฝน ({pct}%)",
+    rainChance: "โอกาสฝนพรุ่งนี้: {pct}%",
+    fxCalculator: "เครื่องคำนวณ FX",
+    quickCostExample: "ตัวอย่างค่าใช้จ่ายแบบเร็ว",
+    activitiesPlanner: "วางแผนกิจกรรม",
+    all: "ทั้งหมด",
+    shareTwitter: "ทวิตเตอร์ / X",
+    shareReddit: "เรดดิต",
+    shareInstagram: "สตอรี่ Instagram",
+    thingsToAvoidIn: "สิ่งที่ควรระวังใน {country}",
+    noWarnings: "ตอนนี้ยังไม่มีคำเตือนเฉพาะประเทศ แต่ควรหลีกเลี่ยงรถที่ไม่เป็นทางการและดูแลทรัพย์สิน",
+    usefulAppsIn: "แอปที่ควรมีเมื่อเที่ยวใน {country}",
+    noAppsYet: "ยังไม่มีรายชื่อแอปเฉพาะประเทศ แนะนำ Google Maps แอปแปลภาษา และแอปเรียกรถที่เชื่อถือได้",
+    appTransport: "การเดินทาง",
+    appMaps: "แผนที่",
+    appTranslation: "แปลภาษา",
+    appFood: "อาหาร",
+    appPayment: "การชำระเงิน",
+    warningWeather: "สภาพอากาศ",
+    warningCrowds: "ความแออัด",
+    warningScam: "มิจฉาชีพ",
+    warningSeason: "ฤดูกาล",
+    warningSafety: "ความปลอดภัย",
+    planTravelTiming: "วางแผนช่วงเวลาเดินทาง",
+    seeFestivalWeatherCrowdCost: "ดูเทศกาล ความเสี่ยงอากาศ ความหนาแน่น และผลกระทบค่าใช้จ่ายได้ในไม่กี่วินาที",
+    nightsLabel: "คืน",
+    stepLabel: "ขั้นตอน",
+    whereAreYouTraveling: "คุณจะไปเที่ยวที่ไหน",
+    crowdedSeasonDue: "เป็นช่วงคนแน่นเพราะ {name}",
+    rainRiskElevated: "ความเสี่ยงฝนสูงขึ้น ({pct}%)",
+    noDisruptions: "ยังไม่มีสัญญาณรบกวนการเดินทางสำคัญในตอนนี้",
+    majorSeasonalEvents: "อีเวนต์ตามฤดูกาล",
+    tempAndComfort: "อุณหภูมิและความสบายในการเดินทาง",
+    peakTrafficCongestion: "ช่วงพีคและความแออัด",
+    seasonalPricePressure: "แรงกดดันด้านราคาตามฤดูกาล",
+    customActivity: "กิจกรรมกำหนดเอง",
+    activityName: "ชื่อกิจกรรม",
+    estimatedCost: "ค่าใช้จ่ายโดยประมาณ ({currency})",
+    add: "เพิ่ม",
+    selectedActivities: "กิจกรรมที่เลือก",
+    tripEstimate: "ประมาณการทริป",
+    hotelPerNight: "โรงแรม / คืน ({currency})",
+    hotelCost: "ค่าโรงแรม",
+    activityCost: "ค่ากิจกรรม",
+    totalTripCost: "ค่าใช้จ่ายรวมทริป",
+    updatingRate: "กำลังอัปเดตเรต...",
+    plannerRate: "เรตสำหรับวางแผน: 1 USD = {rate} {currency}",
+    plannerAvailability: "ตัววางแผนกิจกรรมรองรับ ญี่ปุ่น ไทย เกาหลี จีน และสิงคโปร์",
+    finalStep: "ขั้นตอนสุดท้าย",
+    planTripSmarter: "วางแผนทริปให้ฉลาดขึ้น",
+    startTravelCalculator: "เริ่มคำนวณค่าเดินทาง",
+    remove: "ลบ",
+    weatherClear: "ท้องฟ้าแจ่มใส",
+    weatherPartlyCloudy: "เมฆบางส่วน",
+    weatherCloudy: "มีเมฆมาก",
+    weatherFog: "หมอกลง",
+    weatherDrizzle: "ฝนพรำ",
+    weatherRain: "ฝนตก",
+    weatherSnow: "หิมะตก",
+    weatherStorm: "พายุฝนฟ้าคะนอง",
+    weatherVariable: "แปรปรวน",
+    weatherHintRainy: "แนะนำ: วันนี้เหมาะไปในร่มเช่นพิพิธภัณฑ์ ตลาด หรือคาเฟ่ สำรองสถานที่กลางแจ้งไว้สำหรับช่วงที่ฝนน้อยลง",
+    weatherHintHot: "แนะนำ: ออกไปเช้าตรู่บริเวณกลางแจ้ง จากนั้นหลีกเลี่ยงแดดจัดด้วยการอยู่ในร่มหรือในอาคารช่วงบ่าย",
+    weatherHintClear: "แนะนำ: วันที่ดีสำหรับสถานที่ท่องเที่ยวกลางแจ้ง สวนสาธารณะ และเดินชมเมือง",
+    weatherHintDefault: "แนะนำ: ผสมแผนในร่มและกลางแจ้ง พร้อมสำรองแผนสำรองไว้",
+    dismiss: "ปิด",
+  },
+  es: {
+    destination: "Destino",
+    destinationWithDates: "Destino: {country} · Fechas: {dates}",
+    dateRange: "Rango de fechas",
+    festivalLabel: "Festival",
+    weatherLabel: "Clima",
+    crowdsLabel: "Multitudes",
+    costImpactLabel: "Impacto de costos",
+    festivalTiming: "Temporada de festivales",
+    travelRisks: "Riesgos de viaje",
+    recommendation: "Recomendación",
+    tryAnotherDestination: "Probar otro destino",
+    noMajorEvent: "Sin evento importante",
+    noMajorEventWindow: "Sin eventos importantes en esta ventana",
+    veryBusyWeekends: "Fines de semana muy concurridos",
+    manageable: "Manejable",
+    stablePricing: "Precios estables",
+    hotelSurge: "Hoteles +30% a +40%",
+    travelMidweek: "Viaja entre semana para evitar picos de gente.",
+    balancedTiming: "Este periodo se ve equilibrado en costo y comodidad.",
+    thisDestination: "este destino",
+    defaultBestMonths: "Abr-May, Oct-Nov",
+    exampleCityMonth: "Tokio - Marzo",
+    cherryBlossomSeason: "Temporada de cerezos",
+    weatherLoadingShort: "Cargando clima",
+    rainExpected: "Lluvia esperada mañana ({pct}% prob.)",
+    rainChance: "Probabilidad de lluvia mañana: {pct}%",
+    fxCalculator: "Calculadora FX",
+    quickCostExample: "Ejemplo rápido de costos",
+    activitiesPlanner: "Planificador de actividades",
+    all: "Todo",
+    shareTwitter: "Twitter / X",
+    shareReddit: "Reddit",
+    shareInstagram: "Historias de Instagram",
+    thingsToAvoidIn: "Qué evitar en {country}",
+    noWarnings: "No hay alertas específicas ahora. Evita transporte no oficial y protege tus pertenencias.",
+    usefulAppsIn: "Apps útiles para viajar en {country}",
+    noAppsYet: "Aún no hay lista específica. Esenciales: Google Maps, traductor y app de transporte confiable.",
+    appTransport: "Transporte",
+    appMaps: "Mapas",
+    appTranslation: "Traducción",
+    appFood: "Comida",
+    appPayment: "Pago",
+    warningWeather: "Clima",
+    warningCrowds: "Multitudes",
+    warningScam: "Estafas",
+    warningSeason: "Temporada",
+    warningSafety: "Seguridad",
+    planTravelTiming: "Planifica el momento de tu viaje",
+    seeFestivalWeatherCrowdCost: "Revisa festivales, clima, multitudes e impacto real de costos en menos de 20 segundos.",
+    nightsLabel: "noches",
+    stepLabel: "Paso",
+    whereAreYouTraveling: "¿A dónde viajas?",
+    crowdedSeasonDue: "Temporada concurrida por {name}.",
+    rainRiskElevated: "Riesgo de lluvia elevado ({pct}%).",
+    noDisruptions: "No hay interrupciones importantes de viaje por ahora.",
+    majorSeasonalEvents: "Eventos estacionales importantes",
+    tempAndComfort: "Temperatura y comodidad",
+    peakTrafficCongestion: "Tráfico pico y congestión",
+    seasonalPricePressure: "Presión estacional de precios",
+    customActivity: "Actividad personalizada",
+    activityName: "Nombre de actividad",
+    estimatedCost: "Costo estimado ({currency})",
+    add: "Agregar",
+    selectedActivities: "Actividades seleccionadas",
+    tripEstimate: "Estimación del viaje",
+    hotelPerNight: "Hotel / noche ({currency})",
+    hotelCost: "Costo de hotel",
+    activityCost: "Costo de actividades",
+    totalTripCost: "Costo total del viaje",
+    updatingRate: "Actualizando tipo...",
+    plannerRate: "Tipo del planificador: 1 USD = {rate} {currency}",
+    plannerAvailability: "El planificador está disponible para Japón, Tailandia, Corea, China y Singapur.",
+    finalStep: "Paso final",
+    planTripSmarter: "Planifica tu viaje mejor",
+    startTravelCalculator: "Iniciar calculadora de viaje",
+    remove: "Eliminar",
+    weatherClear: "Despejado",
+    weatherPartlyCloudy: "Parcialmente nublado",
+    weatherCloudy: "Nublado",
+    weatherFog: "Niebla",
+    weatherDrizzle: "Llovizna",
+    weatherRain: "Lluvia",
+    weatherSnow: "Nieve",
+    weatherStorm: "Tormenta",
+    weatherVariable: "Variable",
+    weatherHintRainy: "Consejo: planes de interior hoy (museos, mercados, cafés). Reserva sitios al aire libre para cuando llueva menos.",
+    weatherHintHot: "Consejo: visita lugares al aire libre a primera hora, luego busca zonas con sombra o actividades de interior por el calor.",
+    weatherHintClear: "Consejo: día ideal para atracciones al aire libre, parques y rutas a pie.",
+    weatherHintDefault: "Consejo: combina planes de interior y exterior con una ruta alternativa flexible.",
+    dismiss: "Cerrar",
+  },
+  zh: {
+    destination: "目的地",
+    destinationWithDates: "目的地：{country} · 日期：{dates}",
+    dateRange: "日期范围",
+    festivalLabel: "节日",
+    weatherLabel: "天气",
+    crowdsLabel: "拥挤度",
+    costImpactLabel: "成本影响",
+    festivalTiming: "节日时机",
+    travelRisks: "旅行风险",
+    recommendation: "建议",
+    tryAnotherDestination: "试试其他目的地",
+    noMajorEvent: "暂无重大活动",
+    noMajorEventWindow: "此时间段暂无重大活动",
+    veryBusyWeekends: "周末非常拥挤",
+    manageable: "可接受",
+    stablePricing: "价格稳定",
+    hotelSurge: "酒店上涨 +30% 至 +40%",
+    travelMidweek: "建议在工作日出行，避开高峰人流。",
+    balancedTiming: "当前时机在成本与舒适度上较平衡。",
+    thisDestination: "该目的地",
+    defaultBestMonths: "4-5月，10-11月",
+    exampleCityMonth: "东京 - 3月",
+    cherryBlossomSeason: "樱花季",
+    weatherLoadingShort: "天气加载中",
+    rainExpected: "预计明天有雨（{pct}%）",
+    rainChance: "明天降雨概率：{pct}%",
+    fxCalculator: "FX 计算器",
+    quickCostExample: "快速费用示例",
+    activitiesPlanner: "活动规划",
+    all: "全部",
+    shareTwitter: "Twitter / X",
+    shareReddit: "Reddit",
+    shareInstagram: "Instagram 故事",
+    thingsToAvoidIn: "在 {country} 需要避免",
+    noWarnings: "当前无特定预警。仍请避免非正规交通并注意财物安全。",
+    usefulAppsIn: "在 {country} 旅行实用应用",
+    noAppsYet: "暂无该国家应用清单。建议：Google 地图、翻译应用和可靠叫车应用。",
+    appTransport: "交通",
+    appMaps: "地图",
+    appTranslation: "翻译",
+    appFood: "美食",
+    appPayment: "支付",
+    warningWeather: "天气",
+    warningCrowds: "人流",
+    warningScam: "诈骗",
+    warningSeason: "季节",
+    warningSafety: "安全",
+    planTravelTiming: "规划你的出行时机",
+    seeFestivalWeatherCrowdCost: "20 秒内查看节庆、天气风险、人流和真实成本影响。",
+    nightsLabel: "晚",
+    stepLabel: "步骤",
+    whereAreYouTraveling: "你要去哪里旅行？",
+    crowdedSeasonDue: "因 {name} 进入拥挤季。",
+    rainRiskElevated: "降雨风险升高（{pct}%）。",
+    noDisruptions: "当前未发现重大出行扰动。",
+    majorSeasonalEvents: "重要季节活动",
+    tempAndComfort: "温度与出行舒适度",
+    peakTrafficCongestion: "高峰客流与拥堵",
+    seasonalPricePressure: "季节性价格压力",
+    customActivity: "自定义活动",
+    activityName: "活动名称",
+    estimatedCost: "预估费用（{currency}）",
+    add: "添加",
+    selectedActivities: "已选活动",
+    tripEstimate: "行程估算",
+    hotelPerNight: "酒店 / 晚（{currency}）",
+    hotelCost: "酒店费用",
+    activityCost: "活动费用",
+    totalTripCost: "总行程费用",
+    updatingRate: "正在更新汇率...",
+    plannerRate: "规划汇率: 1 USD = {rate} {currency}",
+    plannerAvailability: "活动规划目前支持日本、泰国、韩国、中国和新加坡。",
+    finalStep: "最后一步",
+    planTripSmarter: "更聪明地规划旅行",
+    startTravelCalculator: "开始旅行计算器",
+    remove: "移除",
+    weatherClear: "晴朗",
+    weatherPartlyCloudy: "局部多云",
+    weatherCloudy: "多云",
+    weatherFog: "雾",
+    weatherDrizzle: "小雨",
+    weatherRain: "雨",
+    weatherSnow: "雪",
+    weatherStorm: "雷暴",
+    weatherVariable: "多变",
+    weatherHintRainy: "建议：今天适合室内活动（博物馆、市场、咖啡馆），将户外行程留待雨少时段。",
+    weatherHintHot: "建议：清晨前往户外景点，下午高温时选择阴凉处或室内活动。",
+    weatherHintClear: "建议：绝佳的户外景点、公园和城市徒步日。",
+    weatherHintDefault: "建议：室内外活动搭配规划，并保留灵活备选路线。",
+    dismiss: "关闭",
+  },
+  ja: {
+    destination: "行き先",
+    destinationWithDates: "行き先: {country} · 日程: {dates}",
+    dateRange: "日程範囲",
+    festivalLabel: "祭り",
+    weatherLabel: "天気",
+    crowdsLabel: "混雑",
+    costImpactLabel: "コスト影響",
+    festivalTiming: "祭りの時期",
+    travelRisks: "旅行リスク",
+    recommendation: "おすすめ",
+    tryAnotherDestination: "別の行き先を試す",
+    noMajorEvent: "大きなイベントなし",
+    noMajorEventWindow: "この期間に大きなイベントはありません",
+    veryBusyWeekends: "週末は非常に混雑",
+    manageable: "許容範囲",
+    stablePricing: "価格は安定",
+    hotelSurge: "ホテル +30%〜+40%",
+    travelMidweek: "混雑を避けるため平日移動がおすすめです。",
+    balancedTiming: "この時期はコストと快適さのバランスが良好です。",
+    thisDestination: "この目的地",
+    defaultBestMonths: "4-5月、10-11月",
+    exampleCityMonth: "東京 - 3月",
+    cherryBlossomSeason: "桜の季節",
+    weatherLoadingShort: "天気読み込み中",
+    rainExpected: "明日は雨予報（{pct}%）",
+    rainChance: "明日の降雨確率: {pct}%",
+    fxCalculator: "FX 計算機",
+    quickCostExample: "クイック費用例",
+    activitiesPlanner: "アクティビティ計画",
+    all: "すべて",
+    shareTwitter: "Twitter / X",
+    shareReddit: "Reddit",
+    shareInstagram: "Instagram ストーリーズ",
+    thingsToAvoidIn: "{country}で注意すべきこと",
+    noWarnings: "現在、特定の警告はありません。非公式交通は避け、貴重品管理を徹底してください。",
+    usefulAppsIn: "{country}旅行で便利なアプリ",
+    noAppsYet: "国別アプリ一覧はまだありません。Google Maps、翻訳、配車アプリを推奨。",
+    appTransport: "交通",
+    appMaps: "地図",
+    appTranslation: "翻訳",
+    appFood: "グルメ",
+    appPayment: "決済",
+    warningWeather: "天気",
+    warningCrowds: "混雑",
+    warningScam: "詐欺",
+    warningSeason: "季節",
+    warningSafety: "安全",
+    planTravelTiming: "旅のタイミングを計画",
+    seeFestivalWeatherCrowdCost: "祭り、天候リスク、混雑、実際の費用影響を20秒で確認。",
+    nightsLabel: "泊",
+    stepLabel: "ステップ",
+    whereAreYouTraveling: "どこへ旅行しますか？",
+    crowdedSeasonDue: "{name}の影響で混雑シーズンです。",
+    rainRiskElevated: "雨リスクが高めです（{pct}%）。",
+    noDisruptions: "現在、大きな旅行混乱はありません。",
+    majorSeasonalEvents: "主要な季節イベント",
+    tempAndComfort: "気温と快適さ",
+    peakTrafficCongestion: "混雑ピークと交通量",
+    seasonalPricePressure: "季節的な価格圧力",
+    customActivity: "カスタムアクティビティ",
+    activityName: "アクティビティ名",
+    estimatedCost: "概算費用（{currency}）",
+    add: "追加",
+    selectedActivities: "選択したアクティビティ",
+    tripEstimate: "旅行見積もり",
+    hotelPerNight: "ホテル / 泊（{currency}）",
+    hotelCost: "ホテル費用",
+    activityCost: "アクティビティ費用",
+    totalTripCost: "旅行総額",
+    updatingRate: "レート更新中...",
+    plannerRate: "計画レート: 1 USD = {rate} {currency}",
+    plannerAvailability: "アクティビティプランナーは日本、タイ、韓国、中国、シンガポールに対応しています。",
+    finalStep: "最終ステップ",
+    planTripSmarter: "より賢く旅を計画",
+    startTravelCalculator: "旅行計算を開始",
+    remove: "削除",
+    weatherClear: "晴れ",
+    weatherPartlyCloudy: "一部曇り",
+    weatherCloudy: "曇り",
+    weatherFog: "霧",
+    weatherDrizzle: "霧雨",
+    weatherRain: "雨",
+    weatherSnow: "雪",
+    weatherStorm: "雷雨",
+    weatherVariable: "不安定",
+    weatherHintRainy: "おすすめ：本日は屋内プラン（博物館・マーケット・カフェ）。雨が少ない時間帯に屋外スポットを楽しみましょう。",
+    weatherHintHot: "おすすめ：早朝に屋外スポットへ。午後の暑さは日陰か屋内アクティビティで過ごしましょう。",
+    weatherHintClear: "おすすめ：屋外観光・公園・街歩きに最適な一日です。",
+    weatherHintDefault: "おすすめ：屋内と屋外のプランを組み合わせ、柔軟なバックアッププランを持っておきましょう。",
+    dismiss: "閉じる",
+  },
+  ko: {
+    destination: "목적지",
+    destinationWithDates: "목적지: {country} · 일정: {dates}",
+    dateRange: "여행 날짜 범위",
+    festivalLabel: "축제",
+    weatherLabel: "날씨",
+    crowdsLabel: "혼잡도",
+    costImpactLabel: "비용 영향",
+    festivalTiming: "축제 시기",
+    travelRisks: "여행 위험",
+    recommendation: "추천",
+    tryAnotherDestination: "다른 목적지 시도",
+    noMajorEvent: "주요 이벤트 없음",
+    noMajorEventWindow: "이 기간에는 큰 이벤트가 없습니다",
+    veryBusyWeekends: "주말 매우 혼잡",
+    manageable: "관리 가능한 수준",
+    stablePricing: "가격 안정",
+    hotelSurge: "호텔 +30%~+40%",
+    travelMidweek: "혼잡을 줄이려면 주중 이동을 권장합니다.",
+    balancedTiming: "현재 시기는 비용과 편의가 균형적입니다.",
+    thisDestination: "이 목적지",
+    defaultBestMonths: "4-5월, 10-11월",
+    exampleCityMonth: "도쿄 - 3월",
+    cherryBlossomSeason: "벚꽃 시즌",
+    weatherLoadingShort: "날씨 로딩 중",
+    rainExpected: "내일 비 예보 ({pct}%)",
+    rainChance: "내일 강수 확률: {pct}%",
+    fxCalculator: "FX 계산기",
+    quickCostExample: "빠른 비용 예시",
+    activitiesPlanner: "액티비티 플래너",
+    all: "전체",
+    shareTwitter: "트위터 / X",
+    shareReddit: "레딧",
+    shareInstagram: "인스타그램 스토리",
+    thingsToAvoidIn: "{country}에서 피해야 할 것",
+    noWarnings: "현재 국가별 경고는 없습니다. 비공식 교통수단은 피하고 소지품을 안전하게 관리하세요.",
+    usefulAppsIn: "{country} 여행에 유용한 앱",
+    noAppsYet: "국가별 앱 목록이 아직 없습니다. Google Maps, 번역 앱, 신뢰할 수 있는 호출 앱을 권장합니다.",
+    appTransport: "교통",
+    appMaps: "지도",
+    appTranslation: "번역",
+    appFood: "음식",
+    appPayment: "결제",
+    warningWeather: "날씨",
+    warningCrowds: "혼잡",
+    warningScam: "사기",
+    warningSeason: "시즌",
+    warningSafety: "안전",
+    planTravelTiming: "여행 타이밍 계획",
+    seeFestivalWeatherCrowdCost: "축제, 날씨 위험, 혼잡도, 실제 비용 영향을 20초 안에 확인하세요.",
+    nightsLabel: "박",
+    stepLabel: "단계",
+    whereAreYouTraveling: "어디로 여행하시나요?",
+    crowdedSeasonDue: "{name} 때문에 혼잡한 시즌입니다.",
+    rainRiskElevated: "비 위험이 높습니다 ({pct}%).",
+    noDisruptions: "현재 큰 여행 차질 신호는 없습니다.",
+    majorSeasonalEvents: "주요 시즌 이벤트",
+    tempAndComfort: "기온과 여행 쾌적도",
+    peakTrafficCongestion: "피크 트래픽과 혼잡",
+    seasonalPricePressure: "시즌별 가격 압력",
+    customActivity: "맞춤 활동",
+    activityName: "활동 이름",
+    estimatedCost: "예상 비용 ({currency})",
+    add: "추가",
+    selectedActivities: "선택한 활동",
+    tripEstimate: "여행 비용 추정",
+    hotelPerNight: "호텔 / 1박 ({currency})",
+    hotelCost: "호텔 비용",
+    activityCost: "활동 비용",
+    totalTripCost: "총 여행 비용",
+    updatingRate: "환율 업데이트 중...",
+    plannerRate: "플래너 환율: 1 USD = {rate} {currency}",
+    plannerAvailability: "액티비티 플래너는 일본, 태국, 한국, 중국, 싱가포르에서 이용 가능합니다.",
+    finalStep: "마지막 단계",
+    planTripSmarter: "더 스마트하게 여행 계획",
+    startTravelCalculator: "여행 계산 시작",
+    remove: "삭제",
+    weatherClear: "맑음",
+    weatherPartlyCloudy: "구름 조금",
+    weatherCloudy: "흐림",
+    weatherFog: "안개",
+    weatherDrizzle: "이슬비",
+    weatherRain: "비",
+    weatherSnow: "눈",
+    weatherStorm: "뇌우",
+    weatherVariable: "변화무쌍",
+    weatherHintRainy: "추천: 오늘은 실내 계획(박물관, 시장, 카페)을 세우고, 비가 줄어드는 시간대에 야외 명소를 방문하세요.",
+    weatherHintHot: "추천: 이른 아침 야외 명소를 방문하고, 오후 더위를 피해 그늘이나 실내 활동을 즐기세요.",
+    weatherHintClear: "추천: 야외 명소, 공원, 도시 도보 여행에 최적의 날입니다.",
+    weatherHintDefault: "추천: 실내외 활동을 혼합하고 유연한 대안 루트를 준비하세요.",
+    dismiss: "닫기",
+  },
+};
+
+function getIsoDateOffset(daysAhead: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + daysAhead);
+  return d.toISOString().slice(0, 10);
+}
+
+function toLocalDate(isoDate: string): Date {
+  return new Date(`${isoDate}T00:00:00`);
+}
+
+function diffNights(startIso: string, endIso: string): number {
+  const msPerDay = 24 * 60 * 60 * 1000;
+  const start = toLocalDate(startIso).getTime();
+  const end = toLocalDate(endIso).getTime();
+  const delta = Math.round((end - start) / msPerDay);
+  return Math.max(1, delta);
+}
+
+function addDaysToIso(isoDate: string, days: number): string {
+  const d = toLocalDate(isoDate);
+  d.setDate(d.getDate() + days);
+  return d.toISOString().slice(0, 10);
+}
+
+function formatDateLabel(isoDate: string, locale: string): string {
+  if (!isoDate) return "";
+  return new Date(`${isoDate}T00:00:00`).toLocaleDateString(locale, {
+    month: "short",
+    day: "numeric",
+  });
+}
+
+function clampScore(score: number): number {
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
+
+function getScoreLabel(score: number, lc: Record<string, string>): string {
+  if (score >= 80) return lc.scoreExcellent ?? "Excellent travel timing";
+  if (score >= 60) return lc.scoreMixed ?? "Mixed conditions";
+  if (score >= 40) return lc.scoreCrowded ?? "Crowded or expensive";
+  return lc.scoreNotRec ?? "Not recommended";
+}
+
+function getScoreTone(score: number): string {
+  if (score >= 80) return "text-emerald-600";
+  if (score >= 60) return "text-yellow-600";
+  if (score >= 40) return "text-orange-600";
+  return "text-rose-600";
+}
+
+function getScorePalette(score: number): { ring: string; inner: string } {
+  if (score >= 80) {
+    return { ring: "bg-emerald-500", inner: "bg-emerald-50 dark:bg-emerald-950/30" };
+  }
+  if (score >= 60) {
+    return { ring: "bg-yellow-500", inner: "bg-yellow-50 dark:bg-yellow-950/30" };
+  }
+  if (score >= 40) {
+    return { ring: "bg-orange-500", inner: "bg-orange-50 dark:bg-orange-950/30" };
+  }
+  return { ring: "bg-rose-500", inner: "bg-rose-50 dark:bg-rose-950/30" };
 }
 
 export default function Home() {
@@ -223,6 +1162,8 @@ export default function Home() {
   }
 
   const t = translations[lang];
+  const lc = LANDING_COPY[lang] ?? LANDING_COPY.en;
+  const lx = { ...LANDING_EXTRA_EN, ...(LANDING_EXTRA[lang] ?? {}) };
 
   const [midRate, setMidRate] = useState<number>(1.0);
   const [rateTimestamp, setRateTimestamp] = useState<string | null>(null);
@@ -254,17 +1195,24 @@ export default function Home() {
   const [customActivityCost, setCustomActivityCost] = useState("");
   const [travelNights, setTravelNights] = useState(5);
   const [hotelPerNight, setHotelPerNight] = useState(120);
-  const [activeDashboardTab, setActiveDashboardTab] = useState("festival-calendar");
+  const [travelStartDate, setTravelStartDate] = useState(() => getIsoDateOffset(21));
+  const [travelEndDate, setTravelEndDate] = useState(() => getIsoDateOffset(27));
+  const [showShareLinks, setShowShareLinks] = useState(false);
+  const [exploreFilter, setExploreFilter] = useState<ExploreFilter>("all");
+  const earliestTravelDate = getIsoDateOffset(0);
+  const minTravelEndDate = travelStartDate > earliestTravelDate ? travelStartDate : earliestTravelDate;
+  const selectedNights = diffNights(travelStartDate, travelEndDate);
 
-  const dashboardTabs = [
-    { id: "festival-calendar", label: "Festival" },
-    { id: "weather-section", label: "Weather" },
-    { id: "warnings-section", label: "Risks" },
-    { id: "updates-section", label: "Updates" },
-    { id: "calculator-section", label: "Calculator" },
-    { id: "apps-section", label: "Apps" },
-    { id: "planner-section", label: "Planner" },
-  ] as const;
+  const exploreFilters: Array<{ id: ExploreFilter; label: string; targetId: string }> = [
+    { id: "all", label: lc.allInsights, targetId: "festival-calendar" },
+    { id: "festival", label: lc.festival, targetId: "festival-calendar" },
+    { id: "weather", label: lc.weather, targetId: "weather-section" },
+    { id: "risks", label: lc.risks, targetId: "warnings-section" },
+    { id: "cost", label: lc.cost, targetId: "updates-section" },
+    { id: "calculator", label: lx.fxCalculator, targetId: "calculator-section" },
+    { id: "apps", label: lc.apps, targetId: "apps-section" },
+    { id: "planner", label: lc.planner, targetId: "planner-section" },
+  ];
 
   const destCurrency = selectedCountry?.currency;
   const canSwap =
@@ -329,8 +1277,41 @@ export default function Home() {
   }
 
   function jumpToSection(sectionId: string) {
-    setActiveDashboardTab(sectionId);
+    const section = document.getElementById(sectionId);
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
   }
+
+  function handleTravelStartDateChange(nextStart: string) {
+    if (!nextStart) return;
+    const currentNights = diffNights(travelStartDate, travelEndDate);
+    const clampedStart = nextStart < earliestTravelDate ? earliestTravelDate : nextStart;
+    setTravelStartDate(clampedStart);
+    setTravelEndDate(addDaysToIso(clampedStart, currentNights));
+  }
+
+  function handleTravelEndDateChange(nextEnd: string) {
+    if (!nextEnd) return;
+    if (nextEnd < minTravelEndDate) {
+      setTravelEndDate(minTravelEndDate);
+      return;
+    }
+    setTravelEndDate(nextEnd);
+  }
+
+  useEffect(() => {
+    if (travelStartDate < earliestTravelDate) {
+      const currentNights = diffNights(travelStartDate, travelEndDate);
+      setTravelStartDate(earliestTravelDate);
+      setTravelEndDate(addDaysToIso(earliestTravelDate, currentNights));
+      return;
+    }
+
+    if (travelEndDate < minTravelEndDate) {
+      setTravelEndDate(minTravelEndDate);
+    }
+  }, [earliestTravelDate, minTravelEndDate, travelEndDate, travelStartDate]);
 
   // Fetch live FX rate; re-runs whenever the destination currency or home currency changes
   useEffect(() => {
@@ -473,7 +1454,7 @@ export default function Home() {
   const activityCost =
     selectedBaseActivities.reduce((sum, item) => sum + toHomeCurrency(item.estimatedCost), 0) +
     customActivities.reduce((sum, item) => sum + toHomeCurrency(item.estimatedCostUsd), 0);
-  const hotelCost = toHomeCurrency(hotelPerNight) * travelNights;
+  const hotelCost = toHomeCurrency(hotelPerNight) * Math.max(1, travelNights);
   const totalTripCost = hotelCost + activityCost;
 
   /** Format rate — use more decimals for small-unit currencies */
@@ -497,53 +1478,88 @@ export default function Home() {
             <div>
               <p className="text-blue-200 text-sm font-medium mb-1">{t.forTravelers}</p>
               <h1 className="text-2xl font-bold text-white leading-tight">
-                {t.title}
+                {lc.heroTitle}
               </h1>
               <p className="text-blue-100 text-sm mt-1">
-                {t.subtitle}
+                {lc.heroSubtitle}
               </p>
             </div>
             <div className="flex items-center gap-2">
             </div>
           </div>
 
-          <div className="mt-4 rounded-xl border border-white/20 bg-white/10 p-5">
-            <p className="text-lg font-semibold text-white">
-              Travel overview for {selectedCountry?.name}
+          <section className="mt-5 rounded-3xl border border-white/20 bg-white/10 px-5 py-6 backdrop-blur-sm">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-blue-200">TravelWiseRate</p>
+            <h2 className="mt-2 text-xl font-extrabold text-white leading-tight">
+              {lx.planTravelTiming}
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-blue-100">
+              {lx.seeFestivalWeatherCrowdCost}
             </p>
-            <p className="mt-2 text-sm text-blue-100 leading-relaxed">
-              We help travelers understand the real cost of paying abroad.
-            </p>
-            <div className="mt-3 rounded-lg bg-black/10 px-3 py-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-blue-200">Compare</p>
-              <ul className="mt-1.5 space-y-1 text-sm text-blue-100">
-                <li>• FX conversion fees</li>
-                <li>• Bank card fees</li>
-                <li>• ATM withdrawal costs</li>
-                <li>• Hidden currency markups</li>
-              </ul>
-            </div>
-            <p className="mt-3 text-xs text-blue-100">
-              Use the calculator below to estimate your real travel spending.
-            </p>
-          </div>
 
-          <Link
-            href="/where-to-travel"
-            className="mt-3 block rounded-2xl border border-white/25 bg-white/10 px-4 py-3 hover:bg-white/20 transition-colors"
-          >
-            <p className="text-[11px] font-semibold uppercase tracking-widest text-blue-200">
-              ✨ Where should you travel with this budget?
-            </p>
-            <p className="mt-1 text-sm font-semibold text-white">
-              🌍 Discover best-value destinations and the best travel timing.
-            </p>
-            <p className="mt-1 text-xs text-blue-100">🧭 Open Where to Travel →</p>
-          </Link>
+            <div className="mt-4 rounded-2xl border border-white/25 bg-white/10 p-3">
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <p className="text-[11px] font-semibold uppercase tracking-widest text-blue-200">{lx.dateRange}</p>
+                <p className="text-[11px] font-semibold text-blue-100">{selectedNights} {lx.nightsLabel}</p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-2 items-end">
+                <div>
+                  <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-blue-200">{lc.travelStart}</p>
+                  <input
+                    type="date"
+                    min={earliestTravelDate}
+                    value={travelStartDate}
+                    onChange={(e) => handleTravelStartDateChange(e.target.value)}
+                    className="w-full rounded-xl border border-white/25 bg-white/15 px-3 py-2 text-sm text-white"
+                  />
+                </div>
+                <div className="hidden sm:flex items-center justify-center px-1 pb-2 text-blue-100 text-sm">→</div>
+                <div>
+                  <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-blue-200">{lc.travelEnd}</p>
+                  <input
+                    type="date"
+                    min={minTravelEndDate}
+                    value={travelEndDate}
+                    onChange={(e) => handleTravelEndDateChange(e.target.value)}
+                    className="w-full rounded-xl border border-white/25 bg-white/15 px-3 py-2 text-sm text-white"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <a
+              href="#calculator-section"
+              className="mt-5 inline-flex w-full items-center justify-center rounded-2xl bg-white px-4 py-3 text-sm font-extrabold text-blue-900 hover:bg-blue-50 transition-colors"
+            >
+              {lc.startCalculator}
+            </a>
+            <p className="mt-2 text-center text-xs text-blue-100">{lc.helper}</p>
+            <a href="#example-travel-insight" className="mt-2 inline-flex text-sm font-semibold text-blue-100 hover:text-white">
+              {lc.seeExample}
+            </a>
+          </section>
+
+          <section className="mt-4 space-y-2">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-blue-200">{lc.howWorks}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="rounded-2xl bg-white/90 dark:bg-gray-900 px-4 py-3">
+              <p className="text-xs font-semibold text-blue-700">{lx.stepLabel} 1</p>
+              <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-gray-100">{lc.step1}</p>
+            </div>
+            <div className="rounded-2xl bg-white/90 dark:bg-gray-900 px-4 py-3">
+              <p className="text-xs font-semibold text-blue-700">{lx.stepLabel} 2</p>
+              <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-gray-100">{lc.step2}</p>
+            </div>
+            <div className="rounded-2xl bg-white/90 dark:bg-gray-900 px-4 py-3">
+              <p className="text-xs font-semibold text-blue-700">{lx.stepLabel} 3</p>
+              <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-gray-100">{lc.step3}</p>
+            </div>
+            </div>
+          </section>
 
           <div className="mt-4 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-sm">
             <p className="text-[11px] font-semibold text-blue-200 uppercase tracking-widest">
-              🛫 Where are you traveling?
+              🛫 {lx.whereAreYouTraveling}
             </p>
 
             <div className="mt-3">
@@ -563,217 +1579,228 @@ export default function Home() {
 
           <div className="mt-5 rounded-2xl border border-black/5 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-3 shadow-sm">
             <p className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
-              Destination
+              {lx.destination}
             </p>
             <p className="mt-1 text-lg font-bold text-gray-900 dark:text-gray-100">
               {selectedCountry?.flag} {selectedCountry?.name}
             </p>
           </div>
 
-          {/* Live FX rate card */}
-          <div className="mt-4 rounded-2xl border border-black/5 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-3 shadow-sm">
-            {rateLoading ? (
-              <span className="text-gray-500 dark:text-gray-400 text-xs">{t.loadingRate}</span>
-            ) : (
-              <>
-                {/* Rate row */}
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                    1 {currency} = {formatRate(midRate, currency)} {homeCurrency}
-                  </span>
-                  <span
-                    title="อัตรากลางจากตลาด (Mid-market rate) อาจแตกต่างจากอัตราที่ธนาคารเรียกเก็บจริง"
-                    className={`cursor-help text-xs px-1.5 py-0.5 rounded-full font-medium ${
-                      rateFallback
-                        ? "bg-yellow-400 text-yellow-900"
-                        : "bg-green-400 text-green-900"
-                    }`}
-                  >
-                    {rateFallback ? t.indicativeRate : t.liveRate}
-                  </span>
-                </div>
-                {/* Source row */}
-                <div className="mt-1 space-y-0.5">
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    {t.fxSourceLabel} exchangerate.host (mid-market rate)
-                  </p>
-                  {rateTimestamp && (
-                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                      {t.fxUpdatedLabel}{" "}
-                      {new Date(rateTimestamp).toLocaleString("en", {
-                        day: "numeric",
-                        month: "short",
-                        year: "numeric",
-                        hour: "2-digit",
-                        minute: "2-digit",
-                      })}
-                    </p>
-                  )}
-                </div>
-              </>
-            )}
-          </div>
-
           {/* Destination context dashboard */}
           {(() => {
             const guideCountry = CODE_TO_COUNTRY[country];
             const festivalKey = COUNTRY_CODE_TO_GUIDE[country];
-            const currentMonth = new Date().getMonth();
+            const selectedTravelMonth = travelStartDate
+              ? new Date(`${travelStartDate}T00:00:00`).getMonth()
+              : new Date().getMonth();
+            const shortMonths = Array.from({ length: 12 }, (_, i) =>
+              new Date(2026, i, 1).toLocaleDateString(lang, { month: "short" })
+            );
             const monthsWithFestivals = festivalKey
               ? Array.from({ length: 12 }, (_, i) => getFestivalsForMonth(i, festivalKey))
               : [];
-            const shortMonths = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-            const thisMonthFestivals = festivalKey ? getFestivalsForMonth(currentMonth, festivalKey) : [];
+            const thisMonthFestivals = festivalKey ? getFestivalsForMonth(selectedTravelMonth, festivalKey) : [];
             const highCrowdNow = thisMonthFestivals.filter((f) => f.crowdLevel === "high" && f.priceImpact);
-            const seasonalHighlights = getSeasonalHighlights(country, currentMonth);
+            const seasonalHighlights = getSeasonalHighlights(country, selectedTravelMonth);
 
             const travelUpdates: string[] = [];
             if (highCrowdNow.length > 0) {
-              travelUpdates.push(`Crowded travel season due to ${highCrowdNow[0].name}.`);
+              travelUpdates.push(lx.crowdedSeasonDue.replace("{name}", highCrowdNow[0].name));
             }
             if (weather && weather.tomorrowRain >= 55) {
-              travelUpdates.push(`Rain risk is elevated tomorrow (${weather.tomorrowRain}% chance).`);
+              travelUpdates.push(lx.rainRiskElevated.replace("{pct}", String(weather.tomorrowRain)));
             }
             const safetyWarning = countryWarnings.find((w) => w.category === "safety" || w.category === "scam");
             if (safetyWarning) {
               travelUpdates.push(safetyWarning.message);
             }
             if (travelUpdates.length === 0) {
-              travelUpdates.push("No major travel disruptions are flagged right now.");
+              travelUpdates.push(lx.noDisruptions);
             }
 
             const firstFestival = thisMonthFestivals[0];
             const keyRisk = countryWarnings.find((w) => w.category === "scam" || w.category === "safety") ?? countryWarnings[0];
             const weatherSummary = weather
-              ? `${weather.currentTemp}C · ${getWeatherLabel(weather.currentCode)}`
-              : "Weather loading";
+              ? `${weather.currentTemp}C - ${getWeatherLabel(weather.currentCode, lx)}`
+              : lx.weatherLoadingShort;
 
             const budgetMonths = festivalKey
               ? getBudgetMonths(festivalKey)
-                  .filter((m) => m !== currentMonth)
+                  .filter((m) => m !== selectedTravelMonth)
                   .slice(0, 3)
-                  .map((m) => shortMonths[m])
               : [];
 
+            let travelTimingScore = 84;
+            if (thisMonthFestivals.length > 0) travelTimingScore -= 6;
+            if (highCrowdNow.length > 0) travelTimingScore -= 16;
+            if (thisMonthFestivals.some((f) => f.priceImpact)) travelTimingScore -= 12;
+            if (countryWarnings.length > 0) travelTimingScore -= Math.min(14, countryWarnings.length * 4);
+            if (weather) {
+              if (weather.tomorrowRain >= 60) travelTimingScore -= 10;
+              if (weather.currentTemp >= 12 && weather.currentTemp <= 28) travelTimingScore += 4;
+              if (weather.currentTemp >= 34 || weather.currentTemp <= 2) travelTimingScore -= 4;
+            }
+            if (budgetMonths.length > 0) travelTimingScore += 2;
+
+            const normalizedScore = clampScore(travelTimingScore);
+            const scoreLabel = getScoreLabel(normalizedScore, lc);
+            const scoreTone = getScoreTone(normalizedScore);
+            const scorePalette = getScorePalette(normalizedScore);
+            const selectedRangeLabel = `${formatDateLabel(travelStartDate, lang)} - ${formatDateLabel(travelEndDate, lang)}`;
+            const altMonth = budgetMonths[0];
+            const altRangeLabel = altMonth !== undefined ? `${shortMonths[altMonth]} 8 - ${shortMonths[altMonth]} 12` : null;
+            const altScore = clampScore(normalizedScore + (altMonth !== undefined ? 18 : 0));
+
+            const shareText = encodeURIComponent(
+              `${selectedCountry?.name ?? "Destination"} ${selectedRangeLabel}\nTravel Timing Score: ${normalizedScore}/100\n${scoreLabel}`
+            );
+
+            const showFestival = exploreFilter === "all" || exploreFilter === "festival";
+            const showWeather = exploreFilter === "all" || exploreFilter === "weather";
+            const showRisks = exploreFilter === "all" || exploreFilter === "risks";
+            const showCost = exploreFilter === "all" || exploreFilter === "cost";
+            const showCalculator = exploreFilter === "all" || exploreFilter === "calculator";
+            const showApps = exploreFilter === "all" || exploreFilter === "apps";
+            const showPlanner = exploreFilter === "all" || exploreFilter === "planner";
+
             return (
-              <div className="mt-4 space-y-3">
-                <section className="rounded-2xl border border-black/5 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Start here</p>
-                      <p className="mt-1 text-sm font-bold text-gray-900 dark:text-gray-100">See your trip timing, risks, and real cost in under 20 seconds.</p>
+              <div className="mt-8 space-y-6">
+                <section className="rounded-3xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-5 py-5 shadow-md">
+                    <p className="text-[11px] font-semibold uppercase tracking-widest text-blue-600">{lc.scoreTitle}</p>
+                  <div className="mt-5 grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 items-start">
+                    <div className="space-y-3">
+                      <div className={`mx-auto h-40 w-40 rounded-full p-2 ${scorePalette.ring}`}>
+                        <div className={`h-full w-full rounded-full flex flex-col items-center justify-center ${scorePalette.inner}`}>
+                          <p className={`text-6xl leading-none font-black ${scoreTone}`}>{normalizedScore}</p>
+                          <p className="mt-1 text-xs font-semibold text-gray-500 dark:text-gray-400">/100</p>
+                        </div>
+                      </div>
+                      <p className={`text-center text-sm font-bold ${scoreTone}`}>{scoreLabel}</p>
+                      <button
+                        onClick={() => setShowShareLinks((prev) => !prev)}
+                        className="w-full rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 text-sm font-semibold"
+                      >
+                        {lc.shareMyTiming}
+                      </button>
+                      {showShareLinks && (
+                        <div className="flex flex-wrap gap-2 text-xs">
+                          <a href={`https://twitter.com/intent/tweet?text=${shareText}`} target="_blank" rel="noreferrer" className="rounded-full bg-[#111827] text-white px-3 py-1.5">{lx.shareTwitter}</a>
+                          <a href={`https://www.reddit.com/submit?title=My%20Travel%20Timing%20Score&text=${shareText}`} target="_blank" rel="noreferrer" className="rounded-full bg-[#ff4500] text-white px-3 py-1.5">{lx.shareReddit}</a>
+                          <a href={`https://www.instagram.com/`} target="_blank" rel="noreferrer" className="rounded-full bg-[#E1306C] text-white px-3 py-1.5">{lx.shareInstagram}</a>
+                        </div>
+                      )}
                     </div>
-                    <a
-                      href="#calculator-section"
-                      className="shrink-0 rounded-full bg-blue-600 px-3 py-1.5 text-[11px] font-semibold text-white hover:bg-blue-700 transition-colors"
-                    >
-                      Start calculator
-                    </a>
+
+                    <div>
+                      <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                        {lx.destinationWithDates
+                          .replace("{country}", selectedCountry?.name ?? "")
+                          .replace("{dates}", selectedRangeLabel)}
+                      </p>
+                      <div className="mt-5 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                        <div className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-3">
+                          <p className="font-semibold text-gray-900 dark:text-gray-100">{lx.festivalLabel}</p>
+                          <p className="mt-0.5 text-gray-600 dark:text-gray-300">{lx.majorSeasonalEvents}</p>
+                          <p className="mt-1 font-semibold text-gray-800 dark:text-gray-100">{firstFestival ? firstFestival.name : lx.noMajorEvent}</p>
+                        </div>
+                        <div className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-3">
+                          <p className="font-semibold text-gray-900 dark:text-gray-100">{lx.weatherLabel}</p>
+                          <p className="mt-0.5 text-gray-600 dark:text-gray-300">{lx.tempAndComfort}</p>
+                          <p className="mt-1 font-semibold text-gray-800 dark:text-gray-100">{weatherSummary}</p>
+                        </div>
+                        <div className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-3">
+                          <p className="font-semibold text-gray-900 dark:text-gray-100">{lx.crowdsLabel}</p>
+                          <p className="mt-0.5 text-gray-600 dark:text-gray-300">{lx.peakTrafficCongestion}</p>
+                          <p className="mt-1 font-semibold text-gray-800 dark:text-gray-100">{highCrowdNow.length > 0 ? lx.veryBusyWeekends : lx.manageable}</p>
+                        </div>
+                        <div className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-3">
+                          <p className="font-semibold text-gray-900 dark:text-gray-100">{lx.costImpactLabel}</p>
+                          <p className="mt-0.5 text-gray-600 dark:text-gray-300">{lx.seasonalPricePressure}</p>
+                          <p className="mt-1 font-semibold text-gray-800 dark:text-gray-100">{highCrowdNow.length > 0 ? lx.hotelSurge : lx.stablePricing}</p>
+                        </div>
+                      </div>
+                      <p className="mt-4 text-xs text-gray-600 dark:text-gray-300">
+                        {lx.recommendation}: {highCrowdNow.length > 0 ? lx.travelMidweek : lx.balancedTiming}
+                      </p>
+
+                      <div className="mt-4">
+                        <p className="text-xs font-semibold text-gray-600 dark:text-gray-300">{lx.tryAnotherDestination}</p>
+                        <div className="mt-2 flex flex-wrap gap-2">
+                          {[
+                            { label: "Tokyo", code: "JP" },
+                            { label: "Kyoto", code: "JP" },
+                            { label: "Seoul", code: "KR" },
+                            { label: "Paris", code: "FR" },
+                            { label: "Bangkok", code: "TH" },
+                          ].map((quick) => (
+                            <button
+                              key={`${quick.label}-${quick.code}`}
+                              onClick={() => handleCountryChange(quick.code)}
+                              className="rounded-full border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-200"
+                            >
+                              {quick.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
-                  <div className="mt-3 grid grid-cols-2 gap-2">
-                    <a href="#festival-calendar" className="rounded-xl border border-black/5 dark:border-gray-700 bg-[#f5f7fb] dark:bg-gray-800/70 px-3 py-2 hover:bg-blue-50 transition-colors">
-                      <p className="text-[10px] uppercase tracking-wide text-gray-500 dark:text-gray-400">Festival timing</p>
-                      <p className="mt-1 text-xs font-semibold text-gray-800 dark:text-gray-100 line-clamp-2">
-                        {firstFestival ? `${firstFestival.emoji} ${firstFestival.name}` : "Check best months to avoid peaks"}
+                  <div className="mt-6 rounded-2xl border border-blue-100 dark:border-blue-900 bg-blue-50/80 dark:bg-blue-950/40 px-4 py-3">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-blue-700 dark:text-blue-300">{lc.smartAlt}</p>
+                    <p className="mt-1 text-sm text-gray-800 dark:text-gray-100">{lc.yourSelectedDates}: {selectedRangeLabel} · Score: {normalizedScore}</p>
+                    {altRangeLabel ? (
+                      <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-gray-100">
+                        {lc.betterOption}: {altRangeLabel} · Score: {altScore}
                       </p>
-                    </a>
-                    <a href="#weather-section" className="rounded-xl border border-black/5 dark:border-gray-700 bg-[#f5f7fb] dark:bg-gray-800/70 px-3 py-2 hover:bg-blue-50 transition-colors">
-                      <p className="text-[10px] uppercase tracking-wide text-gray-500 dark:text-gray-400">Weather route</p>
-                      <p className="mt-1 text-xs font-semibold text-gray-800 dark:text-gray-100 line-clamp-2">{weatherSummary}</p>
-                    </a>
-                    <a href="#warnings-section" className="rounded-xl border border-black/5 dark:border-gray-700 bg-[#f5f7fb] dark:bg-gray-800/70 px-3 py-2 hover:bg-blue-50 transition-colors">
-                      <p className="text-[10px] uppercase tracking-wide text-gray-500 dark:text-gray-400">Risk alerts</p>
-                      <p className="mt-1 text-xs font-semibold text-gray-800 dark:text-gray-100 line-clamp-2">
-                        {keyRisk ? keyRisk.message : "No major destination warning right now"}
-                      </p>
-                    </a>
-                    <a href="#updates-section" className="rounded-xl border border-black/5 dark:border-gray-700 bg-[#f5f7fb] dark:bg-gray-800/70 px-3 py-2 hover:bg-blue-50 transition-colors">
-                      <p className="text-[10px] uppercase tracking-wide text-gray-500 dark:text-gray-400">Money impact</p>
-                      <p className="mt-1 text-xs font-semibold text-gray-800 dark:text-gray-100 line-clamp-2">{travelUpdates[0]}</p>
-                    </a>
-                  </div>
-                  <div className="mt-3 flex flex-wrap gap-1.5">
-                    <div role="tablist" aria-label="Travel dashboard sections" className="flex w-full gap-1.5 overflow-x-auto pb-1">
-                      {dashboardTabs.map((tab) => {
-                        const active = activeDashboardTab === tab.id;
-                        return (
-                          <button
-                            key={tab.id}
-                            role="tab"
-                            aria-selected={active}
-                            onClick={() => jumpToSection(tab.id)}
-                            className={`shrink-0 rounded-full border px-3 py-1 text-[11px] font-semibold transition-colors ${
-                              active
-                                ? "border-blue-600 bg-blue-600 text-white"
-                                : "border-black/10 bg-white dark:border-gray-700 dark:bg-gray-900 text-gray-700 dark:text-gray-200 hover:bg-gray-100"
-                            }`}
-                          >
-                            {tab.label}
-                          </button>
-                        );
-                      })}
-                    </div>
+                    ) : (
+                      <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-gray-100">{lc.alreadyGood}</p>
+                    )}
+                    <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">{lc.altReason}</p>
                   </div>
                 </section>
 
-                {festivalKey && (
-                  <section
-                    id="festival-calendar"
-                    className={`${activeDashboardTab === "festival-calendar" ? "block" : "hidden"} rounded-2xl border border-black/5 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm`}
-                  >
-                    <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">
-                      🎉 Festival calendar — {selectedCountry?.name}
-                    </p>
-                    <div className="flex gap-1.5 overflow-x-auto pb-1 scrollbar-none">
+                <section className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
+                  <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">{lc.exploreInsights}</p>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {exploreFilters.map((item) => (
+                      <button
+                        key={item.id}
+                        onClick={() => {
+                          setExploreFilter(item.id);
+                          jumpToSection(item.targetId);
+                        }}
+                        className={`rounded-full border px-3 py-1.5 text-xs font-semibold transition-colors ${
+                          exploreFilter === item.id
+                            ? "border-blue-600 bg-blue-600 text-white"
+                            : "border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-700 dark:text-gray-200"
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    ))}
+                  </div>
+                </section>
+
+                {showFestival && festivalKey && (
+                  <section id="festival-calendar" className="rounded-3xl border border-purple-200 dark:border-purple-900 bg-gradient-to-br from-purple-50 to-indigo-50 dark:from-gray-900 dark:to-purple-950 px-5 py-5 shadow-sm">
+                    <p className="text-xs font-semibold uppercase tracking-widest text-purple-700 dark:text-purple-300">{lc.festivalCalendar} - {selectedCountry?.name}</p>
+                    <p className="mt-1 text-sm text-gray-700 dark:text-gray-200">{lc.festivalDesc}</p>
+                    <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
                       {shortMonths.map((m, i) => {
                         const festivals = monthsWithFestivals[i];
                         const hasFestival = festivals.length > 0;
-                        const isNow = i === currentMonth;
+                        const isTravelMonth = i === selectedTravelMonth;
+                        const base = isTravelMonth
+                          ? "bg-purple-600 text-white ring-2 ring-purple-300"
+                          : hasFestival
+                            ? "bg-purple-200 text-purple-900"
+                            : "bg-white/90 dark:bg-gray-800 text-gray-500 dark:text-gray-300";
+                        const tag = hasFestival ? festivals[0].emoji : "";
                         return (
-                          <div key={i} className="relative shrink-0">
-                            {hasFestival ? (
-                              guideCountry ? (
-                                <Link
-                                  href={`/${lang}/how-to-pay/${guideCountry}#festivals`}
-                                  title={festivals.map((f) => f.name).join(", ")}
-                                  className={`flex flex-col items-center rounded-xl px-2.5 py-2 text-center transition-all ${
-                                    isNow
-                                      ? "bg-purple-500 text-white shadow-lg shadow-purple-500/40 ring-2 ring-purple-300/50"
-                                      : "bg-purple-500/35 hover:bg-purple-500/55 text-white border border-purple-400/40"
-                                  }`}
-                                >
-                                  <span className="text-[10px] font-bold leading-none">{m}</span>
-                                  <span className="text-[13px] leading-none mt-1">{festivals[0].emoji}</span>
-                                </Link>
-                              ) : (
-                                <div
-                                  title={festivals.map((f) => f.name).join(", ")}
-                                  className={`flex flex-col items-center rounded-xl px-2.5 py-2 text-center ${
-                                    isNow
-                                      ? "bg-purple-500 text-white shadow-lg shadow-purple-500/40 ring-2 ring-purple-300/50"
-                                      : "bg-purple-500/35 text-white border border-purple-400/40"
-                                  }`}
-                                >
-                                  <span className="text-[10px] font-bold leading-none">{m}</span>
-                                  <span className="text-[13px] leading-none mt-1">{festivals[0].emoji}</span>
-                                </div>
-                              )
-                            ) : (
-                              <div
-                                className={`flex flex-col items-center rounded-xl px-2.5 py-2 text-center border ${
-                                  isNow
-                                    ? "bg-gray-200 text-gray-800 dark:text-gray-100 border-gray-300"
-                                    : "bg-[#f5f7fb] dark:bg-gray-800/70 text-gray-500 dark:text-gray-400 border-black/5"
-                                }`}
-                              >
-                                <span className="text-[10px] font-bold leading-none">{m}</span>
-                                <span className="text-[13px] leading-none mt-1 opacity-0">·</span>
-                              </div>
-                            )}
-                            {isNow && (
-                              <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-white shadow-sm shadow-white/50" />
-                            )}
+                          <div key={m} className={`shrink-0 rounded-xl px-3 py-2 text-center min-w-[64px] ${base}`}>
+                            <p className="text-[11px] font-bold">{m}</p>
+                            <p className="text-sm mt-0.5">{tag || "-"}</p>
                           </div>
                         );
                       })}
@@ -781,73 +1808,138 @@ export default function Home() {
                   </section>
                 )}
 
-                <section
-                  id="weather-section"
-                  className={`${activeDashboardTab === "weather-section" ? "block" : "hidden"} rounded-2xl border border-black/5 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm`}
-                >
-                  <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Weather</p>
-                  <h3 className="mt-1 text-sm font-bold text-gray-900 dark:text-gray-100">Weather in {selectedCountry?.name}</h3>
-                  {weatherLoading ? (
-                    <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">Loading weather...</p>
-                  ) : weatherError || !weather ? (
-                    <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">{weatherError ?? "Weather unavailable"}</p>
-                  ) : (
-                    <div className="mt-2 space-y-3">
-                      <div className="rounded-xl bg-[#f5f7fb] dark:bg-gray-800/70 px-3 py-2.5">
-                        <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                          {weather.location}: {weather.currentTemp}C • {getWeatherLabel(weather.currentCode)}
-                        </p>
-                        <p className="mt-0.5 text-xs text-gray-600 dark:text-gray-300">
-                          {weather.tomorrowRain >= 55
-                            ? `Rain expected tomorrow (${weather.tomorrowRain}% chance)`
-                            : `Tomorrow rain chance: ${weather.tomorrowRain}%`}
-                        </p>
-                      </div>
-                      <div className="grid grid-cols-5 gap-1.5">
-                        {weather.forecast.map((day) => {
-                          const weekday = new Date(day.date).toLocaleDateString("en", { weekday: "short" });
+                {showWeather && (
+                  <section id="weather-section" className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
+                    <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{lc.weatherInsights}</p>
+                    <h3 className="mt-1 text-base font-bold text-gray-900 dark:text-gray-100">{lc.weatherConditions} {selectedCountry?.name}</h3>
+                    {weatherLoading ? (
+                      <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">{lc.loadingWeather}</p>
+                    ) : weatherError || !weather ? (
+                      <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">{weatherError ?? lc.weatherUnavailable}</p>
+                    ) : (
+                      <div className="mt-2 space-y-3">
+                        <div className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-3">
+                          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                            {weather.location}: {weather.currentTemp}C - {getWeatherLabel(weather.currentCode, lx)}
+                          </p>
+                          <p className="mt-0.5 text-xs text-gray-600 dark:text-gray-300">
+                            {weather.tomorrowRain >= 55
+                              ? lx.rainExpected.replace("{pct}", String(weather.tomorrowRain))
+                              : lx.rainChance.replace("{pct}", String(weather.tomorrowRain))}
+                          </p>
+                        </div>
+                        <div className="grid grid-cols-5 gap-1.5">
+                          {weather.forecast.map((day) => {
+                            const weekday = new Date(day.date).toLocaleDateString(lang, { weekday: "short" });
+                            return (
+                              <div key={day.date} className="rounded-lg bg-slate-50 dark:bg-gray-800 px-1.5 py-2 text-center">
+                                <p className="text-[10px] font-semibold text-gray-600 dark:text-gray-300">{weekday}</p>
+                                <p className="mt-0.5 text-[10px] text-gray-900 dark:text-gray-100">{day.max}°/{day.min}°</p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        <div className="rounded-xl border border-black/10 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 px-3 py-2.5">
+                          <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{lc.travelComfort}</p>
+                          <p className="mt-1 text-xs leading-relaxed text-gray-700 dark:text-gray-200">{getWeatherPlanHint(weather, lx)}</p>
+                        </div>
+                        {(() => {
+                          const raw = selectedDestination?.flightPriceEstimate;
+                          if (!raw || usdRateLoading) return null;
+                          const nums = raw.replace(/[$,]/g, "").split(/[\u2013\u2014\-]/);
+                          const lo = Number(nums[0]?.trim());
+                          const hi = Number(nums[1]?.trim());
+                          if (!lo || !hi) return null;
                           return (
-                            <div key={day.date} className="rounded-lg bg-[#f5f7fb] dark:bg-gray-800/70 px-1.5 py-2 text-center">
-                              <p className="text-[10px] font-semibold text-gray-600 dark:text-gray-300">{weekday}</p>
-                              <p className="mt-0.5 text-[10px] text-gray-900 dark:text-gray-100">{day.max}°/{day.min}°</p>
+                            <div className="rounded-xl border border-black/10 dark:border-gray-700 bg-slate-50 dark:bg-gray-800 px-3 py-2.5">
+                              <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">{lc.estimatedFlightCost}</p>
+                              <p className="mt-1 text-sm font-bold text-gray-900 dark:text-gray-100">
+                                {fmtCurrencyRound(lo * usdToHomeRate, homeCurrency)} - {fmtCurrencyRound(hi * usdToHomeRate, homeCurrency)}
+                              </p>
+                              <p className="mt-0.5 text-[10px] text-gray-500 dark:text-gray-400">{lc.flightBased} {homeCurrency}.</p>
                             </div>
                           );
-                        })}
+                        })()}
                       </div>
-                      <div className="rounded-xl border border-black/5 dark:border-gray-700 bg-[#f5f7fb] dark:bg-gray-800/70 px-3 py-2.5">
-                        <p className="text-[11px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">Where to go</p>
-                        <p className="mt-1 text-xs leading-relaxed text-gray-700 dark:text-gray-200">{getWeatherPlanHint(weather)}</p>
+                    )}
+                  </section>
+                )}
+
+                {showRisks && (
+                  <div id="warnings-section">
+                    <DestinationWarnings
+                      countryName={selectedCountry?.name ?? lx.thisDestination}
+                      warnings={countryWarnings}
+                      labels={{
+                        title: lx.thingsToAvoidIn,
+                        empty: lx.noWarnings,
+                        categories: {
+                          weather: lx.warningWeather,
+                          crowds: lx.warningCrowds,
+                          scam: lx.warningScam,
+                          season: lx.warningSeason,
+                          safety: lx.warningSafety,
+                        },
+                      }}
+                    />
+                  </div>
+                )}
+
+                {showCost && (
+                  <section id="updates-section" className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
+                    <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{lc.costImpactTitle}</p>
+                    <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2">
+                      <div className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2">
+                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">{lx.festivalTiming}</p>
+                        <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">{firstFestival ? `${firstFestival.emoji} ${firstFestival.name}` : lx.noMajorEventWindow}</p>
+                      </div>
+                      <div className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2">
+                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">{lx.travelRisks}</p>
+                        <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">{keyRisk ? keyRisk.message : lx.noWarnings}</p>
+                      </div>
+                      <div className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2">
+                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">{lc.seasonHighlights}</p>
+                        <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">{seasonalHighlights[0]}</p>
+                      </div>
+                      <div className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2">
+                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">{lc.priceDirection}</p>
+                        <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">{highCrowdNow.length > 0 ? lc.highDemand : lc.balancedDemand}</p>
                       </div>
                     </div>
-                  )}
+                    <ul className="mt-3 space-y-1.5">
+                      {travelUpdates.slice(0, 3).map((item, index) => (
+                        <li key={`${index}-${item.slice(0, 18)}`} className="text-xs text-gray-700 dark:text-gray-200 leading-relaxed">
+                          - {item}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                )}
+
+                <section id="example-travel-insight" className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
+                  <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{lc.exampleTitle}</p>
+                  <h3 className="mt-1 text-base font-bold text-gray-900 dark:text-gray-100">{lx.exampleCityMonth}</h3>
+                  <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-700 dark:text-gray-200">
+                    <p className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2"><span className="font-semibold">{lx.festivalLabel}:</span> {lx.cherryBlossomSeason}</p>
+                    <p className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2"><span className="font-semibold">{lx.weatherLabel}:</span> ~10C</p>
+                    <p className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2"><span className="font-semibold">{lx.crowdsLabel}:</span> {lx.veryBusyWeekends}</p>
+                    <p className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2"><span className="font-semibold">{lx.costImpactLabel}:</span> {lx.hotelSurge}</p>
+                  </div>
                 </section>
 
-                <div id="warnings-section" className={activeDashboardTab === "warnings-section" ? "block" : "hidden"}>
-                  <DestinationWarnings
-                    countryName={selectedCountry?.name ?? "this destination"}
-                    warnings={countryWarnings}
-                  />
-                </div>
-
-                <section
-                  id="updates-section"
-                  className={`${activeDashboardTab === "updates-section" ? "block" : "hidden"} rounded-2xl border border-black/5 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm`}
-                >
-                  <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Travel updates</p>
-                  <ul className="mt-2 space-y-1.5">
-                    {travelUpdates.slice(0, 3).map((item, index) => (
-                      <li key={`${index}-${item.slice(0, 18)}`} className="text-xs text-gray-700 dark:text-gray-200 leading-relaxed">
-                        • {item}
-                      </li>
-                    ))}
-                  </ul>
+                <section className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
+                  <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{lc.bestTimeToVisit}</p>
+                  <h3 className="mt-1 text-base font-bold text-gray-900 dark:text-gray-100">{selectedCountry?.name}</h3>
+                  <p className="mt-2 text-xs text-gray-700 dark:text-gray-200"><span className="font-semibold">{lc.bestMonths}:</span> {budgetMonths.length > 0 ? budgetMonths.map((m) => shortMonths[m]).join(", ") : lx.defaultBestMonths}</p>
+                  <p className="mt-1 text-xs text-gray-700 dark:text-gray-200"><span className="font-semibold">{lc.avoid}:</span> {lc.avoidText}</p>
                 </section>
 
-                <section
-                  id="calculator-section"
-                  className={`${activeDashboardTab === "calculator-section" ? "block" : "hidden"} rounded-2xl border border-black/5 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm`}
-                >
-                  <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">FX calculator</p>
+                {showCalculator && (
+                  <section
+                    id="calculator-section"
+                    className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm"
+                  >
+                  <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{lx.fxCalculator}</p>
                   <div className="mt-2">
                     <PaymentForm
                       country={country}
@@ -867,10 +1959,11 @@ export default function Home() {
                     />
                   </div>
                 </section>
+                )}
 
-                {!results && activeDashboardTab === "calculator-section" && (
-                  <section className="rounded-2xl border border-black/5 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
-                    <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">Quick cost example</p>
+                {!results && showCalculator && (
+                  <section className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
+                    <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">{lx.quickCostExample}</p>
                     <InstantExample
                       currency={currency}
                       homeCurrency={homeCurrency}
@@ -881,15 +1974,32 @@ export default function Home() {
                   </section>
                 )}
 
-                <div id="apps-section" className={activeDashboardTab === "apps-section" ? "block" : "hidden"}>
-                  <DestinationApps countryName={selectedCountry?.name ?? "this destination"} apps={countryApps} />
-                </div>
+                {showApps && (
+                  <div id="apps-section">
+                    <DestinationApps
+                      countryName={selectedCountry?.name ?? lx.thisDestination}
+                      apps={countryApps}
+                      labels={{
+                        title: lx.usefulAppsIn,
+                        empty: lx.noAppsYet,
+                        categories: {
+                          transport: lx.appTransport,
+                          maps: lx.appMaps,
+                          translation: lx.appTranslation,
+                          food: lx.appFood,
+                          payment: lx.appPayment,
+                        },
+                      }}
+                    />
+                  </div>
+                )}
 
+                {showPlanner && (
                 <section
                   id="planner-section"
-                  className={`${activeDashboardTab === "planner-section" ? "block" : "hidden"} rounded-2xl border border-black/5 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4`}
+                  className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4"
                 >
-                  <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">Activities planner</p>
+                  <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{lx.activitiesPlanner}</p>
                   {activityCountry ? (
                     <div className="mt-2 space-y-3">
                       <div className="flex flex-wrap gap-1.5">
@@ -899,7 +2009,7 @@ export default function Home() {
                             activityCategory === "all" ? "bg-blue-600 text-white" : "bg-[#f5f7fb] dark:bg-gray-800/70 text-gray-700 dark:text-gray-200"
                           }`}
                         >
-                          All
+                          {lx.all}
                         </button>
                         {ACTIVITY_CATEGORIES.map((category) => (
                           <button
@@ -937,31 +2047,31 @@ export default function Home() {
                       </div>
 
                       <div className="rounded-xl border border-black/5 dark:border-gray-700 bg-[#f5f7fb] dark:bg-gray-800/70 px-3 py-3 space-y-2">
-                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">Custom activity</p>
+                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">{lx.customActivity}</p>
                         <input
                           value={customActivityName}
                           onChange={(e) => setCustomActivityName(e.target.value)}
-                          placeholder="Activity name"
+                          placeholder={lx.activityName}
                           className="w-full rounded-lg border border-black/10 bg-white dark:border-gray-700 dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
                         />
                         <div className="flex gap-2">
                           <input
                             value={customActivityCost}
                             onChange={(e) => setCustomActivityCost(e.target.value)}
-                            placeholder={`Estimated cost (${homeCurrency})`}
+                            placeholder={lx.estimatedCost.replace("{currency}", homeCurrency)}
                             type="number"
                             min={0}
                             className="w-full rounded-lg border border-black/10 bg-white dark:border-gray-700 dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
                           />
                           <button onClick={addCustomActivity} className="rounded-lg bg-blue-600 px-3 py-2 text-xs font-semibold text-white">
-                            Add
+                            {lx.add}
                           </button>
                         </div>
                       </div>
 
                       {(selectedBaseActivities.length > 0 || customActivities.length > 0) && (
                         <div className="rounded-xl border border-black/5 dark:border-gray-700 bg-[#f5f7fb] dark:bg-gray-800/70 px-3 py-3 space-y-1.5">
-                          <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">Selected activities</p>
+                          <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">{lx.selectedActivities}</p>
                           {selectedBaseActivities.map((activity) => (
                             <div key={activity.id} className="flex items-center justify-between text-xs text-gray-700 dark:text-gray-200">
                               <span>{ACTIVITY_CATEGORY_ICON[activity.category]} {activity.name}</span>
@@ -974,7 +2084,7 @@ export default function Home() {
                               <div className="flex items-center gap-2">
                                 <span className="font-semibold">{fmtCurrency(toHomeCurrency(activity.estimatedCostUsd), homeCurrency)}</span>
                                 <button onClick={() => removeCustomActivity(activity.id)} className="text-red-500 hover:text-red-600">
-                                  Remove
+                                  {lx.remove}
                                 </button>
                               </div>
                             </div>
@@ -983,20 +2093,24 @@ export default function Home() {
                       )}
 
                       <div className="rounded-xl border border-black/5 dark:border-gray-700 bg-[#f5f7fb] dark:bg-gray-800/70 px-3 py-3 space-y-2">
-                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">Trip estimate</p>
+                        <p className="text-xs font-semibold text-gray-700 dark:text-gray-200">{lx.tripEstimate}</p>
                         <div className="grid grid-cols-2 gap-2">
                           <div>
-                            <p className="mb-1 text-[11px] text-gray-500 dark:text-gray-400">Nights</p>
+                            <p className="mb-1 text-[11px] text-gray-500 dark:text-gray-400">{lx.nightsLabel}</p>
                             <input
                               type="number"
                               min={1}
-                              value={travelNights}
-                              onChange={(e) => setTravelNights(Math.max(1, Number(e.target.value || 1)))}
+                              value={travelNights || ""}
+                              onChange={(e) => {
+                                const raw = e.target.value;
+                                setTravelNights(raw === "" ? 0 : Math.max(0, Number(raw)));
+                              }}
+                              onBlur={() => setTravelNights((prev) => (prev < 1 ? 1 : prev))}
                               className="w-full rounded-lg border border-black/10 bg-white dark:border-gray-700 dark:bg-gray-900 px-3 py-2 text-sm text-gray-900 dark:text-gray-100"
                             />
                           </div>
                           <div>
-                            <p className="mb-1 text-[11px] text-gray-500 dark:text-gray-400">Hotel / night ({homeCurrency})</p>
+                            <p className="mb-1 text-[11px] text-gray-500 dark:text-gray-400">{lx.hotelPerNight.replace("{currency}", homeCurrency)}</p>
                             <input
                               type="number"
                               min={0}
@@ -1010,22 +2124,50 @@ export default function Home() {
                           </div>
                         </div>
                         <div className="space-y-1 text-xs text-gray-700 dark:text-gray-200">
-                          <p>Hotel cost: <span className="font-semibold">{fmtCurrency(hotelCost, homeCurrency)}</span></p>
-                          <p>Activity cost: <span className="font-semibold">{fmtCurrency(activityCost, homeCurrency)}</span></p>
-                          <p className="text-sm font-bold text-gray-900 dark:text-gray-100">Total trip cost: {fmtCurrency(totalTripCost, homeCurrency)}</p>
+                          <p>{lx.hotelCost}: <span className="font-semibold">{fmtCurrency(hotelCost, homeCurrency)}</span></p>
+                          <p>{lx.activityCost}: <span className="font-semibold">{fmtCurrency(activityCost, homeCurrency)}</span></p>
+                          <p className="text-sm font-bold text-gray-900 dark:text-gray-100">{lx.totalTripCost}: {fmtCurrency(totalTripCost, homeCurrency)}</p>
                           <p className="text-[11px] text-gray-500 dark:text-gray-400">
-                            {usdRateLoading ? "Updating rate..." : `Planner rate: 1 USD = ${usdToHomeRate.toFixed(4)} ${homeCurrency}`}
+                            {usdRateLoading ? lx.updatingRate : lx.plannerRate.replace("{rate}", usdToHomeRate.toFixed(4)).replace("{currency}", homeCurrency)}
                           </p>
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <p className="mt-2 text-xs text-gray-600 dark:text-gray-300">Activity planner is available for Japan, Thailand, Korea, China, and Singapore.</p>
+                    <p className="mt-2 text-xs text-gray-600 dark:text-gray-300">{lx.plannerAvailability}</p>
                   )}
                 </section>
+                )}
               </div>
             );
           })()}
+
+          {/* Secondary FX reference */}
+          <div className="mt-6 rounded-xl border border-black/10 bg-white/80 dark:border-gray-800 dark:bg-gray-900/70 px-3 py-2">
+            {rateLoading ? (
+              <span className="text-gray-500 dark:text-gray-400 text-[11px]">{t.loadingRate}</span>
+            ) : (
+              <div className="space-y-0.5 text-[11px] text-gray-500 dark:text-gray-400">
+                <p>
+                  1 {currency} = <span className="font-semibold text-gray-700 dark:text-gray-200">{formatRate(midRate, currency)} {homeCurrency}</span>
+                  <span className="ml-1">({rateFallback ? t.indicativeRate : t.liveRate})</span>
+                </p>
+                <p>{t.fxSourceLabel} exchangerate.host</p>
+                {rateTimestamp && (
+                  <p>
+                    {t.fxUpdatedLabel}{" "}
+                    {new Date(rateTimestamp).toLocaleString("en", {
+                      day: "numeric",
+                      month: "short",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </section>
 
@@ -1179,7 +2321,7 @@ export default function Home() {
         {/* ── ALWAYS VISIBLE ── */}
 
         {/* Travel mistakes */}
-        <TravelMistakes />
+        <TravelMistakes lang={lang} />
 
         {/* Where to Travel promo */}
         <Link
@@ -1212,6 +2354,17 @@ export default function Home() {
 
         {/* Travel money tips */}
         <TravelMoneyTips t={t} />
+
+        <section className="rounded-3xl border border-blue-200 dark:border-blue-900 bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-6 text-white shadow-md">
+          <p className="text-[11px] font-semibold uppercase tracking-widest text-blue-100">{lx.finalStep}</p>
+          <h2 className="mt-1 text-xl font-extrabold">{lx.planTripSmarter}</h2>
+          <a
+            href="#calculator-section"
+            className="mt-4 inline-flex items-center justify-center rounded-2xl bg-white px-4 py-2.5 text-sm font-bold text-blue-800 hover:bg-blue-50"
+          >
+            {lx.startTravelCalculator}
+          </a>
+        </section>
       </div>
 
       {/* Sticky action bar ── shown when user is overpaying and hasn't dismissed */}
