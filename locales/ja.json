@@ -316,5 +316,32 @@
   "festivalsCrowdMedium": "やや混雑",
   "festivalsCrowdLow": "閑散期",
   "festivalsPriceImpact": "価格への影響",
-  "festivalsTipLabel": "旅行のヒント"
+  "festivalsTipLabel": "旅のヒント",
+  "wttTags": {
+    "adventure": "アドベンチャー",
+    "art": "アート",
+    "beach": "ビーチ",
+    "budget": "お得",
+    "city": "都市",
+    "culture": "文化",
+    "desert": "砂漠",
+    "diving": "ダイビング",
+    "fjords": "フィヨルド",
+    "food": "グルメ",
+    "hiking": "ハイキング",
+    "history": "歴史",
+    "islands": "島々",
+    "luxury": "ラグジュアリー",
+    "mountains": "山岳",
+    "nature": "自然",
+    "northern lights": "オーロラ",
+    "road trip": "ロードトリップ",
+    "romance": "ロマンス",
+    "shopping": "ショッピング",
+    "skiing": "スキー",
+    "spiritual": "スピリチュアル",
+    "surfing": "サーフィン",
+    "temples": "寺院",
+    "wildlife": "野生動物"
+  }
 }

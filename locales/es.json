@@ -316,5 +316,32 @@
   "festivalsCrowdMedium": "Moderado",
   "festivalsCrowdLow": "Temporada tranquila",
   "festivalsPriceImpact": "Impacto en precios",
-  "festivalsTipLabel": "Consejo de viaje"
+  "festivalsTipLabel": "Consejo de viaje",
+  "wttTags": {
+    "adventure": "Aventura",
+    "art": "Arte",
+    "beach": "Playa",
+    "budget": "Económico",
+    "city": "Ciudad",
+    "culture": "Cultura",
+    "desert": "Desierto",
+    "diving": "Buceo",
+    "fjords": "Fiordos",
+    "food": "Gastronomía",
+    "hiking": "Senderismo",
+    "history": "Historia",
+    "islands": "Islas",
+    "luxury": "Lujo",
+    "mountains": "Montañas",
+    "nature": "Naturaleza",
+    "northern lights": "Aurora Boreal",
+    "road trip": "Road Trip",
+    "romance": "Romance",
+    "shopping": "Compras",
+    "skiing": "Esquí",
+    "spiritual": "Espiritual",
+    "surfing": "Surf",
+    "temples": "Templos",
+    "wildlife": "Fauna Silvestre"
+  }
 }

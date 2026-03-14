@@ -316,5 +316,32 @@
   "festivalsCrowdMedium": "보통",
   "festivalsCrowdLow": "한산한 시즌",
   "festivalsPriceImpact": "가격 영향",
-  "festivalsTipLabel": "여행 팁"
+  "festivalsTipLabel": "여행 팁",
+  "wttTags": {
+    "adventure": "어드벤처",
+    "art": "예술",
+    "beach": "해변",
+    "budget": "알뜨",
+    "city": "도시",
+    "culture": "문화",
+    "desert": "사막",
+    "diving": "다이빙",
+    "fjords": "피오르드",
+    "food": "미식",
+    "hiking": "하이킹",
+    "history": "역사",
+    "islands": "섬",
+    "luxury": "럭셔리",
+    "mountains": "산악",
+    "nature": "자연",
+    "northern lights": "오로라",
+    "road trip": "로드트립",
+    "romance": "로맨틱",
+    "shopping": "쇼핑",
+    "skiing": "스키",
+    "spiritual": "영적",
+    "surfing": "서핑",
+    "temples": "사원",
+    "wildlife": "야생동물"
+  }
 }

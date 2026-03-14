@@ -316,5 +316,32 @@
   "festivalsCrowdMedium": "Moderate Crowds",
   "festivalsCrowdLow": "Quiet Season",
   "festivalsPriceImpact": "Price impact",
-  "festivalsTipLabel": "Travel tip"
+  "festivalsTipLabel": "Travel tip",
+  "wttTags": {
+    "adventure": "Adventure",
+    "art": "Art",
+    "beach": "Beach",
+    "budget": "Budget",
+    "city": "City",
+    "culture": "Culture",
+    "desert": "Desert",
+    "diving": "Diving",
+    "fjords": "Fjords",
+    "food": "Food",
+    "hiking": "Hiking",
+    "history": "History",
+    "islands": "Islands",
+    "luxury": "Luxury",
+    "mountains": "Mountains",
+    "nature": "Nature",
+    "northern lights": "Northern Lights",
+    "road trip": "Road Trip",
+    "romance": "Romance",
+    "shopping": "Shopping",
+    "skiing": "Skiing",
+    "spiritual": "Spiritual",
+    "surfing": "Surfing",
+    "temples": "Temples",
+    "wildlife": "Wildlife"
+  }
 }

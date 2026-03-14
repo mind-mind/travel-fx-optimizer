@@ -316,5 +316,32 @@
   "festivalsCrowdMedium": "ปานกลาง",
   "festivalsCrowdLow": "เงียบสงบ",
   "festivalsPriceImpact": "ผลกระทบต่อราคา",
-  "festivalsTipLabel": "เคล็ดลับการเดินทาง"
+  "festivalsTipLabel": "เคล็ดลับการเดินทาง",
+  "wttTags": {
+    "adventure": "การผจญภัย",
+    "art": "ศิลปะ",
+    "beach": "ชายหาด",
+    "budget": "ประหยัด",
+    "city": "เมือง",
+    "culture": "วัฒนธรรม",
+    "desert": "ทะเลทราย",
+    "diving": "ดำน้ำ",
+    "fjords": "ฟยอร์ด",
+    "food": "อาหาร",
+    "hiking": "เดินป่า",
+    "history": "ประวัติศาสตร์",
+    "islands": "เกาะ",
+    "luxury": "หรูหรา",
+    "mountains": "ภูเขา",
+    "nature": "ธรรมชาติ",
+    "northern lights": "แสงเหนือ",
+    "road trip": "ขับรถท่องเที่ยว",
+    "romance": "โรแมนติก",
+    "shopping": "ช้อปปิ้ง",
+    "skiing": "สกี",
+    "spiritual": "จิตวิญญาณ",
+    "surfing": "เซิร์ฟ",
+    "temples": "วัด",
+    "wildlife": "สัตว์ป่า"
+  }
 }

@@ -59,23 +59,18 @@ export default function Home() {
     return "en";
   });
 
-  const [dark, setDark] = useState(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("theme") === "dark";
-    }
-    return false;
-  });
+  const [dark, setDark] = useState(false);
 
   useEffect(() => {
     const root = document.documentElement;
-    if (dark) {
-      root.classList.add("dark");
-      localStorage.setItem("theme", "dark");
-    } else {
-      root.classList.remove("dark");
-      localStorage.setItem("theme", "light");
-    }
-  }, [dark]);
+    const syncDarkState = () => setDark(root.classList.contains("dark"));
+    syncDarkState();
+
+    const observer = new MutationObserver(syncDarkState);
+    observer.observe(root, { attributes: true, attributeFilter: ["class"] });
+
+    return () => observer.disconnect();
+  }, []);
 
   // Auto-detect home currency from IP on first visit (no saved preference)
   useEffect(() => {
@@ -99,11 +94,6 @@ export default function Home() {
   }
 
   const t = translations[lang];
-
-  function setLangAndSave(next: Lang) {
-    setLang(next);
-    localStorage.setItem("lang", next);
-  }
 
   const [midRate, setMidRate] = useState<number>(1.0);
   const [rateTimestamp, setRateTimestamp] = useState<string | null>(null);
@@ -207,8 +197,11 @@ export default function Home() {
       className="min-h-screen dark:bg-gray-950"
       style={dark ? undefined : { background: "linear-gradient(180deg, #EEF3FF 0%, #F4F7FF 100%)" }}
     >
-      {/* Header */}
-      <div className="pt-12 pb-8 px-4" style={{ background: "linear-gradient(135deg, #0F172A 0%, #1E3A8A 100%)" }}>
+      {/* Hero + travel context + calculator */}
+      <section
+        className="px-4 pt-12 pb-16 min-h-[900px]"
+        style={{ background: "linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%)" }}
+      >
         <div className="max-w-md mx-auto">
           <div className="flex items-start justify-between">
             <div>
@@ -221,26 +214,6 @@ export default function Home() {
               </p>
             </div>
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => setDark((d) => !d)}
-                className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-700 text-white text-base"
-                aria-label="Toggle dark mode"
-              >
-                {dark ? "☀️" : "🌙"}
-              </button>
-              <select
-                value={lang}
-                onChange={(e) => setLangAndSave(e.target.value as Lang)}
-                className="rounded-lg bg-blue-700 px-2 py-1.5 text-xs font-semibold text-white border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
-                aria-label="Select language"
-              >
-                <option value="en">🇺🇸 English</option>
-                <option value="th">🇹🇭 ไทย</option>
-                <option value="es">🇪🇸 Español</option>
-                <option value="zh">🇨🇳 中文</option>
-                <option value="ja">🇯🇵 日本語</option>
-                <option value="ko">🇰🇷 한국어</option>
-              </select>
             </div>
           </div>
 
@@ -421,38 +394,29 @@ export default function Home() {
               </div>
             );
           })()}
-        </div>
-      </div>
 
-      {/* Gradient transition bridge — smoothly fades the hero blue into the page background */}
-      {!dark && (
-        <div
-          aria-hidden="true"
-          style={{
-            background: "linear-gradient(180deg, #1E3A8A 0%, #EEF3FF 100%)",
-            height: "72px",
-            marginTop: "-1px",
-          }}
-        />
-      )}
+          <div className="mt-10">
+            <PaymentForm
+              country={country}
+              amount={amount}
+              bank={bank}
+              method={method}
+              homeCurrency={homeCurrency}
+              t={t}
+              onCountryChange={handleCountryChange}
+              onAmountChange={setAmount}
+              onBankChange={setBank}
+              onMethodChange={handleMethodChange}
+              onHomeCurrencyChange={handleHomeCurrencyChange}
+              onSwap={handleSwap}
+              canSwap={canSwap}
+            />
+          </div>
+        </div>
+      </section>
 
       {/* Content */}
-      <div className="max-w-md mx-auto px-4 -mt-14 pb-28 space-y-5">
-        <PaymentForm
-          country={country}
-          amount={amount}
-          bank={bank}
-          method={method}
-          homeCurrency={homeCurrency}
-          t={t}
-          onCountryChange={handleCountryChange}
-          onAmountChange={setAmount}
-          onBankChange={setBank}
-          onMethodChange={handleMethodChange}
-          onHomeCurrencyChange={handleHomeCurrencyChange}
-          onSwap={handleSwap}
-          canSwap={canSwap}
-        />
+      <div className="max-w-md mx-auto px-4 pt-8 pb-28 space-y-5">
 
         {/* ── AFTER CALCULATION ── */}
         {results && parsedAmount > 0 && (() => {

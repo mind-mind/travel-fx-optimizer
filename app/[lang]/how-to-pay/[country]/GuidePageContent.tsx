@@ -8,6 +8,7 @@ import { VALID_COUNTRIES, COUNTRY_META } from "@/lib/guideConfig";
 import type { Translations } from "@/data/translations";
 import { fmtCurrency } from "@/lib/formatCurrency";
 import { getFestivalsForCountry } from "@/data/festivals";
+import { getFestivalName, getFestivalTravelTip } from "@/data/festivalTranslations";
 
 interface Props {
   content: CountryContent;
@@ -119,14 +120,9 @@ function getCountryName(t: Translations, c: GuideCountry): string {
 }
 
 export function GuidePageContent({ content, t, lang, country }: Props) {
-  const [dark, setDark] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    const storedDark = localStorage.getItem("theme") === "dark";
-    setDark(storedDark);
-    if (storedDark) document.documentElement.classList.add("dark");
-
     // Redirect to the user's preferred language if different from URL
     const validLangs = ["en", "th", "es", "zh", "ja", "ko"];
     const storedLang = localStorage.getItem("lang");
@@ -144,18 +140,6 @@ export function GuidePageContent({ content, t, lang, country }: Props) {
       }
     }
   }, []);
-
-  function toggleDark() {
-    const next = !dark;
-    setDark(next);
-    localStorage.setItem("theme", next ? "dark" : "light");
-    document.documentElement.classList.toggle("dark", next);
-  }
-
-  function handleLangChange(newLang: string) {
-    localStorage.setItem("lang", newLang);
-    router.push(`/${newLang}/how-to-pay/${country}`);
-  }
 
   const otherCountries = VALID_COUNTRIES.filter((c) => c !== country);
 
@@ -175,26 +159,6 @@ export function GuidePageContent({ content, t, lang, country }: Props) {
               {t.guideBack}
             </Link>
             <div className="flex items-center gap-2">
-              <button
-                onClick={toggleDark}
-                className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-700 text-white text-base"
-                aria-label="Toggle dark mode"
-              >
-                {dark ? "☀️" : "🌙"}
-              </button>
-              <select
-                value={lang}
-                onChange={(e) => handleLangChange(e.target.value)}
-                className="rounded-lg bg-blue-700 px-2 py-1.5 text-xs font-semibold text-white border-0 cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-400"
-                aria-label="Select language"
-              >
-                <option value="en">🇺🇸 English</option>
-                <option value="th">🇹🇭 ไทย</option>
-                <option value="es">🇪🇸 Español</option>
-                <option value="zh">🇨🇳 中文</option>
-                <option value="ja">🇯🇵 日本語</option>
-                <option value="ko">🇰🇷 한국어</option>
-              </select>
             </div>
           </div>
 
@@ -420,7 +384,7 @@ export function GuidePageContent({ content, t, lang, country }: Props) {
                           <span className="text-xl">{festival.emoji}</span>
                           <div>
                             <p className="text-sm font-bold text-gray-800 dark:text-gray-100">
-                              {festival.name}
+                              {getFestivalName(festival.id, festival.name, lang)}
                             </p>
                             <p className="text-xs text-gray-400 dark:text-gray-500">{festival.duration}</p>
                           </div>
@@ -453,7 +417,7 @@ export function GuidePageContent({ content, t, lang, country }: Props) {
                         <span className="text-blue-500 text-xs shrink-0 mt-0.5">💡</span>
                         <p className="text-xs text-gray-600 dark:text-gray-400 leading-relaxed">
                           <span className="font-semibold">{t.festivalsTipLabel}:</span>{" "}
-                          {festival.travelTip}
+                          {getFestivalTravelTip(festival.id, festival.travelTip, lang)}
                         </p>
                       </div>
                     </div>

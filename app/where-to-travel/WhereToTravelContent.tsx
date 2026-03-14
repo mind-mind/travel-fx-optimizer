@@ -14,6 +14,7 @@ import {
   type Destination,
 } from "@/data/whereToTravel";
 import { getFestivalsForMonth, COUNTRY_CODE_TO_GUIDE, type Festival } from "@/data/festivals";
+import { getFestivalName, getFestivalTravelTip } from "@/data/festivalTranslations";
 
 // ─── Locale-aware month names via Intl ───────────────────────────────────────
 
@@ -62,12 +63,14 @@ function DestinationCard({
   monthNamesShort,
   festivals,
   t,
+  lang,
 }: {
   dest: Destination;
   monthIndex: number;
   monthNamesShort: string[];
   festivals: Festival[];
   t: Translations;
+  lang: string;
 }) {
   const temp = dest.avgTempByMonth[monthIndex];
   const w = getWeatherType(temp);
@@ -109,7 +112,7 @@ function DestinationCard({
 
       <div className="px-5 py-4 flex-1 space-y-3">
         <p className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
-          {dest.description}
+          {dest.descriptions?.[lang] ?? dest.description}
         </p>
         <div className="flex flex-wrap gap-1.5">
           {dest.tags.map((tag) => (
@@ -117,7 +120,7 @@ function DestinationCard({
               key={tag}
               className="text-[10px] font-medium bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 rounded-full px-2 py-0.5 capitalize"
             >
-              {tag}
+              {(t.wttTags as Record<string, string>)[tag] ?? tag}
             </span>
           ))}
         </div>
@@ -172,16 +175,10 @@ export function WhereToTravelContent() {
   const now = new Date();
   const [monthIndex, setMonthIndex] = useState(now.getMonth());
   const [weather, setWeather] = useState<WeatherType>("mild");
-  const [dark, setDark] = useState(false);
   const [lang, setLang] = useState<Lang>("en");
   const monthScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const stored = localStorage.getItem("theme");
-    if (stored === "dark") {
-      setDark(true);
-      document.documentElement.classList.add("dark");
-    }
     const storedLang = localStorage.getItem("lang") as Lang | null;
     if (storedLang && storedLang in translations) {
       setLang(storedLang);
@@ -191,13 +188,6 @@ export function WhereToTravelContent() {
       setLang(detected);
     }
   }, []);
-
-  function toggleDark() {
-    const next = !dark;
-    setDark(next);
-    localStorage.setItem("theme", next ? "dark" : "light");
-    document.documentElement.classList.toggle("dark", next);
-  }
 
   useEffect(() => {
     const container = monthScrollRef.current;
@@ -238,13 +228,6 @@ export function WhereToTravelContent() {
             >
               {t.guideBack}
             </Link>
-            <button
-              onClick={toggleDark}
-              className="flex items-center justify-center w-8 h-8 rounded-lg bg-blue-700 text-white text-base"
-              aria-label="Toggle dark mode"
-            >
-              {dark ? "☀️" : "🌙"}
-            </button>
           </div>
           <div className="space-y-2 mb-2">
             <p className="text-blue-300 text-sm font-semibold uppercase tracking-widest">
@@ -354,6 +337,7 @@ export function WhereToTravelContent() {
                 monthNamesShort={monthNamesShort}
                 festivals={getFestivalsForMonth(monthIndex, COUNTRY_CODE_TO_GUIDE[dest.countryCode])}
                 t={t}
+                lang={lang}
               />
             ))}
           </div>
@@ -392,13 +376,15 @@ export function WhereToTravelContent() {
                     <span className="text-xl shrink-0">{festival.emoji}</span>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <p className="text-sm font-bold text-gray-800 dark:text-gray-100">{festival.name}</p>
+                        <p className="text-sm font-bold text-gray-800 dark:text-gray-100">
+                          {getFestivalName(festival.id, festival.name, lang)}
+                        </p>
                         <span className="text-[10px] text-gray-400 dark:text-gray-500">
                           {festival.destFlag} {festival.destName}
                         </span>
                       </div>
                       <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5 leading-relaxed">
-                        {festival.travelTip}
+                        {getFestivalTravelTip(festival.id, festival.travelTip, lang)}
                       </p>
                     </div>
                   </div>

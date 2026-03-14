@@ -316,5 +316,32 @@
   "festivalsCrowdMedium": "人流适中",
   "festivalsCrowdLow": "淡季",
   "festivalsPriceImpact": "价格影响",
-  "festivalsTipLabel": "旅行提示"
+  "festivalsTipLabel": "旅行小贴士",
+  "wttTags": {
+    "adventure": "探险",
+    "art": "艺术",
+    "beach": "海滩",
+    "budget": "经济实惠",
+    "city": "城市",
+    "culture": "文化",
+    "desert": "沙漠",
+    "diving": "潜水",
+    "fjords": "峡湾",
+    "food": "美食",
+    "hiking": "徒步",
+    "history": "历史",
+    "islands": "岛屿",
+    "luxury": "奢华",
+    "mountains": "山地",
+    "nature": "自然",
+    "northern lights": "极光",
+    "road trip": "公路旅行",
+    "romance": "浪漫",
+    "shopping": "购物",
+    "skiing": "滑雪",
+    "spiritual": "灵修",
+    "surfing": "冲浪",
+    "temples": "寺庙",
+    "wildlife": "野生动物"
+  }
 }
