@@ -18,6 +18,8 @@ import SharePanel from "@/components/SharePanel";
 import TripEstimator from "@/components/TripEstimator";
 import DestinationWarnings from "@/components/DestinationWarnings";
 import DestinationApps from "@/components/DestinationApps";
+import TravelSafetyNews from "@/components/TravelSafetyNews";
+import type { TravelAdvisory, BannedAirline } from "@/components/TravelSafetyNews";
 import Link from "next/link";
 import { BankName, PaymentMethod, ComparisonResult } from "@/lib/types";
 import { calculateComparisons, getVatRefund } from "@/lib/calculator";
@@ -45,6 +47,8 @@ interface WeatherData {
   currentTemp: number;
   currentCode: number;
   tomorrowRain: number;
+  /** true when data comes from last year's archive instead of the live 16-day forecast */
+  isHistorical?: boolean;
   forecast: Array<{
     date: string;
     max: number;
@@ -57,6 +61,13 @@ interface CustomActivity {
   id: string;
   name: string;
   estimatedCostUsd: number;
+}
+
+interface TravelNewsData {
+  advisories: Record<string, TravelAdvisory>;
+  bannedAirlines: BannedAirline[];
+  fetchedAt: string;
+  fallback?: boolean;
 }
 
 type ExploreFilter =
@@ -566,6 +577,31 @@ const LANDING_EXTRA_EN = {
   weatherHintClear: "Where to go: best day for outdoor attractions, parks, and city walking routes.",
   weatherHintDefault: "Where to go: mix indoor and outdoor plans, and keep a flexible backup route.",
   dismiss: "Dismiss",
+  safetyNewsTitle: "🌐 Live Travel Safety News",
+  safetyUpdatedAgo: "Updated {age}",
+  safetyOffline: "Offline",
+  safetyAdvisoryFor: "Advisory for {country}",
+  safetyDoNotTravel: "Do Not Travel",
+  safetyReconsiderTravel: "Reconsider Travel",
+  safetyExerciseCaution: "Exercise Caution",
+  safetyNormalPrecautions: "Normal Precautions",
+  safetyUnknown: "Unknown",
+  safetyRiskScore: "Risk score: {score} / 5",
+  safetySourceUpdated: "Source data updated: {date}",
+  safetyOfficialSource: "Official source",
+  safetyNoAdvisory: "No advisory data available for this destination right now.",
+  safetyAviationFor: "✈️ Aviation Safety for {country}",
+  safetyEuListLabel: "EU official list ↗",
+  safetyNoAirlinesBanned: "✅ No airlines from {country} on EU safety ban list",
+  safetyNoAirlinesBannedDesc: "Airlines registered in this destination are not currently on the EU Air Safety List. Always book through reputable carriers and check your airline before flying.",
+  safetyViewGlobalList: "View full global EU banned airlines list ({count} entries)",
+  safetyHideGlobalList: "Hide full global EU banned airlines list",
+  safetyDisclaimer: "EU Air Safety List — always verify before booking. Data as of March 2026.",
+  safetyAutoRefresh: "Advisory data current as of March 2026 · auto-refreshes page data every 30 min",
+  safetyJustNow: "just now",
+  safety1MinAgo: "1 min ago",
+  safetyNMinAgo: "{n} min ago",
+  safetyHAgo: "{h}h ago",
 };
 
 const LANDING_EXTRA: Record<Lang, Partial<typeof LANDING_EXTRA_EN>> = {
@@ -661,6 +697,31 @@ const LANDING_EXTRA: Record<Lang, Partial<typeof LANDING_EXTRA_EN>> = {
     weatherHintClear: "แนะนำ: วันที่ดีสำหรับสถานที่ท่องเที่ยวกลางแจ้ง สวนสาธารณะ และเดินชมเมือง",
     weatherHintDefault: "แนะนำ: ผสมแผนในร่มและกลางแจ้ง พร้อมสำรองแผนสำรองไว้",
     dismiss: "ปิด",
+    safetyNewsTitle: "🌐 ข่าวความปลอดภัยการเดินทางสด",
+    safetyUpdatedAgo: "อัปเดต {age}",
+    safetyOffline: "ออฟไลน์",
+    safetyAdvisoryFor: "คำแนะนำสำหรับ {country}",
+    safetyDoNotTravel: "ไม่ควรเดินทาง",
+    safetyReconsiderTravel: "ควรพิจารณาใหม่",
+    safetyExerciseCaution: "ควรระมัดระวัง",
+    safetyNormalPrecautions: "ระมัดระวังตามปกติ",
+    safetyUnknown: "ไม่ทราบ",
+    safetyRiskScore: "คะแนนความเสี่ยง: {score} / 5",
+    safetySourceUpdated: "ข้อมูลต้นทางอัปเดต: {date}",
+    safetyOfficialSource: "แหล่งข้อมูลทางการ",
+    safetyNoAdvisory: "ขณะนี้ยังไม่มีข้อมูลคำแนะนำสำหรับจุดหมายนี้",
+    safetyAviationFor: "✈️ ความปลอดภัยทางอากาศสำหรับ {country}",
+    safetyEuListLabel: "รายชื่ออย่างเป็นทางการ EU ↗",
+    safetyNoAirlinesBanned: "✅ ไม่มีสายการบินจาก {country} ในรายชื่อห้าม EU",
+    safetyNoAirlinesBannedDesc: "สายการบินที่จดทะเบียนในจุดหมายนี้ยังไม่อยู่ในรายชื่อห้ามบิน EU จองผ่านสายการบินที่เชื่อถือได้เสมอ",
+    safetyViewGlobalList: "ดูรายชื่อสายการบินต้องห้ามทั่วโลก ({count} รายการ)",
+    safetyHideGlobalList: "ซ่อนรายชื่อ",
+    safetyDisclaimer: "รายชื่อความปลอดภัยทางอากาศ EU — ตรวจสอบก่อนจองเสมอ ข้อมูล ณ มีนาคม 2026",
+    safetyAutoRefresh: "ข้อมูล ณ มีนาคม 2026 · อัปเดตอัตโนมัติทุก 30 นาที",
+    safetyJustNow: "เมื่อกี้นี้",
+    safety1MinAgo: "1 นาทีที่แล้ว",
+    safetyNMinAgo: "{n} นาทีที่แล้ว",
+    safetyHAgo: "{h} ชม. ที่แล้ว",
   },
   es: {
     destination: "Destino",
@@ -753,6 +814,31 @@ const LANDING_EXTRA: Record<Lang, Partial<typeof LANDING_EXTRA_EN>> = {
     weatherHintClear: "Consejo: día ideal para atracciones al aire libre, parques y rutas a pie.",
     weatherHintDefault: "Consejo: combina planes de interior y exterior con una ruta alternativa flexible.",
     dismiss: "Cerrar",
+    safetyNewsTitle: "🌐 Noticias de seguridad en viajes en vivo",
+    safetyUpdatedAgo: "Actualizado {age}",
+    safetyOffline: "Sin conexión",
+    safetyAdvisoryFor: "Alerta de viaje para {country}",
+    safetyDoNotTravel: "No viajar",
+    safetyReconsiderTravel: "Reconsiderar viaje",
+    safetyExerciseCaution: "Precaución elevada",
+    safetyNormalPrecautions: "Precauciones normales",
+    safetyUnknown: "Desconocido",
+    safetyRiskScore: "Nivel de riesgo: {score} / 5",
+    safetySourceUpdated: "Datos actualizados: {date}",
+    safetyOfficialSource: "Fuente oficial",
+    safetyNoAdvisory: "No hay datos de alerta para este destino por ahora.",
+    safetyAviationFor: "✈️ Seguridad aérea para {country}",
+    safetyEuListLabel: "Lista oficial UE ↗",
+    safetyNoAirlinesBanned: "✅ Sin aerolíneas de {country} en la lista de prohibición UE",
+    safetyNoAirlinesBannedDesc: "Las aerolíneas registradas en este destino no están en la lista de prohibición aérea de la UE. Reserva siempre con aerolíneas reconocidas.",
+    safetyViewGlobalList: "Ver lista global completa de aerolíneas prohibidas UE ({count} entradas)",
+    safetyHideGlobalList: "Ocultar lista global",
+    safetyDisclaimer: "Lista de seguridad aérea UE — verifica siempre antes de reservar. Datos de marzo 2026.",
+    safetyAutoRefresh: "Datos de marzo 2026 · se actualiza automáticamente cada 30 min",
+    safetyJustNow: "ahora mismo",
+    safety1MinAgo: "hace 1 min",
+    safetyNMinAgo: "hace {n} min",
+    safetyHAgo: "hace {h}h",
   },
   zh: {
     destination: "目的地",
@@ -845,6 +931,31 @@ const LANDING_EXTRA: Record<Lang, Partial<typeof LANDING_EXTRA_EN>> = {
     weatherHintClear: "建议：绝佳的户外景点、公园和城市徒步日。",
     weatherHintDefault: "建议：室内外活动搭配规划，并保留灵活备选路线。",
     dismiss: "关闭",
+    safetyNewsTitle: "🌐 实时旅行安全资讯",
+    safetyUpdatedAgo: "更新于 {age}",
+    safetyOffline: "离线",
+    safetyAdvisoryFor: "{country} 旅行安全提示",
+    safetyDoNotTravel: "禁止前往",
+    safetyReconsiderTravel: "重新考虑出行",
+    safetyExerciseCaution: "注意安全",
+    safetyNormalPrecautions: "正常注意",
+    safetyUnknown: "未知",
+    safetyRiskScore: "风险评分：{score} / 5",
+    safetySourceUpdated: "数据更新于：{date}",
+    safetyOfficialSource: "官方来源",
+    safetyNoAdvisory: "当前暂无此目的地的安全提示数据。",
+    safetyAviationFor: "✈️ {country} 航空安全",
+    safetyEuListLabel: "EU 官方名单 ↗",
+    safetyNoAirlinesBanned: "✅ {country} 无航空公司列入 EU 禁飞名单",
+    safetyNoAirlinesBannedDesc: "该目的地注册的航空公司目前未被列入 EU 航空安全名单。订票时请始终选择正规航空公司并核实信息。",
+    safetyViewGlobalList: "查看完整全球 EU 禁飞航空公司名单（共 {count} 条）",
+    safetyHideGlobalList: "收起名单",
+    safetyDisclaimer: "EU 航空安全名单 — 订票前请核实。数据截至 2026 年 3 月。",
+    safetyAutoRefresh: "数据截至 2026 年 3 月 · 每 30 分钟自动刷新",
+    safetyJustNow: "刚刚",
+    safety1MinAgo: "1 分钟前",
+    safetyNMinAgo: "{n} 分钟前",
+    safetyHAgo: "{h} 小时前",
   },
   ja: {
     destination: "行き先",
@@ -937,6 +1048,31 @@ const LANDING_EXTRA: Record<Lang, Partial<typeof LANDING_EXTRA_EN>> = {
     weatherHintClear: "おすすめ：屋外観光・公園・街歩きに最適な一日です。",
     weatherHintDefault: "おすすめ：屋内と屋外のプランを組み合わせ、柔軟なバックアッププランを持っておきましょう。",
     dismiss: "閉じる",
+    safetyNewsTitle: "🌐 リアルタイム旅行安全情報",
+    safetyUpdatedAgo: "{age}に更新",
+    safetyOffline: "オフライン",
+    safetyAdvisoryFor: "{country} の危険情報",
+    safetyDoNotTravel: "渡航中止勧告",
+    safetyReconsiderTravel: "渡航再検討",
+    safetyExerciseCaution: "渡航注意",
+    safetyNormalPrecautions: "通常の注意",
+    safetyUnknown: "不明",
+    safetyRiskScore: "リスクスコア: {score} / 5",
+    safetySourceUpdated: "ソースデータ更新日: {date}",
+    safetyOfficialSource: "公式情報源",
+    safetyNoAdvisory: "現在、この目的地の危険情報はありません。",
+    safetyAviationFor: "✈️ {country} の航空安全",
+    safetyEuListLabel: "EU公式リスト ↗",
+    safetyNoAirlinesBanned: "✅ {country} の航空会社はEU禁止リストに掲載なし",
+    safetyNoAirlinesBannedDesc: "この目的地の登録航空会社はEU航空安全リストに現在掲載されていません。常に信頼できる航空会社を選び、搭乗前に確認してください。",
+    safetyViewGlobalList: "EU禁止航空会社の全リストを表示（{count}件）",
+    safetyHideGlobalList: "全リストを閉じる",
+    safetyDisclaimer: "EUセーフティリスト — 予約前に必ず確認。2026年3月時点のデータ。",
+    safetyAutoRefresh: "2026年3月時点の情報 · 30分ごとに自動更新",
+    safetyJustNow: "たった今",
+    safety1MinAgo: "1分前",
+    safetyNMinAgo: "{n}分前",
+    safetyHAgo: "{h}時間前",
   },
   ko: {
     destination: "목적지",
@@ -1029,6 +1165,31 @@ const LANDING_EXTRA: Record<Lang, Partial<typeof LANDING_EXTRA_EN>> = {
     weatherHintClear: "추천: 야외 명소, 공원, 도시 도보 여행에 최적의 날입니다.",
     weatherHintDefault: "추천: 실내외 활동을 혼합하고 유연한 대안 루트를 준비하세요.",
     dismiss: "닫기",
+    safetyNewsTitle: "🌐 실시간 여행 안전 정보",
+    safetyUpdatedAgo: "{age} 업데이트",
+    safetyOffline: "오프라인",
+    safetyAdvisoryFor: "{country} 여행 안전 권고",
+    safetyDoNotTravel: "여행 금지",
+    safetyReconsiderTravel: "여행 재고",
+    safetyExerciseCaution: "주의 필요",
+    safetyNormalPrecautions: "일반적 주의",
+    safetyUnknown: "정보 없음",
+    safetyRiskScore: "위험 점수: {score} / 5",
+    safetySourceUpdated: "데이터 업데이트: {date}",
+    safetyOfficialSource: "공식 출처",
+    safetyNoAdvisory: "현재 이 목적지의 여행 권고 데이터가 없습니다.",
+    safetyAviationFor: "✈️ {country} 항공 안전",
+    safetyEuListLabel: "EU 공식 목록 ↗",
+    safetyNoAirlinesBanned: "✅ {country} 항공사는 EU 금지 목록에 없음",
+    safetyNoAirlinesBannedDesc: "이 목적지에 등록된 항공사는 현재 EU 항공 안전 목록에 없습니다. 항상 공신력 있는 항공사를 이용하고 탑승 전 확인하세요.",
+    safetyViewGlobalList: "EU 금지 항공사 전체 목록 보기 ({count}개)",
+    safetyHideGlobalList: "전체 목록 닫기",
+    safetyDisclaimer: "EU 항공 안전 목록 — 예약 전 반드시 확인. 2026년 3월 기준.",
+    safetyAutoRefresh: "2026년 3월 기준 · 30분마다 자동 갱신",
+    safetyJustNow: "방금 전",
+    safety1MinAgo: "1분 전",
+    safetyNMinAgo: "{n}분 전",
+    safetyHAgo: "{h}시간 전",
   },
 };
 
@@ -1056,12 +1217,23 @@ function addDaysToIso(isoDate: string, days: number): string {
   return d.toISOString().slice(0, 10);
 }
 
+function makeHistoricalDate(isoDate: string): string {
+  const d = toLocalDate(isoDate);
+  d.setFullYear(d.getFullYear() - 1);
+  return d.toISOString().slice(0, 10);
+}
+
 function formatDateLabel(isoDate: string, locale: string): string {
   if (!isoDate) return "";
   return new Date(`${isoDate}T00:00:00`).toLocaleDateString(locale, {
     month: "short",
     day: "numeric",
   });
+}
+
+function isIsoDateString(value: string | null): value is string {
+  if (!value) return false;
+  return /^\d{4}-\d{2}-\d{2}$/.test(value);
 }
 
 function clampScore(score: number): number {
@@ -1198,6 +1370,9 @@ export default function Home() {
   const [travelStartDate, setTravelStartDate] = useState(() => getIsoDateOffset(21));
   const [travelEndDate, setTravelEndDate] = useState(() => getIsoDateOffset(27));
   const [showShareLinks, setShowShareLinks] = useState(false);
+  const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "error">("idle");
+  const [travelNews, setTravelNews] = useState<TravelNewsData | null>(null);
+  const [travelNewsLoading, setTravelNewsLoading] = useState(false);
   const [exploreFilter, setExploreFilter] = useState<ExploreFilter>("all");
   const earliestTravelDate = getIsoDateOffset(0);
   const minTravelEndDate = travelStartDate > earliestTravelDate ? travelStartDate : earliestTravelDate;
@@ -1313,6 +1488,27 @@ export default function Home() {
     }
   }, [earliestTravelDate, minTravelEndDate, travelEndDate, travelStartDate]);
 
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    const qsCountry = params.get("country");
+    if (qsCountry && COUNTRIES.some((c) => c.code === qsCountry)) {
+      setCountry(qsCountry);
+    }
+
+    const qsStart = params.get("start");
+    const qsEnd = params.get("end");
+
+    if (isIsoDateString(qsStart) && qsStart >= earliestTravelDate) {
+      setTravelStartDate(qsStart);
+      if (isIsoDateString(qsEnd) && qsEnd >= qsStart) {
+        setTravelEndDate(qsEnd);
+      } else {
+        setTravelEndDate(addDaysToIso(qsStart, 6));
+      }
+    }
+  }, [earliestTravelDate]);
+
   // Fetch live FX rate; re-runs whenever the destination currency or home currency changes
   useEffect(() => {
     setRateLoading(true);
@@ -1392,10 +1588,21 @@ export default function Home() {
     setWeatherLoading(true);
     setWeatherError(null);
 
-    fetch(
-      `https://api.open-meteo.com/v1/forecast?latitude=${location.lat}&longitude=${location.lon}&current_weather=true&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&forecast_days=7&timezone=auto`,
-      { signal: controller.signal }
-    )
+    const todayIso = getIsoDateOffset(0);
+    const dayOffset = Math.max(0, diffNights(todayIso, travelStartDate));
+    // Open-Meteo forecast only covers 16 days. For travel dates further out use
+    // last year's archive for the same calendar period as a seasonal reference.
+    const useHistorical = dayOffset >= 15;
+
+    const fetchUrl = useHistorical
+      ? (() => {
+          const histStart = makeHistoricalDate(travelStartDate);
+          const histEnd = addDaysToIso(histStart, 5);
+          return `https://archive-api.open-meteo.com/v1/archive?latitude=${location.lat}&longitude=${location.lon}&start_date=${histStart}&end_date=${histEnd}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto`;
+        })()
+      : `https://api.open-meteo.com/v1/forecast?latitude=${location.lat}&longitude=${location.lon}&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&forecast_days=16&timezone=auto`;
+
+    fetch(fetchUrl, { signal: controller.signal })
       .then((res) => {
         if (!res.ok) throw new Error("Weather API failed");
         return res.json();
@@ -1405,19 +1612,43 @@ export default function Home() {
         const maxTemps: number[] = data?.daily?.temperature_2m_max ?? [];
         const minTemps: number[] = data?.daily?.temperature_2m_min ?? [];
         const weatherCodes: number[] = data?.daily?.weathercode ?? [];
-        const rainProb: number[] = data?.daily?.precipitation_probability_max ?? [];
+
+        // Historical archive has precipitation_sum instead of probability — convert
+        const rainProb: number[] = useHistorical
+          ? (data?.daily?.precipitation_sum as number[] ?? []).map(
+              (p: number) => (p ?? 0) > 2 ? 70 : (p ?? 0) > 0.5 ? 35 : 5
+            )
+          : (data?.daily?.precipitation_probability_max as number[] ?? []);
+
+        if (dailyTimes.length === 0) throw new Error("No weather data");
+
+        // Historical: all fetched dates map to the travel window; forecast: clamp to available range
+        const startIndex = useHistorical ? 0 : Math.min(dayOffset, dailyTimes.length - 1);
+
+        const visibleForecast = dailyTimes
+          .slice(startIndex, startIndex + 5)
+          .map((_date, offset) => {
+            const index = startIndex + offset;
+            return {
+              // Use actual travel dates for display so weekday labels are correct
+              date: useHistorical ? addDaysToIso(travelStartDate, offset) : dailyTimes[index],
+              max: Math.round(maxTemps[index] ?? 0),
+              min: Math.round(minTemps[index] ?? 0),
+              code: Number(weatherCodes[index] ?? 0),
+            };
+          });
+
+        const firstDay = visibleForecast[0];
+        const firstMax = firstDay?.max ?? 0;
+        const firstMin = firstDay?.min ?? 0;
 
         setWeather({
           location: location.city,
-          currentTemp: Math.round(data?.current_weather?.temperature ?? 0),
-          currentCode: Number(data?.current_weather?.weathercode ?? 0),
-          tomorrowRain: Math.round(rainProb[1] ?? rainProb[0] ?? 0),
-          forecast: dailyTimes.slice(0, 5).map((date, index) => ({
-            date,
-            max: Math.round(maxTemps[index] ?? 0),
-            min: Math.round(minTemps[index] ?? 0),
-            code: Number(weatherCodes[index] ?? 0),
-          })),
+          currentTemp: Math.round((firstMax + firstMin) / 2),
+          currentCode: Number(firstDay?.code ?? 0),
+          tomorrowRain: Math.round(rainProb[0] ?? 0),
+          isHistorical: useHistorical,
+          forecast: visibleForecast,
         });
       })
       .catch((err) => {
@@ -1427,7 +1658,77 @@ export default function Home() {
       .finally(() => setWeatherLoading(false));
 
     return () => controller.abort();
-  }, [country]);
+  }, [country, travelStartDate]);
+
+  useEffect(() => {
+    if (shareStatus !== "copied") return;
+    const timer = window.setTimeout(() => setShareStatus("idle"), 2000);
+    return () => window.clearTimeout(timer);
+  }, [shareStatus]);
+
+  // Fetch live travel safety news; re-fetches every 30 minutes
+  useEffect(() => {
+    let disposed = false;
+    const doFetch = () => {
+      if (!disposed) setTravelNewsLoading(true);
+      fetch("/api/travel-news")
+        .then((r) => r.json())
+        .then((data: TravelNewsData) => {
+          if (!disposed) setTravelNews(data);
+        })
+        .catch(() => {})
+        .finally(() => {
+          if (!disposed) setTravelNewsLoading(false);
+        });
+    };
+    doFetch();
+    const timer = setInterval(doFetch, 30 * 60 * 1000);
+    return () => {
+      disposed = true;
+      clearInterval(timer);
+    };
+  }, []);
+
+  function buildShareUrl(): string {
+    const base =
+      typeof window !== "undefined"
+        ? `${window.location.origin}${window.location.pathname}`
+        : "https://travel-fx-optimizer.local/";
+    const url = new URL(base);
+    url.searchParams.set("country", country);
+    url.searchParams.set("start", travelStartDate);
+    url.searchParams.set("end", travelEndDate);
+    return url.toString();
+  }
+
+  async function copyScoreLink() {
+    try {
+      await navigator.clipboard.writeText(buildShareUrl());
+      setShareStatus("copied");
+    } catch {
+      setShareStatus("error");
+    }
+  }
+
+  async function shareScoreLink(title: string, text: string) {
+    const url = buildShareUrl();
+
+    if (navigator.share) {
+      try {
+        await navigator.share({ title, text, url });
+        return;
+      } catch {
+        // Ignore user-cancelled shares and fall back to clipboard only when needed.
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(url);
+      setShareStatus("copied");
+    } catch {
+      setShareStatus("error");
+    }
+  }
 
   // Auto-compare whenever amount or live rate changes
   useEffect(() => {
@@ -1651,9 +1952,9 @@ export default function Home() {
             const altRangeLabel = altMonth !== undefined ? `${shortMonths[altMonth]} 8 - ${shortMonths[altMonth]} 12` : null;
             const altScore = clampScore(normalizedScore + (altMonth !== undefined ? 18 : 0));
 
-            const shareText = encodeURIComponent(
-              `${selectedCountry?.name ?? "Destination"} ${selectedRangeLabel}\nTravel Timing Score: ${normalizedScore}/100\n${scoreLabel}`
-            );
+            const shareRawText = `${selectedCountry?.name ?? "Destination"} ${selectedRangeLabel}\nTravel Timing Score: ${normalizedScore}/100\n${scoreLabel}`;
+            const shareText = encodeURIComponent(shareRawText);
+            const shareUrlEncoded = encodeURIComponent(buildShareUrl());
 
             const showFestival = exploreFilter === "all" || exploreFilter === "festival";
             const showWeather = exploreFilter === "all" || exploreFilter === "weather";
@@ -1683,10 +1984,29 @@ export default function Home() {
                         {lc.shareMyTiming}
                       </button>
                       {showShareLinks && (
-                        <div className="flex flex-wrap gap-2 text-xs">
-                          <a href={`https://twitter.com/intent/tweet?text=${shareText}`} target="_blank" rel="noreferrer" className="rounded-full bg-[#111827] text-white px-3 py-1.5">{lx.shareTwitter}</a>
-                          <a href={`https://www.reddit.com/submit?title=My%20Travel%20Timing%20Score&text=${shareText}`} target="_blank" rel="noreferrer" className="rounded-full bg-[#ff4500] text-white px-3 py-1.5">{lx.shareReddit}</a>
+                        <div className="space-y-2 text-xs">
+                          <div className="flex flex-wrap gap-2">
+                            <button
+                              onClick={copyScoreLink}
+                              className="rounded-full bg-gray-800 text-white px-3 py-1.5"
+                            >
+                              {shareStatus === "copied" ? "Copied" : "Copy link"}
+                            </button>
+                            <button
+                              onClick={() => shareScoreLink(lc.scoreTitle, shareRawText)}
+                              className="rounded-full bg-blue-600 text-white px-3 py-1.5"
+                            >
+                              Share
+                            </button>
+                          </div>
+                          {shareStatus === "error" && (
+                            <p className="text-[11px] text-rose-600 dark:text-rose-300">Could not copy link. Please try again.</p>
+                          )}
+                          <div className="flex flex-wrap gap-2">
+                          <a href={`https://twitter.com/intent/tweet?text=${shareText}&url=${shareUrlEncoded}`} target="_blank" rel="noreferrer" className="rounded-full bg-[#111827] text-white px-3 py-1.5">{lx.shareTwitter}</a>
+                          <a href={`https://www.reddit.com/submit?title=My%20Travel%20Timing%20Score&text=${shareText}%0A${shareUrlEncoded}`} target="_blank" rel="noreferrer" className="rounded-full bg-[#ff4500] text-white px-3 py-1.5">{lx.shareReddit}</a>
                           <a href={`https://www.instagram.com/`} target="_blank" rel="noreferrer" className="rounded-full bg-[#E1306C] text-white px-3 py-1.5">{lx.shareInstagram}</a>
+                          </div>
                         </div>
                       )}
                     </div>
@@ -1819,9 +2139,16 @@ export default function Home() {
                     ) : (
                       <div className="mt-2 space-y-3">
                         <div className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-3">
-                          <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
-                            {weather.location}: {weather.currentTemp}C - {getWeatherLabel(weather.currentCode, lx)}
-                          </p>
+                          <div className="flex items-center justify-between gap-2 flex-wrap">
+                            <p className="text-sm font-semibold text-gray-900 dark:text-gray-100">
+                              {weather.location}: {weather.currentTemp}°C — {getWeatherLabel(weather.currentCode, lx)}
+                            </p>
+                            {weather.isHistorical && (
+                              <span className="rounded-full bg-blue-100 dark:bg-blue-900/40 px-2 py-0.5 text-[10px] font-semibold text-blue-600 dark:text-blue-300">
+                                📅 Seasonal avg ({new Date(travelStartDate).getFullYear() - 1} data)
+                              </span>
+                            )}
+                          </div>
                           <p className="mt-0.5 text-xs text-gray-600 dark:text-gray-300">
                             {weather.tomorrowRain >= 55
                               ? lx.rainExpected.replace("{pct}", String(weather.tomorrowRain))
@@ -1866,7 +2193,43 @@ export default function Home() {
                 )}
 
                 {showRisks && (
-                  <div id="warnings-section">
+                  <div id="warnings-section" className="space-y-4">
+                    <TravelSafetyNews
+                      countryCode={country}
+                      countryName={selectedCountry?.name ?? lx.thisDestination}
+                      advisories={travelNews?.advisories ?? {}}
+                      bannedAirlines={travelNews?.bannedAirlines ?? []}
+                      fetchedAt={travelNews?.fetchedAt ?? null}
+                      isLoading={travelNewsLoading}
+                      isFallback={travelNews?.fallback}
+                      labels={{
+                        title: lx.safetyNewsTitle,
+                        updatedAgo: lx.safetyUpdatedAgo,
+                        offline: lx.safetyOffline,
+                        advisoryFor: lx.safetyAdvisoryFor,
+                        doNotTravel: lx.safetyDoNotTravel,
+                        reconsiderTravel: lx.safetyReconsiderTravel,
+                        exerciseCaution: lx.safetyExerciseCaution,
+                        normalPrecautions: lx.safetyNormalPrecautions,
+                        unknown: lx.safetyUnknown,
+                        riskScore: lx.safetyRiskScore,
+                        sourceUpdated: lx.safetySourceUpdated,
+                        officialSource: lx.safetyOfficialSource,
+                        noAdvisory: lx.safetyNoAdvisory,
+                        aviationFor: lx.safetyAviationFor,
+                        euListLabel: lx.safetyEuListLabel,
+                        noAirlinesBanned: lx.safetyNoAirlinesBanned,
+                        noAirlinesBannedDesc: lx.safetyNoAirlinesBannedDesc,
+                        viewGlobalList: lx.safetyViewGlobalList,
+                        hideGlobalList: lx.safetyHideGlobalList,
+                        disclaimer: lx.safetyDisclaimer,
+                        autoRefresh: lx.safetyAutoRefresh,
+                        justNow: lx.safetyJustNow,
+                        oneMinAgo: lx.safety1MinAgo,
+                        nMinAgo: lx.safetyNMinAgo,
+                        hAgo: lx.safetyHAgo,
+                      }}
+                    />
                     <DestinationWarnings
                       countryName={selectedCountry?.name ?? lx.thisDestination}
                       warnings={countryWarnings}
