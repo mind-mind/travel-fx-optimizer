@@ -82,6 +82,7 @@ export default function PaymentForm({
             onChange={(e) => { onCountryChange(e.target.value); }}
             className="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
+            <option value="">— Select a destination —</option>
             {COUNTRIES.map((c) => (
               <option key={c.code} value={c.code}>
                 {c.flag} {c.name} ({c.currency})

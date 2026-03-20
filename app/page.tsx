@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import PaymentForm from "@/components/PaymentForm";
 import ResultsSection from "@/components/ResultsSection";
 import VatRefundBanner from "@/components/VatRefundBanner";
@@ -602,6 +602,11 @@ const LANDING_EXTRA_EN = {
   safety1MinAgo: "1 min ago",
   safetyNMinAgo: "{n} min ago",
   safetyHAgo: "{h}h ago",
+  riskPopupTitle: "Travel risk alert",
+  riskPopupBody: "{country} currently has elevated travel risk ({score}/5). Check the latest advisory before you book or go.",
+  riskPopupLiveData: "Live safety data refreshes automatically every 30 minutes, so risk levels can change.",
+  riskPopupViewDetails: "View live safety details",
+  riskPopupContinue: "Continue anyway",
 };
 
 const LANDING_EXTRA: Record<Lang, Partial<typeof LANDING_EXTRA_EN>> = {
@@ -1268,7 +1273,7 @@ function getScorePalette(score: number): { ring: string; inner: string } {
 }
 
 export default function Home() {
-  const [country, setCountry] = useState("JP");
+  const [country, setCountry] = useState("");
   const [homeCurrency, setHomeCurrency] = useState<string>(() => {
     if (typeof window !== "undefined") {
       return localStorage.getItem("homeCurrency") ?? "USD";
@@ -1373,7 +1378,10 @@ export default function Home() {
   const [shareStatus, setShareStatus] = useState<"idle" | "copied" | "error">("idle");
   const [travelNews, setTravelNews] = useState<TravelNewsData | null>(null);
   const [travelNewsLoading, setTravelNewsLoading] = useState(false);
+  const [showRiskPopup, setShowRiskPopup] = useState(false);
+  const shownRiskPopupKeysRef = useRef<Set<string>>(new Set());
   const [exploreFilter, setExploreFilter] = useState<ExploreFilter>("all");
+  const selectedAdvisory = travelNews?.advisories[country] ?? null;
   const earliestTravelDate = getIsoDateOffset(0);
   const minTravelEndDate = travelStartDate > earliestTravelDate ? travelStartDate : earliestTravelDate;
   const selectedNights = diffNights(travelStartDate, travelEndDate);
@@ -1456,6 +1464,23 @@ export default function Home() {
     if (section) {
       section.scrollIntoView({ behavior: "smooth", block: "start" });
     }
+  }
+
+  function advisoryPopupKey(advisory: TravelAdvisory): string {
+    return `${advisory.iso}:${advisory.updated}:${advisory.score.toFixed(1)}`;
+  }
+
+  function dismissRiskPopup() {
+    if (selectedAdvisory) {
+      shownRiskPopupKeysRef.current.add(advisoryPopupKey(selectedAdvisory));
+    }
+    setShowRiskPopup(false);
+  }
+
+  function openRiskDetails() {
+    setExploreFilter("risks");
+    dismissRiskPopup();
+    window.setTimeout(() => jumpToSection("warnings-section"), 80);
   }
 
   function handleTravelStartDateChange(nextStart: string) {
@@ -1666,6 +1691,33 @@ export default function Home() {
     return () => window.clearTimeout(timer);
   }, [shareStatus]);
 
+  useEffect(() => {
+    if (!selectedAdvisory || selectedAdvisory.score < 3.0) {
+      setShowRiskPopup(false);
+      return;
+    }
+
+    const popupKey = advisoryPopupKey(selectedAdvisory);
+    if (shownRiskPopupKeysRef.current.has(popupKey)) {
+      return;
+    }
+
+    setShowRiskPopup(true);
+  }, [country, selectedAdvisory]);
+
+  useEffect(() => {
+    if (!showRiskPopup) return;
+
+    const onEsc = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        dismissRiskPopup();
+      }
+    };
+
+    window.addEventListener("keydown", onEsc);
+    return () => window.removeEventListener("keydown", onEsc);
+  }, [showRiskPopup, selectedAdvisory]);
+
   // Fetch live travel safety news; re-fetches every 30 minutes
   useEffect(() => {
     let disposed = false;
@@ -1764,11 +1816,93 @@ export default function Home() {
     return rate.toFixed(decimals);
   }
 
+  const riskPopupMeta = selectedAdvisory
+    ? selectedAdvisory.score >= 4.5
+      ? {
+          icon: "🚫",
+          title: lx.safetyDoNotTravel,
+          palette: "border-rose-300 bg-rose-50 text-rose-700 dark:border-rose-700 dark:bg-rose-950/40 dark:text-rose-300",
+        }
+      : selectedAdvisory.score >= 4.0
+      ? {
+          icon: "⛔",
+          title: lx.safetyReconsiderTravel,
+          palette: "border-orange-300 bg-orange-50 text-orange-700 dark:border-orange-700 dark:bg-orange-950/40 dark:text-orange-300",
+        }
+      : {
+          icon: "⚠️",
+          title: lx.safetyExerciseCaution,
+          palette: "border-yellow-300 bg-yellow-50 text-yellow-700 dark:border-yellow-700 dark:bg-yellow-950/40 dark:text-yellow-300",
+        }
+    : null;
+
   return (
     <main
       className="min-h-screen dark:bg-gray-950"
       style={dark ? undefined : { background: "linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%)" }}
     >
+      {showRiskPopup && selectedAdvisory && riskPopupMeta && (
+        <div className="fixed inset-0 z-[70] flex items-center justify-center px-4">
+          <button
+            type="button"
+            aria-label={lx.dismiss}
+            onClick={dismissRiskPopup}
+            className="absolute inset-0 bg-slate-950/60"
+          />
+
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-label={lx.riskPopupTitle}
+            className="relative z-10 w-full max-w-md rounded-3xl border border-gray-200 bg-white p-5 shadow-2xl dark:border-gray-700 dark:bg-gray-900"
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">
+                  {lx.riskPopupTitle}
+                </p>
+                <div className={`mt-2 inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-semibold ${riskPopupMeta.palette}`}>
+                  <span>{riskPopupMeta.icon}</span>
+                  <span>{riskPopupMeta.title}</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={dismissRiskPopup}
+                className="rounded-full p-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200"
+                aria-label={lx.dismiss}
+              >
+                ✕
+              </button>
+            </div>
+
+            <p className="mt-3 text-sm leading-relaxed text-gray-700 dark:text-gray-200">
+              {lx.riskPopupBody
+                .replace("{country}", selectedCountry?.name ?? selectedAdvisory.name)
+                .replace("{score}", selectedAdvisory.score.toFixed(1))}
+            </p>
+            <p className="mt-2 text-xs text-gray-500 dark:text-gray-400">{lx.riskPopupLiveData}</p>
+
+            <div className="mt-4 flex items-center gap-2">
+              <button
+                type="button"
+                onClick={openRiskDetails}
+                className="rounded-xl bg-red-600 px-3 py-2 text-xs font-bold text-white hover:bg-red-700"
+              >
+                {lx.riskPopupViewDetails}
+              </button>
+              <button
+                type="button"
+                onClick={dismissRiskPopup}
+                className="rounded-xl border border-gray-300 bg-white px-3 py-2 text-xs font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+              >
+                {lx.riskPopupContinue}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Hero + travel context + calculator */}
       <section
         className="px-4 pt-12 pb-16 min-h-[900px]"
@@ -1869,6 +2003,9 @@ export default function Home() {
                 onChange={(e) => handleCountryChange(e.target.value)}
                 className="w-full rounded-xl border border-white/25 bg-white/10 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-300"
               >
+                <option value="" className="text-gray-900 dark:text-gray-100">
+                  — Select a destination —
+                </option>
                 {COUNTRIES.map((c) => (
                   <option key={c.code} value={c.code} className="text-gray-900 dark:text-gray-100">
                     {c.flag} {c.name} ({c.currency})
@@ -1931,11 +2068,26 @@ export default function Home() {
                   .slice(0, 3)
               : [];
 
+            const advisoryRiskScore = selectedAdvisory?.score ?? 0;
+            const advisoryPenalty =
+              advisoryRiskScore >= 4.5
+                ? 45
+                : advisoryRiskScore >= 4.0
+                ? 35
+                : advisoryRiskScore >= 3.0
+                ? 22
+                : advisoryRiskScore >= 2.5
+                ? 12
+                : advisoryRiskScore >= 2.0
+                ? 6
+                : 0;
+
             let travelTimingScore = 84;
             if (thisMonthFestivals.length > 0) travelTimingScore -= 6;
             if (highCrowdNow.length > 0) travelTimingScore -= 16;
             if (thisMonthFestivals.some((f) => f.priceImpact)) travelTimingScore -= 12;
             if (countryWarnings.length > 0) travelTimingScore -= Math.min(14, countryWarnings.length * 4);
+            travelTimingScore -= advisoryPenalty;
             if (weather) {
               if (weather.tomorrowRain >= 60) travelTimingScore -= 10;
               if (weather.currentTemp >= 12 && weather.currentTemp <= 28) travelTimingScore += 4;
@@ -1977,6 +2129,11 @@ export default function Home() {
                         </div>
                       </div>
                       <p className={`text-center text-sm font-bold ${scoreTone}`}>{scoreLabel}</p>
+                      {selectedAdvisory && advisoryPenalty > 0 && (
+                        <p className="text-center text-[11px] font-semibold text-rose-600 dark:text-rose-300">
+                          Safety advisory impact: -{advisoryPenalty} pts ({selectedAdvisory.score.toFixed(1)}/5)
+                        </p>
+                      )}
                       <button
                         onClick={() => setShowShareLinks((prev) => !prev)}
                         className="w-full rounded-xl bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-4 py-2 text-sm font-semibold"
@@ -2279,16 +2436,18 @@ export default function Home() {
                   </section>
                 )}
 
-                <section id="example-travel-insight" className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
-                  <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{lc.exampleTitle}</p>
-                  <h3 className="mt-1 text-base font-bold text-gray-900 dark:text-gray-100">{lx.exampleCityMonth}</h3>
-                  <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-700 dark:text-gray-200">
-                    <p className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2"><span className="font-semibold">{lx.festivalLabel}:</span> {lx.cherryBlossomSeason}</p>
-                    <p className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2"><span className="font-semibold">{lx.weatherLabel}:</span> ~10C</p>
-                    <p className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2"><span className="font-semibold">{lx.crowdsLabel}:</span> {lx.veryBusyWeekends}</p>
-                    <p className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2"><span className="font-semibold">{lx.costImpactLabel}:</span> {lx.hotelSurge}</p>
-                  </div>
-                </section>
+                {country && firstFestival && (
+                  <section id="example-travel-insight" className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
+                    <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{lc.exampleTitle}</p>
+                    <h3 className="mt-1 text-base font-bold text-gray-900 dark:text-gray-100">{selectedCountry?.name} — {shortMonths[selectedTravelMonth]}</h3>
+                    <div className="mt-2 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-gray-700 dark:text-gray-200">
+                      <p className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2"><span className="font-semibold">{lx.festivalLabel}:</span> {firstFestival.name}</p>
+                      <p className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2"><span className="font-semibold">{lx.weatherLabel}:</span> {weather ? `${weather.currentTemp}°C` : "—"}</p>
+                      <p className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2"><span className="font-semibold">{lx.crowdsLabel}:</span> {highCrowdNow.length > 0 ? lx.veryBusyWeekends : lx.manageable}</p>
+                      <p className="rounded-xl bg-slate-50 dark:bg-gray-800 px-3 py-2"><span className="font-semibold">{lx.costImpactLabel}:</span> {highCrowdNow.length > 0 ? lx.hotelSurge : lx.stablePricing}</p>
+                    </div>
+                  </section>
+                )}
 
                 <section className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
                   <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{lc.bestTimeToVisit}</p>
