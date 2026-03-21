@@ -1379,8 +1379,9 @@ export default function Home() {
   const [travelNews, setTravelNews] = useState<TravelNewsData | null>(null);
   const [travelNewsLoading, setTravelNewsLoading] = useState(false);
   const [showRiskPopup, setShowRiskPopup] = useState(false);
+  const [showExtraGuides, setShowExtraGuides] = useState(false);
   const shownRiskPopupKeysRef = useRef<Set<string>>(new Set());
-  const [exploreFilter, setExploreFilter] = useState<ExploreFilter>("all");
+  const [exploreFilter, setExploreFilter] = useState<ExploreFilter>("festival");
   const selectedAdvisory = travelNews?.advisories[country] ?? null;
   const earliestTravelDate = getIsoDateOffset(0);
   const minTravelEndDate = travelStartDate > earliestTravelDate ? travelStartDate : earliestTravelDate;
@@ -1418,6 +1419,7 @@ export default function Home() {
     setCountry(v);
     setAmount("");
     setResults(null);
+    setExploreFilter("festival");
   }
 
   function handleMethodChange(m: PaymentMethod) {
@@ -1923,6 +1925,21 @@ export default function Home() {
             </div>
           </div>
 
+          {/* Where to Travel — top of hero, first decision for undecided users */}
+          <Link
+            href="/where-to-travel"
+            className="mt-4 flex items-center justify-between gap-3 rounded-2xl border-2 border-white/30 bg-white/15 px-4 py-3.5 hover:bg-white/25 transition-colors backdrop-blur-sm"
+          >
+            <div className="space-y-0.5">
+              <p className="text-[10px] font-bold uppercase tracking-widest text-blue-200">{t.wttBadge}</p>
+              <p className="text-sm font-extrabold text-white leading-tight">{t.wttTitle}</p>
+              <p className="text-xs text-blue-100">{t.wttSubtitle}</p>
+            </div>
+            <span className="shrink-0 rounded-xl bg-white text-blue-700 font-bold text-xs px-3 py-2 hover:bg-blue-50 transition-colors whitespace-nowrap">
+              {t.wttExploreCta}
+            </span>
+          </Link>
+
           <section className="mt-5 rounded-3xl border border-white/20 bg-white/10 px-5 py-6 backdrop-blur-sm">
             <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-blue-200">TravelWiseRate</p>
             <h2 className="mt-2 text-xl font-extrabold text-white leading-tight">
@@ -2023,6 +2040,83 @@ export default function Home() {
               {selectedCountry?.flag} {selectedCountry?.name}
             </p>
           </div>
+
+          {!!country && (
+            <section className="mt-4 rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
+              <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">Step 2</p>
+              <h3 className="mt-1 text-sm font-bold text-gray-900 dark:text-gray-100">Choose what you want to know first</h3>
+              <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">Start with one topic to keep planning simple. You can open everything later.</p>
+
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setExploreFilter("festival");
+                    jumpToSection("festival-calendar");
+                  }}
+                  className="rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-200"
+                >
+                  Festivals & timing
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setExploreFilter("weather");
+                    jumpToSection("weather-section");
+                  }}
+                  className="rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-200"
+                >
+                  Weather conditions
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setExploreFilter("risks");
+                    jumpToSection("warnings-section");
+                  }}
+                  className="rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-200"
+                >
+                  Safety warnings
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setExploreFilter("cost");
+                    jumpToSection("updates-section");
+                  }}
+                  className="rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-200"
+                >
+                  Cost impact
+                </button>
+              </div>
+
+              <div className="mt-3 flex flex-wrap gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setExploreFilter("calculator");
+                    jumpToSection("calculator-section");
+                  }}
+                  className="rounded-full bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700"
+                >
+                  Open FX calculator
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setExploreFilter("all")}
+                  className="rounded-full border border-gray-300 dark:border-gray-700 px-3 py-1.5 text-xs font-semibold text-gray-700 dark:text-gray-200"
+                >
+                  Show all topics
+                </button>
+                <Link
+                  href="/vs-compare"
+                  className="rounded-full border border-blue-300 dark:border-blue-700 bg-blue-50 dark:bg-blue-950/40 px-3 py-1.5 text-xs font-semibold text-blue-700 dark:text-blue-200"
+                >
+                  Compare destinations (VS)
+                </Link>
+              </div>
+            </section>
+          )}
 
           {/* Destination context dashboard */}
           {(() => {
@@ -2239,6 +2333,7 @@ export default function Home() {
 
                 <section className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
                   <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">{lc.exploreInsights}</p>
+                  <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">Viewing: {exploreFilter === "all" ? "All topics" : "Focused topic"}</p>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {exploreFilters.map((item) => (
                       <button
@@ -2842,40 +2937,37 @@ export default function Home() {
 
         {/* ── ALWAYS VISIBLE ── */}
 
-        {/* Travel mistakes */}
-        <TravelMistakes lang={lang} />
-
-        {/* Where to Travel promo */}
-        <Link
-          href="/where-to-travel"
-          className="block rounded-2xl overflow-hidden border border-blue-100 dark:border-blue-900 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 transition-all shadow-sm"
-        >
-          <div className="px-5 py-4 flex items-center justify-between gap-4">
-            <div className="space-y-0.5">
-              <p className="text-[11px] font-semibold text-blue-200 uppercase tracking-widest">
-                {t.wttBadge}
-              </p>
-              <p className="text-base font-bold text-white leading-snug">
-                {t.wttTitle}
-              </p>
-              <p className="text-xs text-blue-200 leading-relaxed hidden sm:block">
-                {t.wttSubtitle}
-              </p>
+        <section className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-widest text-gray-500 dark:text-gray-400">More Guides</p>
+              <p className="mt-1 text-sm font-semibold text-gray-900 dark:text-gray-100">Open only what you need</p>
             </div>
-            <span className="shrink-0 text-sm font-semibold text-white bg-white/20 hover:bg-white/30 rounded-xl px-4 py-2 whitespace-nowrap transition-colors">
-              {t.wttExploreCta}
-            </span>
+            <button
+              type="button"
+              onClick={() => setShowExtraGuides((prev) => !prev)}
+              className="rounded-xl border border-gray-300 dark:border-gray-700 px-3 py-2 text-xs font-semibold text-gray-700 dark:text-gray-200"
+            >
+              {showExtraGuides ? "Hide" : "Show"}
+            </button>
           </div>
-        </Link>
+        </section>
 
-        {/* Learn Before You Go */}
-        <LearnSection countryCode={country} t={t} lang={lang} />
+        {showExtraGuides && (
+          <>
+            {/* Travel mistakes */}
+            <TravelMistakes lang={lang} />
 
-        {/* Popular currency pair quick links */}
-        <PopularPairs />
+            {/* Learn Before You Go */}
+            <LearnSection countryCode={country} t={t} lang={lang} />
 
-        {/* Travel money tips */}
-        <TravelMoneyTips t={t} />
+            {/* Popular currency pair quick links */}
+            <PopularPairs />
+
+            {/* Travel money tips */}
+            <TravelMoneyTips t={t} />
+          </>
+        )}
 
         <section className="rounded-3xl border border-blue-200 dark:border-blue-900 bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-6 text-white shadow-md">
           <p className="text-[11px] font-semibold uppercase tracking-widest text-blue-100">{lx.finalStep}</p>
