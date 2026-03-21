@@ -170,8 +170,31 @@ function getSeasonalHighlights(countryCode: string, month: number): string[] {
 
 const LANDING_COPY: Record<Lang, Record<string, string>> = {
   en: {
-    heroTitle: "Know the Best Time to Travel - Before You Book",
-    heroSubtitle: "See festivals, weather risks, crowds, and real travel cost impact in under 20 seconds.",
+    heroTitle: "Don't lose money when you travel.",
+    heroSubtitle: "Compare exchange rates, fees, and payment methods in seconds.",
+    heroSecondaryText: "See the real cost of your trip before you go.",
+    primaryCta: "Show my savings →",
+    quickActionTitle: "Check before you travel",
+    fromCountry: "From country",
+    toCountry: "To country",
+    navCompareCosts: "Compare Costs",
+    navPaymentMethods: "Payment Methods",
+    navSafety: "Safety",
+    navDestinations: "Destinations",
+    checkRealCost: "Show my savings →",
+    exampleRoute: "Thailand → Japan",
+    exampleLose: "You could lose $23 using bad exchange",
+    exampleSave: "You save $18 using best method",
+    trustLine: "Trusted by smart travelers to avoid hidden fees",
+    noLogin: "No login required",
+    noLongForms: "No long forms",
+    showResultNow: "Show result immediately",
+    urgencyLine: "Every trip has hidden costs. Check yours in seconds.",
+    problemTitle: "Most travelers lose money without realizing it 😬",
+    problemText: "Bad exchange rates, hidden fees, and wrong payment methods can cost you $50–$200 per trip.",
+    problemExampleExchange: "You could lose $15 at the airport",
+    problemExampleCard: "You could lose $8 using the wrong card",
+    bottomCta: "Check your travel cost now",
     startCalculator: "Start Travel Calculator",
     helper: "Answer 3 quick questions to see the best time to travel.",
     seeExample: "See Example",
@@ -223,8 +246,31 @@ const LANDING_COPY: Record<Lang, Record<string, string>> = {
     finalTitle: "Plan Your Trip Smarter",
   },
   th: {
-    heroTitle: "รู้ช่วงเวลาที่ดีที่สุดก่อนจองทริป",
-    heroSubtitle: "ดูเทศกาล ความเสี่ยงอากาศ ความหนาแน่นคน และผลกระทบค่าใช้จ่ายจริงใน 20 วินาที",
+    heroTitle: "อย่าเสียเงินเวลาเดินทาง",
+    heroSubtitle: "เปรียบเทียบเรตแลกเปลี่ยน ค่าธรรมเนียม และวิธีจ่ายเงินได้ในไม่กี่วินาที",
+    heroSecondaryText: "ดูต้นทุนจริงของทริปก่อนออกเดินทาง",
+    primaryCta: "ดูว่าฉันประหยัดได้เท่าไร →",
+    quickActionTitle: "เช็กก่อนเดินทาง",
+    fromCountry: "ประเทศต้นทาง",
+    toCountry: "ประเทศปลายทาง",
+    navCompareCosts: "เปรียบเทียบต้นทุน",
+    navPaymentMethods: "วิธีชำระเงิน",
+    navSafety: "ความปลอดภัย",
+    navDestinations: "จุดหมายปลายทาง",
+    checkRealCost: "ดูว่าฉันประหยัดได้เท่าไร →",
+    exampleRoute: "ไทย → ญี่ปุ่น",
+    exampleLose: "คุณอาจเสีย $23 เมื่อใช้เรตแลกเปลี่ยนที่แย่",
+    exampleSave: "คุณประหยัด $18 เมื่อใช้วิธีที่ดีที่สุด",
+    trustLine: "นักเดินทางที่วางแผนอย่างฉลาดใช้เพื่อเลี่ยงค่าธรรมเนียมแอบแฝง",
+    noLogin: "ไม่ต้องล็อกอิน",
+    noLongForms: "ไม่มีฟอร์มยาว",
+    showResultNow: "เห็นผลได้ทันที",
+    urgencyLine: "ทุกทริปมีต้นทุนแอบแฝง เช็กของคุณได้ในไม่กี่วินาที",
+    problemTitle: "นักเดินทางส่วนใหญ่เสียเงินโดยไม่รู้ตัว 😬",
+    problemText: "เรตแลกเปลี่ยนที่แย่ ค่าธรรมเนียมแอบแฝง และวิธีจ่ายเงินที่ผิด อาจทำให้คุณเสีย $50–$200 ต่อทริป",
+    problemExampleExchange: "คุณอาจเสีย $15 ที่สนามบิน",
+    problemExampleCard: "คุณอาจเสีย $8 เมื่อใช้บัตรผิดใบ",
+    bottomCta: "เช็กต้นทุนทริปของคุณตอนนี้",
     startCalculator: "เริ่มคำนวณทริป",
     helper: "ตอบ 3 คำถามสั้นๆ เพื่อดูช่วงเวลาที่เหมาะที่สุด",
     seeExample: "ดูตัวอย่าง",
@@ -276,8 +322,31 @@ const LANDING_COPY: Record<Lang, Record<string, string>> = {
     finalTitle: "วางแผนทริปให้ฉลาดขึ้น",
   },
   es: {
-    heroTitle: "Conoce el mejor momento para viajar antes de reservar",
-    heroSubtitle: "Ve festivales, riesgos climáticos, multitudes e impacto real de costos en menos de 20 segundos.",
+    heroTitle: "No pierdas dinero cuando viajes.",
+    heroSubtitle: "Compara tipos de cambio, comisiones y métodos de pago en segundos.",
+    heroSecondaryText: "Ve el costo real de tu viaje antes de salir.",
+    primaryCta: "Mostrar mi ahorro →",
+    quickActionTitle: "Compruébalo antes de viajar",
+    fromCountry: "País de origen",
+    toCountry: "País de destino",
+    navCompareCosts: "Comparar costos",
+    navPaymentMethods: "Métodos de pago",
+    navSafety: "Seguridad",
+    navDestinations: "Destinos",
+    checkRealCost: "Mostrar mi ahorro →",
+    exampleRoute: "Tailandia → Japón",
+    exampleLose: "Podrías perder $23 usando un mal tipo de cambio",
+    exampleSave: "Ahorras $18 usando el mejor método",
+    trustLine: "Con la confianza de viajeros inteligentes para evitar comisiones ocultas",
+    noLogin: "Sin iniciar sesión",
+    noLongForms: "Sin formularios largos",
+    showResultNow: "Resultado inmediato",
+    urgencyLine: "Cada viaje tiene costos ocultos. Revisa los tuyos en segundos.",
+    problemTitle: "La mayoría de los viajeros pierde dinero sin darse cuenta 😬",
+    problemText: "Los malos tipos de cambio, las comisiones ocultas y los métodos de pago equivocados pueden costarte entre $50 y $200 por viaje.",
+    problemExampleExchange: "Podrías perder $15 en el aeropuerto",
+    problemExampleCard: "Podrías perder $8 por usar la tarjeta equivocada",
+    bottomCta: "Revisa el costo de tu viaje ahora",
     startCalculator: "Iniciar calculadora de viaje",
     helper: "Responde 3 preguntas rápidas para ver el mejor momento para viajar.",
     seeExample: "Ver ejemplo",
@@ -329,8 +398,31 @@ const LANDING_COPY: Record<Lang, Record<string, string>> = {
     finalTitle: "Planea tu viaje de forma inteligente",
   },
   zh: {
-    heroTitle: "预订前先知道最佳旅行时机",
-    heroSubtitle: "20秒内查看节日、天气风险、人流和真实成本影响。",
+    heroTitle: "旅行时别白白亏钱。",
+    heroSubtitle: "几秒内比较汇率、手续费和支付方式。",
+    heroSecondaryText: "出发前先看清这趟旅行的真实成本。",
+    primaryCta: "看看我能省多少 →",
+    quickActionTitle: "出发前先检查",
+    fromCountry: "出发国家",
+    toCountry: "目的地国家",
+    navCompareCosts: "比较成本",
+    navPaymentMethods: "支付方式",
+    navSafety: "安全",
+    navDestinations: "目的地",
+    checkRealCost: "看看我能省多少 →",
+    exampleRoute: "泰国 → 日本",
+    exampleLose: "用了差的汇率，你可能多花 $23",
+    exampleSave: "用了最佳方式，你能省下 $18",
+    trustLine: "聪明旅行者用它来避开隐藏费用",
+    noLogin: "无需登录",
+    noLongForms: "没有冗长表单",
+    showResultNow: "立即看到结果",
+    urgencyLine: "每次旅行都有隐藏成本。几秒钟就能查清。",
+    problemTitle: "大多数旅行者都在不知不觉中亏钱 😬",
+    problemText: "差的汇率、隐藏手续费和错误的支付方式，每趟旅程都可能让你多花 $50–$200。",
+    problemExampleExchange: "你在机场可能多花 $15",
+    problemExampleCard: "用错卡你可能多花 $8",
+    bottomCta: "立即查看你的旅行成本",
     startCalculator: "开始旅行计算器",
     helper: "回答3个简短问题，快速看到最佳出行时间。",
     seeExample: "查看示例",
@@ -382,8 +474,31 @@ const LANDING_COPY: Record<Lang, Record<string, string>> = {
     finalTitle: "更聪明地规划你的旅行",
   },
   ja: {
-    heroTitle: "予約前にベストな旅行タイミングを把握",
-    heroSubtitle: "20秒で祭り・天候リスク・混雑・実コスト影響を確認できます。",
+    heroTitle: "旅先でお金をムダにしない。",
+    heroSubtitle: "為替レート、手数料、支払い方法を数秒で比較。",
+    heroSecondaryText: "出発前に旅の本当のコストを確認しましょう。",
+    primaryCta: "節約額を確認する →",
+    quickActionTitle: "旅行前にチェック",
+    fromCountry: "出発国",
+    toCountry: "渡航先",
+    navCompareCosts: "コスト比較",
+    navPaymentMethods: "支払い方法",
+    navSafety: "安全情報",
+    navDestinations: "目的地",
+    checkRealCost: "節約額を確認する →",
+    exampleRoute: "タイ → 日本",
+    exampleLose: "悪い為替レートだと $23 損するかもしれません",
+    exampleSave: "最適な方法なら $18 節約できます",
+    trustLine: "隠れ手数料を避けたい賢い旅行者に使われています",
+    noLogin: "ログイン不要",
+    noLongForms: "長い入力なし",
+    showResultNow: "すぐに結果表示",
+    urgencyLine: "どの旅行にも隠れコストがあります。数秒で確認できます。",
+    problemTitle: "多くの旅行者は気づかないうちに損をしています 😬",
+    problemText: "悪い為替レート、隠れ手数料、間違った支払い方法で、1回の旅行ごとに $50〜$200 余計にかかることがあります。",
+    problemExampleExchange: "空港で $15 損するかもしれません",
+    problemExampleCard: "間違ったカードで $8 損するかもしれません",
+    bottomCta: "今すぐ旅行コストを確認",
     startCalculator: "トラベル計算を開始",
     helper: "3つの質問に答えて最適な時期を確認しましょう。",
     seeExample: "例を見る",
@@ -431,8 +546,31 @@ const LANDING_COPY: Record<Lang, Record<string, string>> = {
     finalTitle: "もっと賢く旅を計画",
   },
   ko: {
-    heroTitle: "예약 전에 최고의 여행 시기를 확인하세요",
-    heroSubtitle: "20초 안에 축제, 날씨 리스크, 혼잡도, 실제 비용 영향을 확인합니다.",
+    heroTitle: "여행할 때 돈을 잃지 마세요.",
+    heroSubtitle: "환율, 수수료, 결제 방법을 몇 초 만에 비교하세요.",
+    heroSecondaryText: "출발 전에 여행의 실제 비용을 확인하세요.",
+    primaryCta: "내 절약 금액 보기 →",
+    quickActionTitle: "떠나기 전에 확인하세요",
+    fromCountry: "출발 국가",
+    toCountry: "도착 국가",
+    navCompareCosts: "비용 비교",
+    navPaymentMethods: "결제 방법",
+    navSafety: "안전",
+    navDestinations: "목적지",
+    checkRealCost: "내 절약 금액 보기 →",
+    exampleRoute: "태국 → 일본",
+    exampleLose: "나쁜 환율을 쓰면 $23 손해 볼 수 있습니다",
+    exampleSave: "가장 좋은 방법을 쓰면 $18 절약",
+    trustLine: "숨은 수수료를 피하려는 똑똑한 여행자들이 사용합니다",
+    noLogin: "로그인 필요 없음",
+    noLongForms: "긴 입력 없음",
+    showResultNow: "바로 결과 확인",
+    urgencyLine: "모든 여행에는 숨은 비용이 있습니다. 몇 초 안에 확인하세요.",
+    problemTitle: "대부분의 여행자는 모르게 돈을 잃습니다 😬",
+    problemText: "나쁜 환율, 숨은 수수료, 잘못된 결제 방법 때문에 여행 한 번에 $50~$200 더 쓸 수 있습니다.",
+    problemExampleExchange: "공항에서 $15 손해 볼 수 있습니다",
+    problemExampleCard: "잘못된 카드를 쓰면 $8 손해 볼 수 있습니다",
+    bottomCta: "지금 여행 비용 확인",
     startCalculator: "여행 계산 시작",
     helper: "3가지 질문에 답하고 최적 시기를 확인하세요.",
     seeExample: "예시 보기",
@@ -1280,6 +1418,7 @@ export default function Home() {
     }
     return "USD";
   });
+  const [fromCountryCode, setFromCountryCode] = useState("");
   const [amount, setAmount] = useState("");
   const [bank, setBank] = useState<BankName>("Standard card");
   const [method, setMethod] = useState<PaymentMethod>("Credit Card");
@@ -1338,6 +1477,28 @@ export default function Home() {
     localStorage.setItem("homeCurrency", v);
   }
 
+  function handleQuickCheck() {
+    const fromCountry = COUNTRIES.find((item) => item.code === fromCountryCode);
+    if (!fromCountry || !country) return;
+
+    handleHomeCurrencyChange(fromCountry.currency);
+    if (!amount) {
+      setAmount("1000");
+    }
+    setExploreFilter("calculator");
+    window.setTimeout(() => jumpToSection("calculator-section"), 80);
+  }
+
+  function handleSafetyNavigation() {
+    if (country) {
+      setExploreFilter("risks");
+      window.setTimeout(() => jumpToSection("warnings-section"), 80);
+      return;
+    }
+
+    window.setTimeout(() => jumpToSection("quick-check-section"), 80);
+  }
+
   const t = translations[lang];
   const lc = LANDING_COPY[lang] ?? LANDING_COPY.en;
   const lx = { ...LANDING_EXTRA_EN, ...(LANDING_EXTRA[lang] ?? {}) };
@@ -1381,21 +1542,21 @@ export default function Home() {
   const [showRiskPopup, setShowRiskPopup] = useState(false);
   const [showExtraGuides, setShowExtraGuides] = useState(false);
   const shownRiskPopupKeysRef = useRef<Set<string>>(new Set());
-  const [exploreFilter, setExploreFilter] = useState<ExploreFilter>("festival");
+  const [exploreFilter, setExploreFilter] = useState<ExploreFilter>("calculator");
   const selectedAdvisory = travelNews?.advisories[country] ?? null;
   const earliestTravelDate = getIsoDateOffset(0);
   const minTravelEndDate = travelStartDate > earliestTravelDate ? travelStartDate : earliestTravelDate;
   const selectedNights = diffNights(travelStartDate, travelEndDate);
 
   const exploreFilters: Array<{ id: ExploreFilter; label: string; targetId: string }> = [
-    { id: "all", label: lc.allInsights, targetId: "festival-calendar" },
-    { id: "festival", label: lc.festival, targetId: "festival-calendar" },
-    { id: "weather", label: lc.weather, targetId: "weather-section" },
-    { id: "risks", label: lc.risks, targetId: "warnings-section" },
-    { id: "cost", label: lc.cost, targetId: "updates-section" },
+    { id: "all", label: lc.allInsights, targetId: "calculator-section" },
     { id: "calculator", label: lx.fxCalculator, targetId: "calculator-section" },
+    { id: "cost", label: lc.cost, targetId: "updates-section" },
+    { id: "risks", label: lc.risks, targetId: "warnings-section" },
     { id: "apps", label: lc.apps, targetId: "apps-section" },
     { id: "planner", label: lc.planner, targetId: "planner-section" },
+    { id: "festival", label: lc.festival, targetId: "festival-calendar" },
+    { id: "weather", label: lc.weather, targetId: "weather-section" },
   ];
 
   const destCurrency = selectedCountry?.currency;
@@ -1911,6 +2072,14 @@ export default function Home() {
         style={{ background: "linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%)" }}
       >
         <div className="max-w-md mx-auto">
+          {/* Simplified navigation */}
+          <nav className="mb-5 flex gap-2 overflow-x-auto pb-1" aria-label="Main navigation">
+            <a href="#calculator-section" className="shrink-0 rounded-full border border-white/30 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors">{lc.navCompareCosts}</a>
+            <a href="#calculator-section" className="shrink-0 rounded-full border border-white/30 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors">{lc.navPaymentMethods}</a>
+            <button type="button" onClick={handleSafetyNavigation} className="shrink-0 rounded-full border border-white/30 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors">{lc.navSafety}</button>
+            <a href="/where-to-travel" className="shrink-0 rounded-full border border-white/30 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white hover:bg-white/20 transition-colors">{lc.navDestinations}</a>
+          </nav>
+
           <div className="flex items-start justify-between">
             <div>
               <p className="text-blue-200 text-sm font-medium mb-1">{t.forTravelers}</p>
@@ -1920,8 +2089,103 @@ export default function Home() {
               <p className="text-blue-100 text-sm mt-1">
                 {lc.heroSubtitle}
               </p>
+              <p className="mt-2 text-sm font-semibold text-white/90">
+                {lc.heroSecondaryText}
+              </p>
+              <a
+                href="#calculator-section"
+                className="mt-3 inline-flex items-center gap-1.5 rounded-xl bg-white px-4 py-2 text-sm font-extrabold text-blue-800 hover:bg-blue-50 transition-colors"
+              >
+                {lc.primaryCta}
+              </a>
             </div>
             <div className="flex items-center gap-2">
+            </div>
+          </div>
+
+          <section id="quick-check-section" className="mt-4 rounded-3xl border border-white/25 bg-white/12 px-4 py-4 backdrop-blur-sm">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-blue-200">TravelWiseRate</p>
+                <h2 className="mt-1 text-lg font-extrabold text-white">{lc.quickActionTitle}</h2>
+              </div>
+              <p className="max-w-[180px] text-right text-[11px] font-semibold text-blue-100">{lc.trustLine}</p>
+            </div>
+
+            <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div>
+                <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-blue-200">{lc.fromCountry}</p>
+                <select
+                  value={fromCountryCode}
+                  onChange={(e) => setFromCountryCode(e.target.value)}
+                  className="w-full rounded-xl border border-white/25 bg-white/12 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-300"
+                >
+                  <option value="" className="text-gray-900 dark:text-gray-100">
+                    — Select origin —
+                  </option>
+                  {COUNTRIES.map((item) => (
+                    <option key={`from-${item.code}`} value={item.code} className="text-gray-900 dark:text-gray-100">
+                      {item.flag} {item.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <p className="mb-1 text-[11px] font-semibold uppercase tracking-widest text-blue-200">{lc.toCountry}</p>
+                <select
+                  value={country}
+                  onChange={(e) => handleCountryChange(e.target.value)}
+                  className="w-full rounded-xl border border-white/25 bg-white/12 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-300"
+                >
+                  <option value="" className="text-gray-900 dark:text-gray-100">
+                    — Select a destination —
+                  </option>
+                  {COUNTRIES.map((item) => (
+                    <option key={`to-${item.code}`} value={item.code} className="text-gray-900 dark:text-gray-100">
+                      {item.flag} {item.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={handleQuickCheck}
+              disabled={!country || !fromCountryCode}
+              className="mt-4 inline-flex w-full items-center justify-center rounded-2xl bg-white px-4 py-3 text-sm font-extrabold text-blue-900 transition-colors hover:bg-blue-50 disabled:cursor-not-allowed disabled:bg-white/60"
+            >
+              {lc.checkRealCost}
+            </button>
+
+            <div className="mt-4 rounded-2xl border border-emerald-300/30 bg-emerald-500/12 px-4 py-3">
+              <p className="text-xs font-bold text-white">{lc.exampleRoute}</p>
+              <p className="mt-1 text-sm font-semibold text-emerald-100">{lc.exampleLose}</p>
+              <p className="mt-1 text-sm font-semibold text-emerald-100">{lc.exampleSave}</p>
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white">{lc.noLogin}</span>
+              <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white">{lc.noLongForms}</span>
+              <span className="rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-semibold text-white">{lc.showResultNow}</span>
+            </div>
+
+            <p className="mt-3 text-sm font-semibold text-blue-50">{lc.urgencyLine}</p>
+          </section>
+
+          {/* Problem section — money loss */}
+          <div className="mt-4 rounded-2xl border border-red-400/40 bg-red-500/15 px-4 py-4 backdrop-blur-sm">
+            <p className="text-sm font-bold text-white">{lc.problemTitle}</p>
+            <p className="mt-1 text-xs text-red-100">{lc.problemText}</p>
+            <div className="mt-3 space-y-1.5">
+              <div className="flex items-center gap-2">
+                <span className="text-red-300" aria-hidden>💸</span>
+                <p className="text-xs font-semibold text-red-200">{lc.problemExampleExchange}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-red-300" aria-hidden>💸</span>
+                <p className="text-xs font-semibold text-red-200">{lc.problemExampleCard}</p>
+              </div>
             </div>
           </div>
 
@@ -2009,37 +2273,16 @@ export default function Home() {
             </div>
           </section>
 
-          <div className="mt-4 rounded-2xl border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-sm">
-            <p className="text-[11px] font-semibold text-blue-200 uppercase tracking-widest">
-              🛫 {lx.whereAreYouTraveling}
-            </p>
-
-            <div className="mt-3">
-              <select
-                value={country}
-                onChange={(e) => handleCountryChange(e.target.value)}
-                className="w-full rounded-xl border border-white/25 bg-white/10 px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-300"
-              >
-                <option value="" className="text-gray-900 dark:text-gray-100">
-                  — Select a destination —
-                </option>
-                {COUNTRIES.map((c) => (
-                  <option key={c.code} value={c.code} className="text-gray-900 dark:text-gray-100">
-                    {c.flag} {c.name} ({c.currency})
-                  </option>
-                ))}
-              </select>
+          {!!country && (
+            <div className="mt-5 rounded-2xl border border-black/5 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-3 shadow-sm">
+              <p className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
+                {lx.destination}
+              </p>
+              <p className="mt-1 text-lg font-bold text-gray-900 dark:text-gray-100">
+                {selectedCountry?.flag} {selectedCountry?.name}
+              </p>
             </div>
-          </div>
-
-          <div className="mt-5 rounded-2xl border border-black/5 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-3 shadow-sm">
-            <p className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">
-              {lx.destination}
-            </p>
-            <p className="mt-1 text-lg font-bold text-gray-900 dark:text-gray-100">
-              {selectedCountry?.flag} {selectedCountry?.name}
-            </p>
-          </div>
+          )}
 
           {!!country && (
             <section className="mt-4 rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
@@ -2051,22 +2294,22 @@ export default function Home() {
                 <button
                   type="button"
                   onClick={() => {
-                    setExploreFilter("festival");
-                    jumpToSection("festival-calendar");
+                    setExploreFilter("calculator");
+                    jumpToSection("calculator-section");
                   }}
-                  className="rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-200"
+                  className="rounded-xl border border-blue-400 dark:border-blue-600 bg-blue-50 dark:bg-blue-950/40 px-3 py-2 text-left text-xs font-semibold text-blue-700 dark:text-blue-200"
                 >
-                  Festivals & timing
+                  💱 Compare Costs
                 </button>
                 <button
                   type="button"
                   onClick={() => {
-                    setExploreFilter("weather");
-                    jumpToSection("weather-section");
+                    setExploreFilter("calculator");
+                    jumpToSection("calculator-section");
                   }}
                   className="rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-200"
                 >
-                  Weather conditions
+                  💳 Payment Methods
                 </button>
                 <button
                   type="button"
@@ -2076,31 +2319,21 @@ export default function Home() {
                   }}
                   className="rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-200"
                 >
-                  Safety warnings
+                  🛡️ Safety
                 </button>
                 <button
                   type="button"
                   onClick={() => {
-                    setExploreFilter("cost");
-                    jumpToSection("updates-section");
+                    setExploreFilter("festival");
+                    jumpToSection("festival-calendar");
                   }}
                   className="rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 text-left text-xs font-semibold text-gray-700 dark:text-gray-200"
                 >
-                  Cost impact
+                  📅 Travel Timing
                 </button>
               </div>
 
               <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setExploreFilter("calculator");
-                    jumpToSection("calculator-section");
-                  }}
-                  className="rounded-full bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700"
-                >
-                  Open FX calculator
-                </button>
                 <button
                   type="button"
                   onClick={() => setExploreFilter("all")}
@@ -2212,6 +2445,46 @@ export default function Home() {
 
             return (
               <div className="mt-8 space-y-6">
+                {showCalculator && (
+                  <section
+                    id="calculator-section"
+                    className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm"
+                  >
+                  <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{lx.fxCalculator}</p>
+                  <div className="mt-2">
+                    <PaymentForm
+                      country={country}
+                      amount={amount}
+                      bank={bank}
+                      method={method}
+                      homeCurrency={homeCurrency}
+                      t={t}
+                      onCountryChange={handleCountryChange}
+                      onAmountChange={setAmount}
+                      onBankChange={setBank}
+                      onMethodChange={handleMethodChange}
+                      onHomeCurrencyChange={handleHomeCurrencyChange}
+                      onSwap={handleSwap}
+                      canSwap={canSwap}
+                      showCountryField={false}
+                    />
+                  </div>
+                </section>
+                )}
+
+                {!results && showCalculator && (
+                  <section className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
+                    <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">{lx.quickCostExample}</p>
+                    <InstantExample
+                      currency={currency}
+                      homeCurrency={homeCurrency}
+                      midRate={midRate}
+                      rateLoading={rateLoading}
+                      t={t}
+                    />
+                  </section>
+                )}
+
                 <section className="rounded-3xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-5 py-5 shadow-md">
                     <p className="text-[11px] font-semibold uppercase tracking-widest text-blue-600">{lc.scoreTitle}</p>
                   <div className="mt-5 grid grid-cols-1 md:grid-cols-[180px_1fr] gap-6 items-start">
@@ -2550,46 +2823,6 @@ export default function Home() {
                   <p className="mt-2 text-xs text-gray-700 dark:text-gray-200"><span className="font-semibold">{lc.bestMonths}:</span> {budgetMonths.length > 0 ? budgetMonths.map((m) => shortMonths[m]).join(", ") : lx.defaultBestMonths}</p>
                   <p className="mt-1 text-xs text-gray-700 dark:text-gray-200"><span className="font-semibold">{lc.avoid}:</span> {lc.avoidText}</p>
                 </section>
-
-                {showCalculator && (
-                  <section
-                    id="calculator-section"
-                    className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm"
-                  >
-                  <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest">{lx.fxCalculator}</p>
-                  <div className="mt-2">
-                    <PaymentForm
-                      country={country}
-                      amount={amount}
-                      bank={bank}
-                      method={method}
-                      homeCurrency={homeCurrency}
-                      t={t}
-                      onCountryChange={handleCountryChange}
-                      onAmountChange={setAmount}
-                      onBankChange={setBank}
-                      onMethodChange={handleMethodChange}
-                      onHomeCurrencyChange={handleHomeCurrencyChange}
-                      onSwap={handleSwap}
-                      canSwap={canSwap}
-                      showCountryField={false}
-                    />
-                  </div>
-                </section>
-                )}
-
-                {!results && showCalculator && (
-                  <section className="rounded-2xl border border-black/10 bg-white dark:border-gray-800 dark:bg-gray-900 px-4 py-4 shadow-sm">
-                    <p className="text-[10px] font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-widest mb-2">{lx.quickCostExample}</p>
-                    <InstantExample
-                      currency={currency}
-                      homeCurrency={homeCurrency}
-                      midRate={midRate}
-                      rateLoading={rateLoading}
-                      t={t}
-                    />
-                  </section>
-                )}
 
                 {showApps && (
                   <div id="apps-section">
@@ -2976,7 +3209,7 @@ export default function Home() {
             href="#calculator-section"
             className="mt-4 inline-flex items-center justify-center rounded-2xl bg-white px-4 py-2.5 text-sm font-bold text-blue-800 hover:bg-blue-50"
           >
-            {lx.startTravelCalculator}
+            {lc.bottomCta}
           </a>
         </section>
       </div>
