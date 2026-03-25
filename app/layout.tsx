@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { Suspense } from "react";
+import Link from "next/link";
 import GlobalLanguageSelector from "@/components/GlobalLanguageSelector";
 import "./globals.css";
 
@@ -45,6 +46,30 @@ export default function RootLayout({
           <GlobalLanguageSelector />
         </Suspense>
         {children}
+        <footer className="border-t border-gray-200 bg-white px-4 py-8 text-sm text-gray-600 dark:border-gray-800 dark:bg-[#020617] dark:text-gray-300">
+          <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-3 sm:flex-row">
+            <p>© {new Date().getFullYear()} TravelWiseRate</p>
+            <nav aria-label="Footer">
+              <ul className="flex items-center gap-4">
+                <li>
+                  <Link href="/about" className="hover:text-blue-600 dark:hover:text-blue-400">
+                    About
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/privacy" className="hover:text-blue-600 dark:hover:text-blue-400">
+                    Privacy
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/contact" className="hover:text-blue-600 dark:hover:text-blue-400">
+                    Contact
+                  </Link>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </footer>
         {/* Google Analytics 4 */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=G-DGP8GRE798"
