@@ -25,8 +25,6 @@ export default function RootLayout({
       <head>
         {/* Google Search Console verification */}
         <meta name="google-site-verification" content="AVOj9qFgtPCQrtA-OfOtnc1aCsMEDjga5elLe6JNVnk" />
-        {/* Google AdSense account */}
-        <meta name="google-adsense-account" content="ca-pub-2107207218808903" />
         {/* Prevent flash of unstyled content for dark mode */}
         <Script
           id="dark-mode-init"
@@ -35,14 +33,14 @@ export default function RootLayout({
             __html: `try{if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')}catch(e){}`,
           }}
         />
-        {/* Google AdSense */}
-        <script
-          async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2107207218808903"
-          crossOrigin="anonymous"
-        />
       </head>
       <body>
+        {/* Google AdSense */}
+        <Script
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2107207218808903"
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
         <Suspense fallback={null}>
           <GlobalLanguageSelector />
         </Suspense>
